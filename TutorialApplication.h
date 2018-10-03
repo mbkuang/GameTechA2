@@ -19,6 +19,8 @@ http://www.ogre3d.org/wiki/
 #define __TutorialApplication_h_
 
 #include "BaseApplication.h"
+#include <btBulletDynamicsCommon.h>
+#include "Simulator.h"
 
 //---------------------------------------------------------------------------
 
@@ -30,6 +32,14 @@ public:
 
 protected:
     virtual void createScene(void);
+    virtual bool frameRenderingQueued(const Ogre::FrameEvent& fe);
+
+    virtual bool keyPressed(const OIS::KeyEvent &arg);
+    virtual bool keyReleased(const OIS::KeyEvent &arg);
+
+    virtual bool mouseMoved(const OIS::MouseEvent &arg);
+    virtual bool mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
+    virtual bool mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
 };
 
 //---------------------------------------------------------------------------

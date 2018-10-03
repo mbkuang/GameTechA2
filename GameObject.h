@@ -1,3 +1,10 @@
+#ifndef __GameObject_h_
+#define __GameObject_h_
+
+#include <btBulletDynamicsCommon.h>
+#include "OgreMotionState.h"
+#include <Ogre.h>
+
 class GameObject {
 protected:
 	Ogre::String name;
@@ -11,4 +18,8 @@ protected:
 	btTransform tr;
 	btVector3 inertia;
 	OgreMotionState* motionState;
+public:
+	btRigidBody* getBody();
 };
+
+#endif
