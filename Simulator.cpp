@@ -1,3 +1,5 @@
+#include "Simulator.h"
+
 Simulator::Simulator() {
 	collisionConfiguration = new btDefaultCollisionConfiguration();
 	dispatcher = new btCollisionDispatcher(collisionConfiguration);
@@ -13,4 +15,12 @@ Simulator::Simulator() {
 void Simulator::addObject (GameObject* o) {
 	objList.push_back(o);
 	dynamicsWorld->addRigidBody(o->getBody());
+}
+
+/*bool Simulator::removeObject(GameObject*  o) {
+
+}*/
+
+void Simulator::stepSimulation(const Ogre::Real elapsedTime, int maxSubSteps, const Ogre::Real fixedTimestep) {
+
 }
