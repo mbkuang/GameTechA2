@@ -24,6 +24,7 @@ protected:
 	OgreMotionState* motionState;
 public:
 	btRigidBody* getBody();
+    Ogre::SceneNode* getNode() {return rootNode;}
 };
 
 #endif

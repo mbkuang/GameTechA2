@@ -1029,7 +1029,8 @@ assignment2-TutorialApplication.o: TutorialApplication.cpp \
  /usr/include/bullet/BulletDynamics/Vehicle/btWheelInfo.h \
  /usr/include/bullet/BulletDynamics/Dynamics/btActionInterface.h \
  /usr/include/bullet/BulletDynamics/Dynamics/btRigidBody.h Simulator.h \
- /usr/include/OGRE/Ogre.h /usr/include/OGRE/OgreArchiveManager.h \
+ /usr/include/bullet/btBulletCollisionCommon.h /usr/include/OGRE/Ogre.h \
+ /usr/include/OGRE/OgreArchiveManager.h \
  /usr/include/OGRE/OgreBillboardChain.h \
  /usr/include/OGRE/OgreBillboardSet.h /usr/include/OGRE/OgreConfigFile.h \
  /usr/include/OGRE/OgreControllerManager.h \
@@ -1077,7 +1078,8 @@ assignment2-TutorialApplication.o: TutorialApplication.cpp \
  /usr/include/OGRE/OgreShadowCameraSetupLiSPSM.h \
  /usr/include/OGRE/OgreShadowCameraSetupPlaneOptimal.h \
  /usr/include/OGRE/OgreShadowCameraSetupPSSM.h GameObject.h \
- OgreMotionState.h /usr/include/OGRE/OgreVector3.h
+ OgreMotionState.h /usr/include/OGRE/OgreVector3.h Ball.h GameObject.h \
+ Wall.h
 
 /usr/include/stdc-predef.h:
 
@@ -3443,6 +3445,8 @@ BaseApplication.h:
 
 Simulator.h:
 
+/usr/include/bullet/btBulletCollisionCommon.h:
+
 /usr/include/OGRE/Ogre.h:
 
 /usr/include/OGRE/OgreArchiveManager.h:
@@ -3564,3 +3568,9 @@ GameObject.h:
 OgreMotionState.h:
 
 /usr/include/OGRE/OgreVector3.h:
+
+Ball.h:
+
+GameObject.h:
+
+Wall.h:

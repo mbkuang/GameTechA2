@@ -21,6 +21,8 @@ http://www.ogre3d.org/wiki/
 #include "BaseApplication.h"
 #include <btBulletDynamicsCommon.h>
 #include "Simulator.h"
+#include "Ball.h"
+#include "Wall.h"
 
 //---------------------------------------------------------------------------
 

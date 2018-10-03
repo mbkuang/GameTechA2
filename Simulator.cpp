@@ -15,6 +15,7 @@ Simulator::Simulator() {
 
 void Simulator::addObject (GameObject* o) {
 	objList.push_back(o);
+    //TODO this crashes when we dont set object bodies
 	dynamicsWorld->addRigidBody(o->getBody());
 }
 

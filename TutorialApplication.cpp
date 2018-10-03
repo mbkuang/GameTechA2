@@ -31,34 +31,15 @@ TutorialApplication::~TutorialApplication(void)
 void TutorialApplication::createScene(void)
 {
     // Create your scene here :)
-    //create the actual plane in Ogre3D
-    Ogre::Plane plane(Ogre::Vector3::UNIT_Y, 0);
-    Ogre::MeshPtr planePtr = Ogre::MeshManager::getSingleton().createPlane("ground", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, plane, 1500, 1500, 20, 20, true, 1, 5, 5, Ogre::Vector3::UNIT_Z);
+    Ogre::Light* light = mSceneMgr->createLight("MainLight");
+    Ogre::SceneNode* lightNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
+    lightNode->setPosition(0, 25, 50);
+    light->setDiffuseColour(1.0,1.0,1.0);
+    light->setType(Ogre::Light::LT_POINT);
+    lightNode->attachObject(light);
 
-    Ogre::Entity *entGround = mSceneMgr->createEntity("GroundEntity", "ground");
-    Ogre::SceneNode *groundNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("groundNode");
-
-    groundNode->attachObject(entGround);
-
-    //create the plane entity to the physics engine, and attach it to the node
-
-    btTransform groundTransform;
-    groundTransform.setIdentity();
-    groundTransform.setOrigin(btVector3(0, -50, 0));
-
-    btScalar groundMass(0.); //the mass is 0, because the ground is immovable (static)
-    btVector3 localGroundInertia(0, 0, 0);
-
-    btCollisionShape *groundShape = new btBoxShape(btVector3(btScalar(50.), btScalar(50.), btScalar(50.)));
-    btDefaultMotionState *groundMotionState = new btDefaultMotionState(groundTransform);
-
-    groundShape->calculateLocalInertia(groundMass, localGroundInertia);
-
-    btRigidBody::btRigidBodyConstructionInfo groundRBInfo(groundMass, groundMotionState, groundShape, localGroundInertia);
-    btRigidBody *groundBody = new btRigidBody(groundRBInfo);
-
-    //add the body to the dynamics world
-    this->gameSimulator->getDynamicsWorld()->addRigidBody(groundBody);
+    Ball* ball = new Ball(mSceneMgr);
+    gameSimulator->addObject(ball);
 }
 //---------------------------------------------------------------------------
 bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)

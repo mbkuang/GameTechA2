@@ -175,10 +175,11 @@ assignment2-Simulator.o: Simulator.cpp /usr/include/stdc-predef.h \
  /usr/include/bullet/BulletDynamics/Vehicle/btWheelInfo.h \
  /usr/include/bullet/BulletDynamics/Dynamics/btActionInterface.h \
  /usr/include/bullet/BulletDynamics/Dynamics/btRigidBody.h \
- /usr/include/OGRE/Ogre.h /usr/include/OGRE/OgrePrerequisites.h \
- /usr/include/OGRE/OgrePlatform.h /usr/include/OGRE/OgreConfig.h \
- /usr/include/OGRE/OgreBuildSettings.h /usr/include/c++/5/string \
- /usr/include/c++/5/bits/stringfwd.h /usr/include/c++/5/bits/memoryfwd.h \
+ /usr/include/bullet/btBulletCollisionCommon.h /usr/include/OGRE/Ogre.h \
+ /usr/include/OGRE/OgrePrerequisites.h /usr/include/OGRE/OgrePlatform.h \
+ /usr/include/OGRE/OgreConfig.h /usr/include/OGRE/OgreBuildSettings.h \
+ /usr/include/c++/5/string /usr/include/c++/5/bits/stringfwd.h \
+ /usr/include/c++/5/bits/memoryfwd.h \
  /usr/include/c++/5/bits/char_traits.h \
  /usr/include/c++/5/bits/stl_algobase.h \
  /usr/include/c++/5/bits/functexcept.h \
@@ -1428,6 +1429,8 @@ Simulator.h:
 /usr/include/bullet/BulletDynamics/Dynamics/btActionInterface.h:
 
 /usr/include/bullet/BulletDynamics/Dynamics/btRigidBody.h:
+
+/usr/include/bullet/btBulletCollisionCommon.h:
 
 /usr/include/OGRE/Ogre.h:
 

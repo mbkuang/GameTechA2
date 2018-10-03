@@ -2,6 +2,8 @@
 #define __Simulator_h_
 
 #include <btBulletDynamicsCommon.h>
+#include <btBulletCollisionCommon.h>
+
 #include <Ogre.h>
 #include "GameObject.h"
 
