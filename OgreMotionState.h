@@ -22,7 +22,7 @@ public:
 		worldTrans = mPos1;
 	}
 	virtual void setWorldTransform(const btTransform &worldTrans) {
-		if (mVisibleobj == nullptr)
+		if (mVisibleobj == NULL)//nullptr)
 			return; // silently return before we set a node
 
 		btQuaternion rot = worldTrans.getRotation();

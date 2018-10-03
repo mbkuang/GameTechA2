@@ -1,9 +1,13 @@
 #ifndef __GameObject_h_
 #define __GameObject_h_
 
-#include <btBulletDynamicsCommon.h>
 #include "OgreMotionState.h"
 #include <Ogre.h>
+#include <OgreEntity.h>
+#include <OgreVector3.h>
+#include <OgreSceneManager.h>
+#include <btBulletDynamicsCommon.h>
+class Simulator;
 
 class GameObject {
 protected:

@@ -20,6 +20,7 @@ http://www.ogre3d.org/wiki/
 //---------------------------------------------------------------------------
 TutorialApplication::TutorialApplication(void)
 {
+    gameSimulator = new Simulator();
 }
 //---------------------------------------------------------------------------
 TutorialApplication::~TutorialApplication(void)
@@ -57,7 +58,7 @@ void TutorialApplication::createScene(void)
     btRigidBody *groundBody = new btRigidBody(groundRBInfo);
 
     //add the body to the dynamics world
-    this->physicsEngine->getDynamicsWorld()->addRigidBody(groundBody);
+    this->gameSimulator->getDynamicsWorld()->addRigidBody(groundBody);
 }
 //---------------------------------------------------------------------------
 bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
@@ -73,7 +74,7 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
 bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& fe)
 {
     if (mKeyboard->isKeyDown(OIS::KC_R)) {
-        ball->reset();
+        //ball->reset();
     }
 
     if (mKeyboard->isKeyDown(OIS::KC_W)) {

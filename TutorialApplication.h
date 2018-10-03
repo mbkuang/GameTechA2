@@ -33,6 +33,7 @@ public:
 protected:
     virtual void createScene(void);
     virtual bool frameRenderingQueued(const Ogre::FrameEvent& fe);
+    Simulator* gameSimulator;
 private:
     bool processUnbufferedInput(const Ogre::FrameEvent& fe);
 };
