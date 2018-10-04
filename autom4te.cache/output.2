@@ -16069,12 +16069,12 @@ if test -n "$bullet_CFLAGS"; then
     pkg_cv_bullet_CFLAGS="$bullet_CFLAGS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"bullet >= 2.79\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "bullet >= 2.79") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"bullet >= 2.83\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "bullet >= 2.83") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_bullet_CFLAGS=`$PKG_CONFIG --cflags "bullet >= 2.79" 2>/dev/null`
+  pkg_cv_bullet_CFLAGS=`$PKG_CONFIG --cflags "bullet >= 2.83" 2>/dev/null`
 		      test "x$?" != "x0" && pkg_failed=yes 
 else
   pkg_failed=yes
@@ -16086,12 +16086,12 @@ if test -n "$bullet_LIBS"; then
     pkg_cv_bullet_LIBS="$bullet_LIBS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"bullet >= 2.79\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "bullet >= 2.79") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"bullet >= 2.83\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "bullet >= 2.83") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_bullet_LIBS=`$PKG_CONFIG --libs "bullet >= 2.79" 2>/dev/null`
+  pkg_cv_bullet_LIBS=`$PKG_CONFIG --libs "bullet >= 2.83" 2>/dev/null`
 		      test "x$?" != "x0" && pkg_failed=yes 
 else
   pkg_failed=yes
@@ -16112,14 +16112,14 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        bullet_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "bullet >= 2.79" 2>&1`
+	        bullet_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "bullet >= 2.83" 2>&1`
         else 
-	        bullet_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "bullet >= 2.79" 2>&1`
+	        bullet_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "bullet >= 2.83" 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$bullet_PKG_ERRORS" >&5
 
-	as_fn_error $? "Package requirements (bullet >= 2.79) were not met:
+	as_fn_error $? "Package requirements (bullet >= 2.83) were not met:
 
 $bullet_PKG_ERRORS
 

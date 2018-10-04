@@ -1,6 +1,5 @@
 assignment2-GameObject.o: GameObject.cpp /usr/include/stdc-predef.h \
- GameObject.h OgreMotionState.h \
- /usr/include/bullet/btBulletDynamicsCommon.h \
+ GameObject.h Simulator.h /usr/include/bullet/btBulletDynamicsCommon.h \
  /usr/include/bullet/btBulletCollisionCommon.h \
  /usr/include/bullet/BulletCollision/CollisionDispatch/btCollisionWorld.h \
  /usr/include/bullet/LinearMath/btVector3.h \
@@ -176,10 +175,11 @@ assignment2-GameObject.o: GameObject.cpp /usr/include/stdc-predef.h \
  /usr/include/bullet/BulletDynamics/Vehicle/btWheelInfo.h \
  /usr/include/bullet/BulletDynamics/Dynamics/btActionInterface.h \
  /usr/include/bullet/BulletDynamics/Dynamics/btRigidBody.h \
- /usr/include/OGRE/Ogre.h /usr/include/OGRE/OgrePrerequisites.h \
- /usr/include/OGRE/OgrePlatform.h /usr/include/OGRE/OgreConfig.h \
- /usr/include/OGRE/OgreBuildSettings.h /usr/include/c++/5/string \
- /usr/include/c++/5/bits/stringfwd.h /usr/include/c++/5/bits/memoryfwd.h \
+ /usr/include/bullet/btBulletCollisionCommon.h /usr/include/OGRE/Ogre.h \
+ /usr/include/OGRE/OgrePrerequisites.h /usr/include/OGRE/OgrePlatform.h \
+ /usr/include/OGRE/OgreConfig.h /usr/include/OGRE/OgreBuildSettings.h \
+ /usr/include/c++/5/string /usr/include/c++/5/bits/stringfwd.h \
+ /usr/include/c++/5/bits/memoryfwd.h \
  /usr/include/c++/5/bits/char_traits.h \
  /usr/include/c++/5/bits/stl_algobase.h \
  /usr/include/c++/5/bits/functexcept.h \
@@ -1044,7 +1044,7 @@ assignment2-GameObject.o: GameObject.cpp /usr/include/stdc-predef.h \
  /usr/include/OGRE/OgrePolygon.h /usr/include/OGRE/OgreConvexBody.h \
  /usr/include/OGRE/OgreShadowCameraSetupLiSPSM.h \
  /usr/include/OGRE/OgreShadowCameraSetupPlaneOptimal.h \
- /usr/include/OGRE/OgreShadowCameraSetupPSSM.h \
+ /usr/include/OGRE/OgreShadowCameraSetupPSSM.h OgreMotionState.h \
  /usr/include/OGRE/OgreEntity.h /usr/include/OGRE/OgreVector3.h \
  /usr/include/OGRE/OgreSceneManager.h
 
@@ -1052,7 +1052,7 @@ assignment2-GameObject.o: GameObject.cpp /usr/include/stdc-predef.h \
 
 GameObject.h:
 
-OgreMotionState.h:
+Simulator.h:
 
 /usr/include/bullet/btBulletDynamicsCommon.h:
 
@@ -1431,6 +1431,8 @@ OgreMotionState.h:
 /usr/include/bullet/BulletDynamics/Dynamics/btActionInterface.h:
 
 /usr/include/bullet/BulletDynamics/Dynamics/btRigidBody.h:
+
+/usr/include/bullet/btBulletCollisionCommon.h:
 
 /usr/include/OGRE/Ogre.h:
 
@@ -3423,6 +3425,8 @@ OgreMotionState.h:
 /usr/include/OGRE/OgreShadowCameraSetupPlaneOptimal.h:
 
 /usr/include/OGRE/OgreShadowCameraSetupPSSM.h:
+
+OgreMotionState.h:
 
 /usr/include/OGRE/OgreEntity.h:
 

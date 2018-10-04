@@ -4,7 +4,8 @@
 #include <OgreSceneManager.h>
 #include <Wall.h>
 
-Wall::Wall(Ogre::SceneManager* scnMgr) {
+Wall::Wall(Simulator* sim, Ogre::SceneManager* scnMgr) {
+    simulator = sim;
     Ogre::Entity* wall = scnMgr->createEntity("cube.mesh");
     rootNode = scnMgr->getRootSceneNode()->createChildSceneNode(Ogre::Vector3(0,0,0));
     rootNode->setScale(1,1,1);

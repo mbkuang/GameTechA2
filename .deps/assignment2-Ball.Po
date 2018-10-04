@@ -914,8 +914,8 @@ assignment2-Ball.o: Ball.cpp /usr/include/stdc-predef.h \
  /usr/include/OGRE/OgreShadowCameraSetupPlaneOptimal.h \
  /usr/include/OGRE/OgreShadowCameraSetupPSSM.h \
  /usr/include/OGRE/OgreEntity.h /usr/include/OGRE/OgreVector3.h \
- /usr/include/OGRE/OgreSceneManager.h Ball.h GameObject.h \
- OgreMotionState.h /usr/include/bullet/btBulletDynamicsCommon.h \
+ /usr/include/OGRE/OgreSceneManager.h Ball.h GameObject.h Simulator.h \
+ GameObject.h /usr/include/bullet/btBulletDynamicsCommon.h \
  /usr/include/bullet/btBulletCollisionCommon.h \
  /usr/include/bullet/BulletCollision/CollisionDispatch/btCollisionWorld.h \
  /usr/include/bullet/LinearMath/btVector3.h \
@@ -1044,7 +1044,8 @@ assignment2-Ball.o: Ball.cpp /usr/include/stdc-predef.h \
  /usr/include/bullet/BulletDynamics/Vehicle/btVehicleRaycaster.h \
  /usr/include/bullet/BulletDynamics/Vehicle/btWheelInfo.h \
  /usr/include/bullet/BulletDynamics/Dynamics/btActionInterface.h \
- /usr/include/bullet/BulletDynamics/Dynamics/btRigidBody.h
+ /usr/include/bullet/BulletDynamics/Dynamics/btRigidBody.h \
+ /usr/include/bullet/btBulletCollisionCommon.h OgreMotionState.h
 
 /usr/include/stdc-predef.h:
 
@@ -3166,7 +3167,9 @@ Ball.h:
 
 GameObject.h:
 
-OgreMotionState.h:
+Simulator.h:
+
+GameObject.h:
 
 /usr/include/bullet/btBulletDynamicsCommon.h:
 
@@ -3429,3 +3432,7 @@ OgreMotionState.h:
 /usr/include/bullet/BulletDynamics/Dynamics/btActionInterface.h:
 
 /usr/include/bullet/BulletDynamics/Dynamics/btRigidBody.h:
+
+/usr/include/bullet/btBulletCollisionCommon.h:
+
+OgreMotionState.h:

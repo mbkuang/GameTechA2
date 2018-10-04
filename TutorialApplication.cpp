@@ -20,7 +20,7 @@ http://www.ogre3d.org/wiki/
 //---------------------------------------------------------------------------
 TutorialApplication::TutorialApplication(void)
 {
-    gameSimulator = new Simulator();
+    simulator = new Simulator();
 }
 //---------------------------------------------------------------------------
 TutorialApplication::~TutorialApplication(void)
@@ -35,11 +35,10 @@ void TutorialApplication::createScene(void)
     Ogre::SceneNode* lightNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
     lightNode->setPosition(0, 25, 50);
     light->setDiffuseColour(1.0,1.0,1.0);
-    light->setType(Ogre::Light::LT_POINT);
+    //light->setType(Ogre::Light::LT_POINT);
     lightNode->attachObject(light);
 
-    Ball* ball = new Ball(mSceneMgr);
-    gameSimulator->addObject(ball);
+    Ball* ball = new Ball(simulator, mSceneMgr);
 }
 //---------------------------------------------------------------------------
 bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
@@ -48,6 +47,29 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
 
     if (!processUnbufferedInput(fe))
         return false;
+
+    // Update Ogre with Bullet's State
+	if (this->simulator != NULL){
+		simulator->getDynamicsWorld()->stepSimulation(1.0f/60.0f); //suppose you have 60 frames per second
+
+		for (int i = 0; i < this->simulator->getCollisionObjectCount(); i++) {
+			btCollisionObject* obj = this->simulator->getDynamicsWorld()->getCollisionObjectArray()[i];
+			btRigidBody* body = btRigidBody::upcast(obj);
+
+			if (body && body->getMotionState()){
+				btTransform trans;
+				body->getMotionState()->getWorldTransform(trans);
+
+				void *userPointer = body->getUserPointer();
+				if (userPointer) {
+					btQuaternion orientation = trans.getRotation();
+					Ogre::SceneNode *sceneNode = static_cast<Ogre::SceneNode *>(userPointer);
+					sceneNode->setPosition(Ogre::Vector3(trans.getOrigin().getX(), trans.getOrigin().getY(), trans.getOrigin().getZ()));
+					sceneNode->setOrientation(Ogre::Quaternion(orientation.getW(), orientation.getX(), orientation.getY(), orientation.getZ()));
+				}
+			}
+		}
+	}
 
     return ret;
 }

@@ -24,9 +24,17 @@ void Simulator::addObject (GameObject* o) {
 }*/
 
 void Simulator::stepSimulation(const Ogre::Real elapsedTime, int maxSubSteps, const Ogre::Real fixedTimestep) {
-
+    getDynamicsWorld()->stepSimulation(elapsedTime,maxSubSteps,fixedTimestep);//1.0f/60.0f,);
 }
 
 btDiscreteDynamicsWorld* Simulator::getDynamicsWorld() {
     return dynamicsWorld;
+}
+
+std::vector<btCollisionShape*> Simulator::getCollisionShapes() {
+    return collisionShapes;
+}
+
+int Simulator::getCollisionObjectCount() {
+    return objList.size();
 }
