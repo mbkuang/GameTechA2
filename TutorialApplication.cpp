@@ -34,6 +34,7 @@ void TutorialApplication::createScene(void)
     Ogre::SceneNode* cNode = mSceneMgr->getRootSceneNode()
         ->createChildSceneNode("CameraNode");
     cNode->attachObject(mCamera);
+    cNode->setPosition(0,0,100);
 
     Ogre::Light* light = mSceneMgr->createLight("MainLight");
     Ogre::SceneNode* lightNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();

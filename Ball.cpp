@@ -25,23 +25,25 @@ Ball::Ball(Simulator* sim, Ogre::SceneManager* scnMgr) {
     //TODO Set the rigid Body
     btTransform transform;
     transform.setIdentity();
-    transform.setOrigin(btVector3(0, -50, 0));
+    transform.setOrigin(btVector3(0, 50, 0));
 
     shape = new btSphereShape(btScalar(.5));
     //this->simulator->getCollisionShapes().push_back(shape);
 
     motionState = new OgreMotionState(transform, rootNode);
 
-    mass = 1.; //the mass is 1, because the ball is movable (dynamic)
+    mass = .1; //the mass is 1, because the ball is movable (dynamic)
     inertia = btVector3(0, 0, 0);
 
     shape->calculateLocalInertia(mass, inertia);
 
     btRigidBody::btRigidBodyConstructionInfo bRBInfo(
-        mass, motionState, shape, inertia);
+        mass, motionState->getMotionState(), shape, inertia);
     body = new btRigidBody(bRBInfo);
     body->setRestitution(1);
     body->setUserPointer(rootNode);
+
+    body->setLinearVelocity(btVector3(0,10,0));
 
     // Add to the physics simulator
     this->simulator->getDynamicsWorld()->addRigidBody(body);
