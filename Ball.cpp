@@ -4,12 +4,12 @@
 #include <OgreSceneManager.h>
 #include <Ball.h>
 
-Ball::Ball(Simulator* sim, Ogre::SceneManager* scnMgr) {
-    simulator = sim;
-    Ogre::Entity* ball = scnMgr->createEntity("Sphere", "sphere.mesh");
+Ball::Ball(Ogre::String name, Ogre::SceneManager* sceneMgr, Simulator* simulator) : GameObject(name, sceneMgr, simulator) {
+    //simulator = sim;
+    Ogre::Entity* ball = sceneMgr->createEntity("Sphere", "sphere.mesh");
 
     ball->setCastShadows(true);
-    rootNode = scnMgr->getRootSceneNode()
+    rootNode = sceneMgr->getRootSceneNode()
         ->createChildSceneNode("Ball", Ogre::Vector3(0,0,0));
     rootNode->attachObject(ball);
     rootNode->scale(0.1f,0.1f,0.1f);

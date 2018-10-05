@@ -6,7 +6,7 @@ protected:
     Ogre::Vector3 bDirection;
     Ogre::Real bSpeed;
 public:
-    Ball(Simulator* sim, Ogre::SceneManager* scnMgr);
+    Ball(Ogre::String name, Ogre::SceneManager* sceneMgr, Simulator* simulator);
     ~Ball();
     Ogre::Vector3 getPosition();
     Ogre::Real getRadius();

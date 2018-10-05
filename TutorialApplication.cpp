@@ -43,8 +43,8 @@ void TutorialApplication::createScene(void)
     //light->setType(Ogre::Light::LT_POINT);
     lightNode->attachObject(light);
 
-    Ball* ball = new Ball(simulator, mSceneMgr);
-    Wall* wall = new Wall("Wall", simulator, mSceneMgr, 0, -50, 0, 1, 1, .5);
+    //Ball* ball = new Ball(simulator, mSceneMgr);
+    Wall* wall = new Wall("Wall", mSceneMgr, simulator, 0, -50, 0, 1, 1, .5);
 }
 //---------------------------------------------------------------------------
 bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)

@@ -30,8 +30,9 @@ protected:
 	btTransform transform;
 	btVector3 inertia;
 	OgreMotionState* motionState;
+
 public:
-    GameObject();
+    GameObject(Ogre::String name, Ogre::SceneManager* sceneMgr, Simulator* simulator);
     ~GameObject();
 	btRigidBody* getBody();
     Ogre::SceneNode* getNode() {return rootNode;}

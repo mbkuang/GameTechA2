@@ -4,18 +4,21 @@
 #include <OgreSceneManager.h>
 #include <Wall.h>
 
-Wall::Wall(Ogre::String newName, Simulator* sim, Ogre::SceneManager* scnMgr, float xPosition, float yPosition, float zPosition, float xScale, float yScale, float zScale) {
-	name = newName;
-    simulator = sim;
-    Ogre::Entity* wall = scnMgr->createEntity(name, "cube.mesh");
+Wall::Wall(Ogre::String name, Ogre::SceneManager* sceneMgr, Simulator* simulator, 
+    float xPosition, float yPosition, float zPosition, 
+    float xScale, float yScale, float zScale) : 
+    GameObject(name, sceneMgr, simulator) {
+	//name = newName;
+    //simulator = sim;
+    Ogre::Entity* wall = sceneMgr->createEntity(name, "cube.mesh");
 
     wall->setCastShadows(true);
-    rootNode = scnMgr->getRootSceneNode()->createChildSceneNode(name, Ogre::Vector3(xPosition, yPosition, zPosition));
+    rootNode = sceneMgr->getRootSceneNode()->createChildSceneNode(name, Ogre::Vector3(xPosition, yPosition, zPosition));
     rootNode->attachObject(wall);
     rootNode->scale(xScale, yScale, zScale);
     rootNode->setPosition(xPosition, yPosition, zPosition);
 
-    //TODO Set the rigid Body
+    // Set the rigid body
     transform.setIdentity();
     transform.setOrigin(btVector3(xPosition, yPosition, zPosition));
 
