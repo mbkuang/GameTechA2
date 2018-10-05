@@ -13,22 +13,14 @@ Ball::Ball(Ogre::String name, Ogre::SceneManager* sceneMgr, Simulator* simulator
         ->createChildSceneNode("Ball", Ogre::Vector3(0,0,0));
     rootNode->attachObject(ball);
     rootNode->scale(0.1f,0.1f,0.1f);
-    rootNode->setPosition(0,0,0);
-    bRadius = 15.0f;
-    bDirection = Ogre::Vector3(
-        (rand()%100-50)/100.0f,
-        (rand()%100-50)/100.0f,
-        (rand()%100-50)/100.0f);
-    bDirection.normalise();
-    bSpeed = (rand()%200+50)/1.0f;
+    rootNode->setPosition(x,y,z);
 
-    //TODO Set the rigid Body
-    btTransform transform;
+    // Set the rigid Body
     transform.setIdentity();
-    transform.setOrigin(btVector3(0, 50, 0));
+    transform.setOrigin(btVector3(x, y, z));
 
     shape = new btSphereShape(btScalar(.5));
-    //this->simulator->getCollisionShapes().push_back(shape);
+    //TODO this->simulator->getCollisionShapes().push_back(shape);
 
     motionState = new OgreMotionState(transform, rootNode);
 
@@ -43,18 +35,14 @@ Ball::Ball(Ogre::String name, Ogre::SceneManager* sceneMgr, Simulator* simulator
     body->setRestitution(1);
     body->setUserPointer(rootNode);
 
-    body->setLinearVelocity(btVector3(0,10,0));
+    body->setLinearVelocity(btVector3(0,0,0));
 
     // Add to the physics simulator
     this->simulator->getDynamicsWorld()->addRigidBody(body);
     this->simulator->addObject(this);
-    //this->simulator->trackRigidBodyWithName(body, "ballBody")
+    //TODO this->simulator->trackRigidBodyWithName(body, "ballBody");
 }
 
-Ogre::Vector3 Ball::getPosition() {
-    return rootNode->getPosition();
-}
+Ball::~Ball() {
 
-Ogre::Real Ball::getRadius() {
-    return bRadius;
 }

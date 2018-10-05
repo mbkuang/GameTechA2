@@ -2,12 +2,9 @@
 
 class Ball : public GameObject {
 protected:
-    Ogre::Real bRadius;
-    Ogre::Vector3 bDirection;
-    Ogre::Real bSpeed;
+    float x, y, z;
 public:
     Ball(Ogre::String name, Ogre::SceneManager* sceneMgr, Simulator* simulator);
     ~Ball();
-    Ogre::Vector3 getPosition();
-    Ogre::Real getRadius();
+    
 };

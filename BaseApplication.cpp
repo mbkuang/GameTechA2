@@ -90,6 +90,9 @@ void BaseApplication::createCamera(void)
     // Create the camera
     mCamera = mSceneMgr->createCamera("PlayerCam");
 
+    Ogre::SceneNode* cNode = mSceneMgr->getRootSceneNode()
+        ->createChildSceneNode("CameraNode");
+    cNode->attachObject(mCamera);
     // Position it at 500 in Z direction
     mCamera->setPosition(Ogre::Vector3(0,0,100));
     // Look back along -Z

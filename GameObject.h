@@ -35,7 +35,10 @@ public:
     GameObject(Ogre::String name, Ogre::SceneManager* sceneMgr, Simulator* simulator);
     ~GameObject();
 	btRigidBody* getBody();
+	Ogre::String getName();
     Ogre::SceneNode* getNode() {return rootNode;}
+    void setVelocity(float xVelocity, float yVelocity, float zVelocity);
+    void setPosition(float xPosition, float yPosition, float zPosition);
 };
 
 #endif

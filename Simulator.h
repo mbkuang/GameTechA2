@@ -20,7 +20,7 @@ protected:
 	btDiscreteDynamicsWorld* dynamicsWorld;
     std::vector<btCollisionShape*> collisionShapes;
 	//btAlignedObjectArray<btCollisionShape*> collisionShapes;
-	std::deque<GameObject*> objList;
+	std::map<Ogre::String, GameObject*> objMap;
 
 public:
 	Simulator();
@@ -32,6 +32,7 @@ public:
     btDiscreteDynamicsWorld* getDynamicsWorld();
     std::vector<btCollisionShape*> getCollisionShapes();
     int getCollisionObjectCount();
+    GameObject* getObject(Ogre::String oName);
 };
 
 #endif
