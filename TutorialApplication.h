@@ -23,6 +23,7 @@ http://www.ogre3d.org/wiki/
 #include "Simulator.h"
 #include "Ball.h"
 #include "Wall.h"
+#include "Paddle.h"
 
 //---------------------------------------------------------------------------
 

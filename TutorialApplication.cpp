@@ -43,7 +43,8 @@ void TutorialApplication::createScene(void)
     //light->setType(Ogre::Light::LT_POINT);
     lightNode->attachObject(light);
 
-    Ball* ball = new Ball(simulator, mSceneMgr);
+    Ball* ball = new Ball("Ball", simulator, mSceneMgr);
+    Paddle* playerPaddle = new Paddle("PlayerPaddle", simulator, mSceneMgr);
 }
 //---------------------------------------------------------------------------
 bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)

@@ -115,6 +115,7 @@ am_assignment2_OBJECTS = assignment2-Ball.$(OBJEXT) \
 	assignment2-PlayerCamera.$(OBJEXT) \
 	assignment2-PlayingField.$(OBJEXT) \
 	assignment2-Simulator.$(OBJEXT) assignment2-Wall.$(OBJEXT) \
+	assignment2-Paddle.$(OBJEXT) \
 	assignment2-BaseApplication.$(OBJEXT) \
 	assignment2-TutorialApplication.$(OBJEXT)
 assignment2_OBJECTS = $(am_assignment2_OBJECTS)
@@ -343,9 +344,9 @@ target_alias =
 top_build_prefix = 
 top_builddir = .
 top_srcdir = .
-noinst_HEADERS = Ball.h ControlListener.h GameObject.h OgreMotionState.h Overlay.h Player.h PlayerCamera.h PlayingField.h Simulator.h Wall.h BaseApplication.h TutorialApplication.h
+noinst_HEADERS = Ball.h ControlListener.h GameObject.h OgreMotionState.h Overlay.h Player.h PlayerCamera.h PlayingField.h Simulator.h Wall.h Paddle.h BaseApplication.h TutorialApplication.h
 assignment2_CPPFLAGS = -I$(top_srcdir)
-assignment2_SOURCES = Ball.cpp ControlListener.cpp GameObject.cpp Overlay.cpp Player.cpp PlayerCamera.cpp PlayingField.cpp Simulator.cpp Wall.cpp BaseApplication.cpp TutorialApplication.cpp
+assignment2_SOURCES = Ball.cpp ControlListener.cpp GameObject.cpp Overlay.cpp Player.cpp PlayerCamera.cpp PlayingField.cpp Simulator.cpp Wall.cpp Paddle.cpp BaseApplication.cpp TutorialApplication.cpp
 assignment2_CXXFLAGS = $(OGRE_CFLAGS) $(OIS_CFLAGS) $(bullet_CFLAGS)
 assignment2_LDADD = $(OGRE_LIBS) $(OIS_LIBS) $(bullet_LIBS)
 assignment2_LDFLAGS = -lOgreOverlay -lboost_system
@@ -469,6 +470,7 @@ include ./$(DEPDIR)/assignment2-BaseApplication.Po
 include ./$(DEPDIR)/assignment2-ControlListener.Po
 include ./$(DEPDIR)/assignment2-GameObject.Po
 include ./$(DEPDIR)/assignment2-Overlay.Po
+include ./$(DEPDIR)/assignment2-Paddle.Po
 include ./$(DEPDIR)/assignment2-Player.Po
 include ./$(DEPDIR)/assignment2-PlayerCamera.Po
 include ./$(DEPDIR)/assignment2-PlayingField.Po
@@ -622,6 +624,20 @@ assignment2-Wall.obj: Wall.cpp
 #	$(AM_V_CXX)source='Wall.cpp' object='assignment2-Wall.obj' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
 #	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(assignment2_CPPFLAGS) $(CPPFLAGS) $(assignment2_CXXFLAGS) $(CXXFLAGS) -c -o assignment2-Wall.obj `if test -f 'Wall.cpp'; then $(CYGPATH_W) 'Wall.cpp'; else $(CYGPATH_W) '$(srcdir)/Wall.cpp'; fi`
+
+assignment2-Paddle.o: Paddle.cpp
+	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(assignment2_CPPFLAGS) $(CPPFLAGS) $(assignment2_CXXFLAGS) $(CXXFLAGS) -MT assignment2-Paddle.o -MD -MP -MF $(DEPDIR)/assignment2-Paddle.Tpo -c -o assignment2-Paddle.o `test -f 'Paddle.cpp' || echo '$(srcdir)/'`Paddle.cpp
+	$(AM_V_at)$(am__mv) $(DEPDIR)/assignment2-Paddle.Tpo $(DEPDIR)/assignment2-Paddle.Po
+#	$(AM_V_CXX)source='Paddle.cpp' object='assignment2-Paddle.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(assignment2_CPPFLAGS) $(CPPFLAGS) $(assignment2_CXXFLAGS) $(CXXFLAGS) -c -o assignment2-Paddle.o `test -f 'Paddle.cpp' || echo '$(srcdir)/'`Paddle.cpp
+
+assignment2-Paddle.obj: Paddle.cpp
+	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(assignment2_CPPFLAGS) $(CPPFLAGS) $(assignment2_CXXFLAGS) $(CXXFLAGS) -MT assignment2-Paddle.obj -MD -MP -MF $(DEPDIR)/assignment2-Paddle.Tpo -c -o assignment2-Paddle.obj `if test -f 'Paddle.cpp'; then $(CYGPATH_W) 'Paddle.cpp'; else $(CYGPATH_W) '$(srcdir)/Paddle.cpp'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/assignment2-Paddle.Tpo $(DEPDIR)/assignment2-Paddle.Po
+#	$(AM_V_CXX)source='Paddle.cpp' object='assignment2-Paddle.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(assignment2_CPPFLAGS) $(CPPFLAGS) $(assignment2_CXXFLAGS) $(CXXFLAGS) -c -o assignment2-Paddle.obj `if test -f 'Paddle.cpp'; then $(CYGPATH_W) 'Paddle.cpp'; else $(CYGPATH_W) '$(srcdir)/Paddle.cpp'; fi`
 
 assignment2-BaseApplication.o: BaseApplication.cpp
 	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(assignment2_CPPFLAGS) $(CPPFLAGS) $(assignment2_CXXFLAGS) $(CXXFLAGS) -MT assignment2-BaseApplication.o -MD -MP -MF $(DEPDIR)/assignment2-BaseApplication.Tpo -c -o assignment2-BaseApplication.o `test -f 'BaseApplication.cpp' || echo '$(srcdir)/'`BaseApplication.cpp
