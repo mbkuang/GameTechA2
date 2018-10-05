@@ -4,8 +4,9 @@
 #include <OgreSceneManager.h>
 #include <Ball.h>
 
-Ball::Ball(Ogre::String name, Ogre::SceneManager* sceneMgr, Simulator* simulator) : GameObject(name, sceneMgr, simulator) {
-    //simulator = sim;
+Ball::Ball(Ogre::String name, Ogre::SceneManager* sceneMgr, Simulator* simulator)
+    : GameObject(name, sceneMgr, simulator) {
+        
     Ogre::Entity* ball = sceneMgr->createEntity("Sphere", "sphere.mesh");
 
     ball->setCastShadows(true);
