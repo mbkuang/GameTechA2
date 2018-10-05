@@ -37,8 +37,12 @@ public:
 	btRigidBody* getBody();
 	Ogre::String getName();
     Ogre::SceneNode* getNode() {return rootNode;}
+    btVector3 getPosition();
+    btVector3 getVelocity();
     void setVelocity(float xVelocity, float yVelocity, float zVelocity);
+    void setVelocity(btVector3 newVelocity);
     void setPosition(float xPosition, float yPosition, float zPosition);
+    void setPosition(btVector3 newPosition);
 };
 
 #endif

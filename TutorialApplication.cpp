@@ -31,19 +31,15 @@ TutorialApplication::~TutorialApplication(void)
 void TutorialApplication::createScene(void)
 {
     // Create your scene here :)
-    // Ogre::SceneNode* cNode = mSceneMgr->getRootSceneNode()
-    //     ->createChildSceneNode("CameraNode");
-    // cNode->setPosition(0,0,100);
-    // cNode->attachObject(mCamera);
 
     Ogre::Light* light = mSceneMgr->createLight("MainLight");
     Ogre::SceneNode* lightNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
     lightNode->setPosition(0, 25, 50);
     light->setDiffuseColour(1.0,1.0,1.0);
-    //light->setType(Ogre::Light::LT_POINT);
     lightNode->attachObject(light);
 
-    Wall* wall = new Wall("Wall", mSceneMgr, simulator, 0, -50, 0, 1, 1, .5);
+    //Wall* wall = new Wall("Wall", mSceneMgr, simulator, 0, -50, 0, 1, 1, .5);
+
     Ball* ball = new Ball("Ball", mSceneMgr, simulator);
     Paddle* playerPaddle = new Paddle("PlayerPaddle", mSceneMgr, simulator);
     playerPaddle->setPosition(0.0,0.0,50.0);
@@ -85,27 +81,21 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
 bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& fe)
 {
     if (mKeyboard->isKeyDown(OIS::KC_R)) {
-        //ball->reset();
+        //TODO ball->reset();
     }
 
     if (mKeyboard->isKeyDown(OIS::KC_W)) {
-        Ogre::SceneNode* camNode = mSceneMgr->getSceneNode("CameraNode");
-        Ogre::Vector3 cPosition = camNode->getPosition();
-        Ogre::Vector3 cDirection = mCamera->getDirection();
-        cPosition.x += cDirection.x*.05;
-        cPosition.y += cDirection.y*.05;
-        cPosition.z += cDirection.z*.05;
-        mCamera->move(cPosition);
+        GameObject* playerPaddle = simulator->getObject("PlayerPaddle");
+        btVector3 pPosition = playerPaddle->getPosition();
+        pPosition.setY(pPosition.getY()+.1);
+        playerPaddle->setPosition(pPosition);
     }
 
     if (mKeyboard->isKeyDown(OIS::KC_S)) {
-        Ogre::SceneNode* camNode = mSceneMgr->getSceneNode("CameraNode");
-        Ogre::Vector3 cPosition = camNode->getPosition();
-        Ogre::Vector3 cDirection = mCamera->getDirection();
-        cPosition.x -= cDirection.x*.05;
-        cPosition.y -= cDirection.y*.05;
-        cPosition.z -= cDirection.z*.05;
-        mCamera->move(cPosition);
+        GameObject* playerPaddle = simulator->getObject("PlayerPaddle");
+        btVector3 pPosition = playerPaddle->getPosition();
+        pPosition.setY(pPosition.getY()-.1);
+        playerPaddle->setPosition(pPosition);
     }
 
     if (mKeyboard->isKeyDown(OIS::KC_Q)) {
@@ -125,11 +115,17 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& fe)
     }
 
     if (mKeyboard->isKeyDown(OIS::KC_A)) {
-        mCamera->roll(Ogre::Degree(.05));
+        GameObject* playerPaddle = simulator->getObject("PlayerPaddle");
+        btVector3 pPosition = playerPaddle->getPosition();
+        pPosition.setX(pPosition.getX()-.1);
+        playerPaddle->setPosition(pPosition);
     }
 
     if (mKeyboard->isKeyDown(OIS::KC_D)) {
-        mCamera->roll(Ogre::Degree(-.05));
+        GameObject* playerPaddle = simulator->getObject("PlayerPaddle");
+        btVector3 pPosition = playerPaddle->getPosition();
+        pPosition.setX(pPosition.getX()+.1);
+        playerPaddle->setPosition(pPosition);
     }
 
     return true;
