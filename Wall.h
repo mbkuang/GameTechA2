@@ -10,8 +10,8 @@ private:
 	float zScale;
 
 public:
-    Wall(Ogre::String name, Ogre::SceneManager* sceneMgr, Simulator* simulator, 
-    	float xPosition = 0, float yPosition = 0, float zPosition = 0, 
+    Wall(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim, 
+    	float xPosition = 0, float yPosition = 0, float zPosition = 0,
     	float xScale = 1, float yScale = 1, float zScale = 1);
     ~Wall();
 };

@@ -1,9 +1,9 @@
 #include "GameObject.h"
 
-GameObject::GameObject(Ogre::String name, Ogre::SceneManager* sceneMgr, Simulator* simulator) {
-	this->name = name;
-	this->sceneMgr = sceneMgr;
-	this->simulator = simulator;
+GameObject::GameObject(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim) {
+	name = newName;
+	sceneMgr = scnMgr;
+	simulator = sim;
 	rootNode = sceneMgr->getRootSceneNode();
 	geom = NULL;
 	shape = NULL;

@@ -5,12 +5,12 @@
 #include <Paddle.h>
 
 Paddle::Paddle(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim)
-    : GameObject(name, sceneMgr, simulator) {
+    : GameObject(newName, scnMgr, sim) {
     Ogre::Entity* paddle = sceneMgr->createEntity(name, "cube.mesh");
 
-    x = 0.0;
-    y = 0.0;
-    z = 0.0;
+    float x = 0.0;
+    float y = 0.0;
+    float z = 0.0;
 
     paddle->setCastShadows(true);
     rootNode = sceneMgr->getRootSceneNode()

@@ -32,7 +32,7 @@ protected:
 	OgreMotionState* motionState;
 
 public:
-    GameObject(Ogre::String name, Ogre::SceneManager* sceneMgr, Simulator* simulator);
+    GameObject(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim);
     ~GameObject();
 	btRigidBody* getBody();
 	Ogre::String getName();

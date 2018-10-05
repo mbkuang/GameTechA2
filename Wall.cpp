@@ -4,10 +4,10 @@
 #include <OgreSceneManager.h>
 #include <Wall.h>
 
-Wall::Wall(Ogre::String name, Ogre::SceneManager* sceneMgr, Simulator* simulator,
+Wall::Wall(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
     float xPosition, float yPosition, float zPosition,
     float xScale, float yScale, float zScale) :
-    GameObject(name, sceneMgr, simulator) {
+    GameObject(newName, scnMgr, sim) {
 
     Ogre::Entity* wall = sceneMgr->createEntity(name, "cube.mesh");
 

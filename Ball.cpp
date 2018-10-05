@@ -4,8 +4,8 @@
 #include <OgreSceneManager.h>
 #include <Ball.h>
 
-Ball::Ball(Ogre::String name, Ogre::SceneManager* sceneMgr, Simulator* simulator)
-    : GameObject(name, sceneMgr, simulator) {
+Ball::Ball(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim)
+    : GameObject(newName, scnMgr, sim) {
 
     Ogre::Entity* ball = sceneMgr->createEntity(name, "sphere.mesh");
 
