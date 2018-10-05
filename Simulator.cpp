@@ -14,7 +14,7 @@ Simulator::Simulator() {
 }
 
 void Simulator::addObject (GameObject* o) {
-	objMap[o->getName()] = o;//.insert(o->getName(), o);
+	objMap[o->getName()] = o;
     //TODO this crashes when we dont set object bodies
 	dynamicsWorld->addRigidBody(o->getBody());
 }

@@ -19,7 +19,7 @@ Paddle::Paddle(Ogre::String newName, Simulator* sim, Ogre::SceneManager* scnMgr)
     rootNode = scnMgr->getRootSceneNode()
         ->createChildSceneNode(name, Ogre::Vector3(x,y,z));
     rootNode->attachObject(paddle);
-    rootNode->scale(3.0f,3.0f,.1f);
+    rootNode->scale(.5f,.5f,.1f);
     rootNode->setPosition(x,y,z);
 
     //TODO Set the rigid Body
@@ -27,7 +27,7 @@ Paddle::Paddle(Ogre::String newName, Simulator* sim, Ogre::SceneManager* scnMgr)
     transform.setIdentity();
     transform.setOrigin(btVector3(x, y, z));
 
-    shape = new btBoxShape(btVector3(3,3,.5));
+    shape = new btBoxShape(btVector3(.5,.5,.1));
 
     motionState = new OgreMotionState(transform, rootNode);
 

@@ -31,10 +31,10 @@ TutorialApplication::~TutorialApplication(void)
 void TutorialApplication::createScene(void)
 {
     // Create your scene here :)
-    Ogre::SceneNode* cNode = mSceneMgr->getRootSceneNode()
-        ->createChildSceneNode("CameraNode");
-    cNode->attachObject(mCamera);
-    cNode->setPosition(0,0,100);
+    // Ogre::SceneNode* cNode = mSceneMgr->getRootSceneNode()
+    //     ->createChildSceneNode("CameraNode");
+    // cNode->setPosition(0,0,100);
+    // cNode->attachObject(mCamera);
 
     Ogre::Light* light = mSceneMgr->createLight("MainLight");
     Ogre::SceneNode* lightNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
@@ -45,6 +45,7 @@ void TutorialApplication::createScene(void)
 
     Ball* ball = new Ball("Ball", simulator, mSceneMgr);
     Paddle* playerPaddle = new Paddle("PlayerPaddle", simulator, mSceneMgr);
+    playerPaddle->setPosition(0.0,0.0,50.0);
 }
 //---------------------------------------------------------------------------
 bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
