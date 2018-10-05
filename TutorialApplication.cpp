@@ -38,11 +38,22 @@ void TutorialApplication::createScene(void)
     light->setDiffuseColour(1.0,1.0,1.0);
     lightNode->attachObject(light);
 
-    //Wall* wall = new Wall("Wall", mSceneMgr, simulator, 0, -50, 0, 1, 1, .5);
+    Wall* flooring = new Wall("Flooring", mSceneMgr, simulator, 0, -55, 0, 1, .2, 1);
+    //Wall* ceiling = new Wall("Ceiling", mSceneMgr, simulator, 0, 55, 0, 1, .1, 1);
+    // Wall* westWall = new Wall("WestWall", mSceneMgr, simulator, -55, 0, 0, .1, 1, 1);
+    // Wall* eastWall = new Wall("EastWall", mSceneMgr, simulator, 55, 0, 0, .1, 1, 1);
+    // Wall* northWall = new Wall("NorthWall", mSceneMgr, simulator, 0, 0, -55, 1, 1, .1);
+    //Wall* southWall = new Wall("SouthWall", mSceneMgr, simulator, 0, 0, 55, 1, 1, .1);
 
     Ball* ball = new Ball("Ball", mSceneMgr, simulator);
+    ball->setPosition(0.0,60.0,-50.0);
+    Ball* newball = new Ball("NewBall", mSceneMgr, simulator);
+    newball->setPosition(10.0,50.0,0.0);
+    Ball* newball2 = new Ball("NewBall2", mSceneMgr, simulator);
+    newball2->setPosition(0.0,50.0,25.0);
     Paddle* playerPaddle = new Paddle("PlayerPaddle", mSceneMgr, simulator);
-    playerPaddle->setPosition(0.0,0.0,50.0);
+    playerPaddle->setPosition(0.0,0.0,-50.0);
+
 }
 //---------------------------------------------------------------------------
 bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)

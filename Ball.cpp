@@ -13,7 +13,7 @@ Ball::Ball(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim)
     rootNode = sceneMgr->getRootSceneNode()
         ->createChildSceneNode(name, Ogre::Vector3(0,0,0));
     rootNode->attachObject(ball);
-    rootNode->scale(0.1f,0.1f,0.1f);
+    rootNode->scale(0.025f,0.025f,0.025f);
     rootNode->setPosition(0,0,0);
 
     // Set the rigid Body
