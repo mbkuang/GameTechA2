@@ -4,7 +4,7 @@
 #include <OgreSceneManager.h>
 #include <Paddle.h>
 
-Paddle::Paddle(Ogre::String newName, Simulator* sim, Ogre::SceneManager* scnMgr) {
+Paddle::Paddle(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim) : GameObject(newName, scnMgr, sim) {
     simulator = sim;
 
     name = newName;

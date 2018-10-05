@@ -44,8 +44,8 @@ void TutorialApplication::createScene(void)
     lightNode->attachObject(light);
 
     Wall* wall = new Wall("Wall", mSceneMgr, simulator, 0, -50, 0, 1, 1, .5);
-    Ball* ball = new Ball("Ball", simulator, mSceneMgr);
-    Paddle* playerPaddle = new Paddle("PlayerPaddle", simulator, mSceneMgr);
+    Ball* ball = new Ball("Ball", mSceneMgr, simulator);
+    Paddle* playerPaddle = new Paddle("PlayerPaddle", mSceneMgr, simulator);
     playerPaddle->setPosition(0.0,0.0,50.0);
 }
 //---------------------------------------------------------------------------
