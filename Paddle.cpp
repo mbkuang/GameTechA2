@@ -4,26 +4,22 @@
 #include <OgreSceneManager.h>
 #include <Paddle.h>
 
-Paddle::Paddle(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim) : GameObject(newName, scnMgr, sim) {
-    simulator = sim;
+Paddle::Paddle(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim)
+    : GameObject(newName, scnMgr, sim) {
+    Ogre::Entity* paddle = sceneMgr->createEntity(name, "cube.mesh");
 
-    name = newName;
-
-    Ogre::Entity* paddle = scnMgr->createEntity(name, "cube.mesh");
-
-    x = 0.0;
-    y = 0.0;
-    z = 0.0;
+    float x = 0.0;
+    float y = 0.0;
+    float z = 0.0;
 
     paddle->setCastShadows(true);
-    rootNode = scnMgr->getRootSceneNode()
+    rootNode = sceneMgr->getRootSceneNode()
         ->createChildSceneNode(name, Ogre::Vector3(x,y,z));
     rootNode->attachObject(paddle);
     rootNode->scale(.5f,.5f,.1f);
     rootNode->setPosition(x,y,z);
 
     //TODO Set the rigid Body
-    btTransform transform;
     transform.setIdentity();
     transform.setOrigin(btVector3(x, y, z));
 

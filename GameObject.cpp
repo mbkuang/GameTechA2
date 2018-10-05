@@ -1,9 +1,9 @@
 #include "GameObject.h"
 
-GameObject::GameObject(Ogre::String name, Ogre::SceneManager* sceneMgr, Simulator* simulator) {
-	this->name = name;
-	this->sceneMgr = sceneMgr;
-	this->simulator = simulator;
+GameObject::GameObject(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim) {
+	name = newName;
+	sceneMgr = scnMgr;
+	simulator = sim;
 	rootNode = sceneMgr->getRootSceneNode();
 	geom = NULL;
 	shape = NULL;
@@ -14,7 +14,7 @@ GameObject::GameObject(Ogre::String name, Ogre::SceneManager* sceneMgr, Simulato
 }
 
 GameObject::~GameObject() {
-	//TOD0:
+	//TODO :
 }
 
 btRigidBody* GameObject::getBody() {
@@ -25,12 +25,45 @@ Ogre::String GameObject::getName() {
     return this->name;
 }
 
+btVector3 GameObject::getPosition() {
+
+    Ogre::SceneNode* gameNode = sceneMgr->getSceneNode(name);
+    Ogre::Vector3 gamePosition = gameNode->getPosition();
+    btVector3 position = btVector3(gamePosition.x, gamePosition.y, gamePosition.z);
+    return position;
+}
+
+btVector3 GameObject::getVelocity() {
+    if (body != NULL)
+        return body->getLinearVelocity();
+}
+
 void GameObject::setVelocity(float xVelocity, float yVelocity, float zVelocity) {
     if (body != NULL)
         body->setLinearVelocity(btVector3(xVelocity, yVelocity, zVelocity));
 }
 
+void GameObject::setVelocity(btVector3 newVelocity) {
+    if (body != NULL)
+        body->setLinearVelocity(newVelocity);
+}
+
 void GameObject::setPosition(float xPosition, float yPosition, float zPosition) {
-    if (&transform != NULL)
-        transform.setOrigin(btVector3(xPosition, yPosition, zPosition));
+    if (body != NULL) {
+        btTransform transformation;
+        transformation.setOrigin(btVector3(xPosition, yPosition, zPosition));
+        transformation.setRotation(body->getOrientation());
+        body->setWorldTransform(transformation);
+        motionState->setWorldTransform(transformation);
+    }
+}
+
+void GameObject::setPosition(btVector3 newPosition) {
+    if (body != NULL) {
+        btTransform transformation;
+        transformation.setOrigin(newPosition);
+        transformation.setRotation(body->getOrientation());
+        body->setWorldTransform(transformation);
+        motionState->setWorldTransform(transformation);
+    }
 }

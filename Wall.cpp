@@ -4,16 +4,16 @@
 #include <OgreSceneManager.h>
 #include <Wall.h>
 
-Wall::Wall(Ogre::String name, Ogre::SceneManager* sceneMgr, Simulator* simulator, 
-    float xPosition, float yPosition, float zPosition, 
-    float xScale, float yScale, float zScale) : 
-    GameObject(name, sceneMgr, simulator) {
-	//name = newName;
-    //simulator = sim;
+Wall::Wall(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
+    float xPosition, float yPosition, float zPosition,
+    float xScale, float yScale, float zScale) :
+    GameObject(newName, scnMgr, sim) {
+
     Ogre::Entity* wall = sceneMgr->createEntity(name, "cube.mesh");
 
     wall->setCastShadows(true);
-    rootNode = sceneMgr->getRootSceneNode()->createChildSceneNode(name, Ogre::Vector3(xPosition, yPosition, zPosition));
+    rootNode = sceneMgr->getRootSceneNode()
+        ->createChildSceneNode(name, Ogre::Vector3(xPosition, yPosition, zPosition));
     rootNode->attachObject(wall);
     rootNode->scale(xScale, yScale, zScale);
     rootNode->setPosition(xPosition, yPosition, zPosition);
@@ -27,7 +27,7 @@ Wall::Wall(Ogre::String name, Ogre::SceneManager* sceneMgr, Simulator* simulator
 
     motionState = new OgreMotionState(transform, rootNode);
 
-    mass = 0.; //the mass is 1, because the wall is movable (dynamic)
+    mass = 0.; //the mass is 0, because the wall is static
     inertia = btVector3(0, 0, 0);
 
     shape->calculateLocalInertia(mass, inertia);

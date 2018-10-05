@@ -4,21 +4,21 @@
 #include <OgreSceneManager.h>
 #include <Ball.h>
 
-Ball::Ball(Ogre::String name, Ogre::SceneManager* sceneMgr, Simulator* simulator)
-    : GameObject(name, sceneMgr, simulator) {
-        
-    Ogre::Entity* ball = sceneMgr->createEntity("Sphere", "sphere.mesh");
+Ball::Ball(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim)
+    : GameObject(newName, scnMgr, sim) {
+
+    Ogre::Entity* ball = sceneMgr->createEntity(name, "sphere.mesh");
 
     ball->setCastShadows(true);
     rootNode = sceneMgr->getRootSceneNode()
-        ->createChildSceneNode("Ball", Ogre::Vector3(0,0,0));
+        ->createChildSceneNode(name, Ogre::Vector3(0,0,0));
     rootNode->attachObject(ball);
     rootNode->scale(0.1f,0.1f,0.1f);
-    rootNode->setPosition(x,y,z);
+    rootNode->setPosition(0,0,0);
 
     // Set the rigid Body
     transform.setIdentity();
-    transform.setOrigin(btVector3(x, y, z));
+    transform.setOrigin(btVector3(0, 0, 0));
 
     shape = new btSphereShape(btScalar(.5));
     //TODO this->simulator->getCollisionShapes().push_back(shape);
