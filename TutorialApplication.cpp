@@ -31,6 +31,10 @@ TutorialApplication::~TutorialApplication(void)
 void TutorialApplication::createScene(void)
 {
     // Create your scene here :)
+    Ogre::SceneNode* cNode = mSceneMgr->getRootSceneNode()
+        ->createChildSceneNode("CameraNode");
+    cNode->attachObject(mCamera);
+
     Ogre::Light* light = mSceneMgr->createLight("MainLight");
     Ogre::SceneNode* lightNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
     lightNode->setPosition(0, 25, 50);
