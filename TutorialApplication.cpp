@@ -32,6 +32,8 @@ void TutorialApplication::createScene(void)
 {
     // Create your scene here :)
 
+    initCEGUI();
+
     Ogre::Light* light = mSceneMgr->createLight("MainLight");
     Ogre::SceneNode* lightNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
     lightNode->setPosition(0, 25, 50);
@@ -54,11 +56,102 @@ void TutorialApplication::createScene(void)
     Paddle* playerPaddle = new Paddle("PlayerPaddle", mSceneMgr, simulator);
     playerPaddle->setPosition(0.0,0.0,-50.0);
 
+    CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
+    CEGUI::Window *sheet = wmgr.createWindow("DefaultWindow", "CEGUIDemo/Sheet");
+
+    CEGUI::Window *quit = wmgr.createWindow("TaharezLook/Button", "CEGUIDemo/QuitButton");
+    quit->setText("Quit");
+    quit->setSize(CEGUI::USize(CEGUI::UDim(0.15, 0), CEGUI::UDim(0.05, 0)));
+
+    sheet->addChild(quit);
+    CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(sheet);
+
+    quit->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&TutorialApplication::quit, this));
+
+}
+//---------------------------------------------------------------------------
+bool TutorialApplication::quit() {
+    mShutDown = true;
+    return true;
+}
+//---------------------------------------------------------------------------
+void TutorialApplication::initCEGUI() {
+    /* Code taken/inspired by Ogre wiki */
+
+    mRenderer = &CEGUI::OgreRenderer::bootstrapSystem();
+
+    CEGUI::ImageManager::setImagesetDefaultResourceGroup("Imagesets");
+    CEGUI::Font::setDefaultResourceGroup("Fonts");
+    CEGUI::Scheme::setDefaultResourceGroup("Schemes");
+    CEGUI::WidgetLookManager::setDefaultResourceGroup("LookNFeel");
+    CEGUI::WindowManager::setDefaultResourceGroup("Layouts");
+
+    CEGUI::SchemeManager::getSingleton().createFromFile("TaharezLook.scheme");
+    
+    CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("TaharezLook/MouseArrow");
+
+}
+//---------------------------------------------------------------------------
+CEGUI::MouseButton convertButton(OIS::MouseButtonID buttonID) {
+    switch (buttonID)
+    {
+    case OIS::MB_Left:
+        return CEGUI::LeftButton;
+
+    case OIS::MB_Right:
+        return CEGUI::RightButton;
+
+    case OIS::MB_Middle:
+        return CEGUI::MiddleButton;
+
+    default:
+        return CEGUI::LeftButton;
+    }
+}
+//---------------------------------------------------------------------------
+void TutorialApplication::createFrameListener(void)
+{
+    Ogre::LogManager::getSingletonPtr()->logMessage("*** Initializing OIS ***");
+    OIS::ParamList pl;
+    size_t windowHnd = 0;
+    std::ostringstream windowHndStr;
+
+    mWindow->getCustomAttribute("WINDOW", &windowHnd);
+    windowHndStr << windowHnd;
+    pl.insert(std::make_pair(std::string("WINDOW"), windowHndStr.str()));
+
+    mInputManager = OIS::InputManager::createInputSystem(pl);
+
+    mKeyboard = static_cast<OIS::Keyboard*>(mInputManager->createInputObject(OIS::OISKeyboard, true));
+    mMouse = static_cast<OIS::Mouse*>(mInputManager->createInputObject(OIS::OISMouse, true));
+
+    mMouse->setEventCallback(this);
+    mKeyboard->setEventCallback(this);
+
+    // Set initial mouse clipping size
+    windowResized(mWindow);
+
+    // Register as a Window listener
+    Ogre::WindowEventUtilities::addWindowEventListener(mWindow, this);
+
+    mRoot->addFrameListener(this);
 }
 //---------------------------------------------------------------------------
 bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
 {
     bool ret = BaseApplication::frameRenderingQueued(fe);
+
+    if(mWindow->isClosed())
+        return false;
+    if(mShutDown)
+        return false;
+
+    //Capture/update devices
+    mKeyboard->capture();
+    mMouse->capture();
+
+    //Inject timestamps to CEGUI system
+    CEGUI::System::getSingleton().injectTimePulse(fe.timeSinceLastFrame);
 
     if (!processUnbufferedInput(fe))
         return false;
@@ -87,6 +180,40 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
 	}
 
     return ret;
+}
+//---------------------------------------------------------------------------
+bool TutorialApplication::keyPressed(const OIS::KeyEvent& arg) {
+    CEGUI::GUIContext& context = CEGUI::System::getSingleton().getDefaultGUIContext();
+    context.injectKeyDown((CEGUI::Key::Scan)arg.key);
+    context.injectChar((CEGUI::Key::Scan)arg.text);
+    if(arg.key == OIS::KC_ESCAPE) {
+        mShutDown = true;
+    }
+    return true;
+}
+//---------------------------------------------------------------------------
+bool TutorialApplication::keyReleased(const OIS::KeyEvent& arg) {
+    CEGUI::System::getSingleton().getDefaultGUIContext().injectKeyUp((CEGUI::Key::Scan)arg.key);
+    return true;
+}
+//---------------------------------------------------------------------------
+bool TutorialApplication::mouseMoved(const OIS::MouseEvent& arg) {
+    CEGUI::GUIContext& sys = CEGUI::System::getSingleton().getDefaultGUIContext();
+    sys.injectMouseMove(arg.state.X.rel, arg.state.Y.rel);
+    // Scroll wheel.
+    if (arg.state.Z.rel)
+        sys.injectMouseWheelChange(arg.state.Z.rel / 120.0f);
+    return true;
+}
+//---------------------------------------------------------------------------
+bool TutorialApplication::mousePressed(const OIS::MouseEvent& arg, OIS::MouseButtonID id) {
+    CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonDown(convertButton(id));
+    return true;
+}
+//---------------------------------------------------------------------------
+bool TutorialApplication::mouseReleased(const OIS::MouseEvent& arg, OIS::MouseButtonID id) {
+    CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonUp(convertButton(id));
+    return true;
 }
 //---------------------------------------------------------------------------
 bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& fe)

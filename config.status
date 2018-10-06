@@ -437,7 +437,7 @@ Copyright (C) 2012 Free Software Foundation, Inc.
 This config.status script is free software; the Free Software Foundation
 gives unlimited permission to copy, distribute and modify it."
 
-ac_pwd='/u/ethan555/Documents/Game Technology/Assignment2/GameTechA2'
+ac_pwd='/u/mbkuang/Desktop/assignment2/GameTechA2'
 srcdir='.'
 INSTALL='/usr/bin/install -c'
 MKDIR_P='/bin/mkdir -p'
@@ -875,6 +875,10 @@ S["am__EXEEXT_FALSE"]=""
 S["am__EXEEXT_TRUE"]="#"
 S["LTLIBOBJS"]=""
 S["LIBOBJS"]=""
+S["CEGUI_OGRE_LIBS"]="-L/lusr/opt/cegui-0.8.7/lib -lCEGUIOgreRenderer-0 -lOgreMain -lpthread -lCEGUIBase-0"
+S["CEGUI_OGRE_CFLAGS"]="-pthread -I/lusr/opt/cegui-0.8.7/include/cegui-0 -I/usr/include/OGRE"
+S["CEGUI_LIBS"]="-L/lusr/opt/cegui-0.8.7/lib -lCEGUIBase-0"
+S["CEGUI_CFLAGS"]="-I/lusr/opt/cegui-0.8.7/include/cegui-0"
 S["BULLET_LIBS"]=""
 S["BULLET_CFLAGS"]=""
 S["bullet_LIBS"]="-lBulletSoftBody -lBulletDynamics -lBulletCollision -lLinearMath"
@@ -955,12 +959,12 @@ S["mkdir_p"]="$(MKDIR_P)"
 S["MKDIR_P"]="/bin/mkdir -p"
 S["INSTALL_STRIP_PROGRAM"]="$(install_sh) -c -s"
 S["STRIP"]="strip"
-S["install_sh"]="${SHELL} '/u/ethan555/Documents/Game Technology/Assignment2/GameTechA2/install-sh'"
-S["MAKEINFO"]="${SHELL} \"/u/ethan555/Documents/Game Technology/Assignment2/GameTechA2/missing\" makeinfo"
-S["AUTOHEADER"]="${SHELL} \"/u/ethan555/Documents/Game Technology/Assignment2/GameTechA2/missing\" autoheader"
-S["AUTOMAKE"]="${SHELL} \"/u/ethan555/Documents/Game Technology/Assignment2/GameTechA2/missing\" automake-1.15"
-S["AUTOCONF"]="${SHELL} \"/u/ethan555/Documents/Game Technology/Assignment2/GameTechA2/missing\" autoconf"
-S["ACLOCAL"]="${SHELL} \"/u/ethan555/Documents/Game Technology/Assignment2/GameTechA2/missing\" aclocal-1.15"
+S["install_sh"]="${SHELL} /u/mbkuang/Desktop/assignment2/GameTechA2/install-sh"
+S["MAKEINFO"]="${SHELL} /u/mbkuang/Desktop/assignment2/GameTechA2/missing makeinfo"
+S["AUTOHEADER"]="${SHELL} /u/mbkuang/Desktop/assignment2/GameTechA2/missing autoheader"
+S["AUTOMAKE"]="${SHELL} /u/mbkuang/Desktop/assignment2/GameTechA2/missing automake-1.15"
+S["AUTOCONF"]="${SHELL} /u/mbkuang/Desktop/assignment2/GameTechA2/missing autoconf"
+S["ACLOCAL"]="${SHELL} /u/mbkuang/Desktop/assignment2/GameTechA2/missing aclocal-1.15"
 S["VERSION"]="0.1"
 S["PACKAGE"]="SampleApp"
 S["CYGPATH_W"]="echo"

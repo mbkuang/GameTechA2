@@ -24,6 +24,8 @@ http://www.ogre3d.org/wiki/
 #include "Ball.h"
 #include "Wall.h"
 #include "Paddle.h"
+#include <CEGUI/CEGUI.h>
+#include <CEGUI/RendererModules/Ogre/Renderer.h>
 
 //---------------------------------------------------------------------------
 
@@ -36,9 +38,20 @@ public:
 protected:
     virtual void createScene(void);
     virtual bool frameRenderingQueued(const Ogre::FrameEvent& fe);
+    
+    virtual void createFrameListener(void);
+    virtual bool keyPressed(const OIS::KeyEvent& arg);
+    virtual bool keyReleased(const OIS::KeyEvent& arg);
+    virtual bool mouseMoved(const OIS::MouseEvent& me);
+    virtual bool mousePressed(const OIS::MouseEvent& me, OIS::MouseButtonID id);
+    virtual bool mouseReleased(const OIS::MouseEvent& me, OIS::MouseButtonID id);
+
     Simulator* simulator;
+    CEGUI::OgreRenderer* mRenderer;
 private:
     bool processUnbufferedInput(const Ogre::FrameEvent& fe);
+    void initCEGUI();
+    bool quit();
 };
 
 //---------------------------------------------------------------------------
