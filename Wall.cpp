@@ -15,19 +15,19 @@ Wall::Wall(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
     rootNode = sceneMgr->getRootSceneNode()
         ->createChildSceneNode(name, Ogre::Vector3(xPosition, yPosition, zPosition));
     rootNode->attachObject(wall);
-    rootNode->scale(xScale, yScale, zScale);
+    rootNode->scale(xScale * 0.01, yScale * 0.01, zScale * 0.01);
     rootNode->setPosition(xPosition, yPosition, zPosition);
 
     // Set the rigid body
     transform.setIdentity();
     transform.setOrigin(btVector3(xPosition, yPosition, zPosition));
 
-    shape = new btBoxShape(btVector3(xScale, yScale, zScale));
+    shape = new btBoxShape(btVector3(xScale * 0.5, yScale * 0.5, zScale * 0.5));
     //this->simulator->getCollisionShapes().push_back(shape);
 
     motionState = new OgreMotionState(transform, rootNode);
 
-    mass = 0.; //the mass is 0, because the wall is static
+    mass = 0; //the mass is 0, because the wall is static
     inertia = btVector3(0, 0, 0);
 
     shape->calculateLocalInertia(mass, inertia);
@@ -37,9 +37,10 @@ Wall::Wall(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
     body = new btRigidBody(bRBInfo);
     body->setRestitution(1);
     body->setUserPointer(rootNode);
+    //body->setWorldTransform(transform);
 
     // Add to the physics simulator
-    this->simulator->getDynamicsWorld()->addRigidBody(body);
+    //this->simulator->getDynamicsWorld()->addRigidBody(body);
     this->simulator->addObject(this);
     //this->simulator->trackRigidBodyWithName(body, "wallBody")
 }

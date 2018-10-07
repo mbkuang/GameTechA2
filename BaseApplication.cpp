@@ -94,9 +94,9 @@ void BaseApplication::createCamera(void)
         ->createChildSceneNode("CameraNode");
     cNode->attachObject(mCamera);
     // Position it at 500 in Z direction
-    mCamera->setPosition(Ogre::Vector3(0,0,100));
+    mCamera->setPosition(Ogre::Vector3(0,0,45));
     // Look back along -Z
-    mCamera->lookAt(Ogre::Vector3(0,0,-300));
+    mCamera->lookAt(Ogre::Vector3(0,0,-45));
     mCamera->setNearClipDistance(5);
 }
 //---------------------------------------------------------------------------

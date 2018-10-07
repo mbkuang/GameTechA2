@@ -13,7 +13,7 @@ Ball::Ball(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim)
     rootNode = sceneMgr->getRootSceneNode()
         ->createChildSceneNode(name, Ogre::Vector3(0,0,0));
     rootNode->attachObject(ball);
-    rootNode->scale(0.025f,0.025f,0.025f);
+    rootNode->scale(0.01f,0.01f,0.01f);
     rootNode->setPosition(0,0,0);
 
     // Set the rigid Body
@@ -25,7 +25,7 @@ Ball::Ball(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim)
 
     motionState = new OgreMotionState(transform, rootNode);
 
-    mass = .1; //the mass is 1, because the ball is movable (dynamic)
+    mass = 1; //the mass is 1, because the ball is movable (dynamic)
     inertia = btVector3(0, 0, 0);
 
     shape->calculateLocalInertia(mass, inertia);
@@ -39,7 +39,7 @@ Ball::Ball(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim)
     body->setLinearVelocity(btVector3(0,0,0));
 
     // Add to the physics simulator
-    this->simulator->getDynamicsWorld()->addRigidBody(body);
+    //this->simulator->getDynamicsWorld()->addRigidBody(body);
     this->simulator->addObject(this);
     //TODO this->simulator->trackRigidBodyWithName(body, "ballBody");
 }

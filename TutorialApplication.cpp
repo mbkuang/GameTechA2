@@ -40,21 +40,23 @@ void TutorialApplication::createScene(void)
     light->setDiffuseColour(1.0,1.0,1.0);
     lightNode->attachObject(light);
 
-    Wall* flooring = new Wall("Flooring", mSceneMgr, simulator, 0, -55, 0, 1, .2, 1);
-    //Wall* ceiling = new Wall("Ceiling", mSceneMgr, simulator, 0, 55, 0, 1, .1, 1);
-    // Wall* westWall = new Wall("WestWall", mSceneMgr, simulator, -55, 0, 0, .1, 1, 1);
-    // Wall* eastWall = new Wall("EastWall", mSceneMgr, simulator, 55, 0, 0, .1, 1, 1);
-    // Wall* northWall = new Wall("NorthWall", mSceneMgr, simulator, 0, 0, -55, 1, 1, .1);
-    //Wall* southWall = new Wall("SouthWall", mSceneMgr, simulator, 0, 0, 55, 1, 1, .1);
+    mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
+
+    Wall* flooring = new Wall("Flooring", mSceneMgr, simulator, 0, -49.5, 0, 100, 1, 100);
+    Wall* ceiling = new Wall("Ceiling", mSceneMgr, simulator, 0, 49.5, 0, 100, 1, 100);
+    Wall* westWall = new Wall("WestWall", mSceneMgr, simulator, -49.5, 0, 0, 1, 100, 100);
+    Wall* eastWall = new Wall("EastWall", mSceneMgr, simulator, 49.5, 0, 0, 1, 100, 100);
+    Wall* northWall = new Wall("NorthWall", mSceneMgr, simulator, 0, 0, -49.5, 100, 100, 1);
+    Wall* southWall = new Wall("SouthWall", mSceneMgr, simulator, 0, 0, 49.5, 100, 100, 1);
 
     Ball* ball = new Ball("Ball", mSceneMgr, simulator);
-    ball->setPosition(0.0,60.0,-50.0);
+    ball->setPosition(0.0,5.0,0.0);
     Ball* newball = new Ball("NewBall", mSceneMgr, simulator);
-    newball->setPosition(10.0,50.0,0.0);
-    Ball* newball2 = new Ball("NewBall2", mSceneMgr, simulator);
-    newball2->setPosition(0.0,50.0,25.0);
+    newball->setPosition(0.0,5.0,10.0);
+    // Ball* newball2 = new Ball("NewBall2", mSceneMgr, simulator);
+    // newball2->setPosition(0.0,50.0,25.0);
     Paddle* playerPaddle = new Paddle("PlayerPaddle", mSceneMgr, simulator);
-    playerPaddle->setPosition(0.0,0.0,-50.0);
+    playerPaddle->setPosition(0.0,0.0,0.0);
 
     CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
     CEGUI::Window *sheet = wmgr.createWindow("DefaultWindow", "CEGUIDemo/Sheet");
@@ -158,25 +160,26 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
 
     // Update Ogre with Bullet's State
 	if (this->simulator != NULL){
-		simulator->getDynamicsWorld()->stepSimulation(1.0f/60.0f); //suppose you have 60 frames per second
+		//simulator->getDynamicsWorld()->stepSimulation(1.0f/60.0f); //suppose you have 60 frames per second
+        simulator->stepSimulation(fe.timeSinceLastFrame);
 
-		for (int i = 0; i < this->simulator->getCollisionObjectCount(); i++) {
-			btCollisionObject* obj = this->simulator->getDynamicsWorld()->getCollisionObjectArray()[i];
-			btRigidBody* body = btRigidBody::upcast(obj);
+		// for (int i = 0; i < this->simulator->getCollisionObjectCount(); i++) {
+		// 	btCollisionObject* obj = this->simulator->getDynamicsWorld()->getCollisionObjectArray()[i];
+		// 	btRigidBody* body = btRigidBody::upcast(obj);
 
-			if (body && body->getMotionState()){
-				btTransform trans;
-				body->getMotionState()->getWorldTransform(trans);
+		// 	if (body && body->getMotionState()){
+		// 		btTransform trans;
+		// 		body->getMotionState()->getWorldTransform(trans);
 
-				void *userPointer = body->getUserPointer();
-				if (userPointer) {
-					btQuaternion orientation = trans.getRotation();
-					Ogre::SceneNode *sceneNode = static_cast<Ogre::SceneNode *>(userPointer);
-					sceneNode->setPosition(Ogre::Vector3(trans.getOrigin().getX(), trans.getOrigin().getY(), trans.getOrigin().getZ()));
-					sceneNode->setOrientation(Ogre::Quaternion(orientation.getW(), orientation.getX(), orientation.getY(), orientation.getZ()));
-				}
-			}
-		}
+		// 		void *userPointer = body->getUserPointer();
+		// 		if (userPointer) {
+		// 			btQuaternion orientation = trans.getRotation();
+		// 			Ogre::SceneNode *sceneNode = static_cast<Ogre::SceneNode *>(userPointer);
+		// 			sceneNode->setPosition(Ogre::Vector3(trans.getOrigin().getX(), trans.getOrigin().getY(), trans.getOrigin().getZ()));
+		// 			sceneNode->setOrientation(Ogre::Quaternion(orientation.getW(), orientation.getX(), orientation.getY(), orientation.getZ()));
+		// 		}
+		// 	}
+		// }
 	}
 
     return ret;
