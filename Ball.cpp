@@ -36,7 +36,7 @@ Ball::Ball(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim)
     body->setRestitution(1);
     body->setUserPointer(rootNode);
 
-    body->setLinearVelocity(btVector3(0,0,0));
+    body->setLinearVelocity(btVector3(0,0,-30));
 
     // Add to the physics simulator
     //this->simulator->getDynamicsWorld()->addRigidBody(body);
