@@ -10,6 +10,7 @@ Wall::Wall(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
     GameObject(newName, scnMgr, sim) {
 
     Ogre::Entity* wall = sceneMgr->createEntity(name, "cube.mesh");
+    wall->setMaterialName("WallTexture");
 
     wall->setCastShadows(true);
     rootNode = sceneMgr->getRootSceneNode()

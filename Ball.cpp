@@ -8,6 +8,7 @@ Ball::Ball(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim)
     : GameObject(newName, scnMgr, sim) {
 
     Ogre::Entity* ball = sceneMgr->createEntity(name, "sphere.mesh");
+    ball->setMaterialName("BallTexture");
 
     ball->setCastShadows(true);
     rootNode = sceneMgr->getRootSceneNode()

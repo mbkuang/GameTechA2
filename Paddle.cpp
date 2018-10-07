@@ -7,6 +7,7 @@
 Paddle::Paddle(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim)
     : GameObject(newName, scnMgr, sim) {
     Ogre::Entity* paddle = sceneMgr->createEntity(name, "cube.mesh");
+    paddle->setMaterialName("PaddleTexture");
 
     float x = 0.0;
     float y = 0.0;
