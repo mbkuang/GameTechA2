@@ -2926,13 +2926,27 @@ m4trace:configure.ac:26: -1- PKG_CHECK_EXISTS([CEGUI-0-OGRE >= 0.8], [pkg_cv_[]C
 m4trace:configure.ac:26: -1- _PKG_SHORT_ERRORS_SUPPORTED
 m4trace:configure.ac:27: -1- m4_pattern_allow([^CEGUI_OGRE_CFLAGS$])
 m4trace:configure.ac:28: -1- m4_pattern_allow([^CEGUI_OGRE_LIBS$])
-m4trace:configure.ac:31: -1- m4_pattern_allow([^LIB@&t@OBJS$])
-m4trace:configure.ac:31: -1- m4_pattern_allow([^LTLIBOBJS$])
-m4trace:configure.ac:31: -1- AM_CONDITIONAL([am__EXEEXT], [test -n "$EXEEXT"])
-m4trace:configure.ac:31: -1- m4_pattern_allow([^am__EXEEXT_TRUE$])
-m4trace:configure.ac:31: -1- m4_pattern_allow([^am__EXEEXT_FALSE$])
-m4trace:configure.ac:31: -1- _AM_SUBST_NOTMAKE([am__EXEEXT_TRUE])
-m4trace:configure.ac:31: -1- _AM_SUBST_NOTMAKE([am__EXEEXT_FALSE])
-m4trace:configure.ac:31: -1- _AC_AM_CONFIG_HEADER_HOOK(["$ac_file"])
-m4trace:configure.ac:31: -1- _AM_OUTPUT_DEPENDENCY_COMMANDS
-m4trace:configure.ac:31: -1- _LT_PROG_LTMAIN
+m4trace:configure.ac:30: -1- PKG_CHECK_MODULES([sdl], [sdl >= 1.0])
+m4trace:configure.ac:30: -1- m4_pattern_allow([^sdl_CFLAGS$])
+m4trace:configure.ac:30: -1- m4_pattern_allow([^sdl_LIBS$])
+m4trace:configure.ac:30: -1- PKG_CHECK_EXISTS([sdl >= 1.0], [pkg_cv_[]sdl_CFLAGS=`$PKG_CONFIG --[]cflags "sdl >= 1.0" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes ], [pkg_failed=yes])
+m4trace:configure.ac:30: -1- PKG_CHECK_EXISTS([sdl >= 1.0], [pkg_cv_[]sdl_LIBS=`$PKG_CONFIG --[]libs "sdl >= 1.0" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes ], [pkg_failed=yes])
+m4trace:configure.ac:30: -1- _PKG_SHORT_ERRORS_SUPPORTED
+m4trace:configure.ac:31: -1- m4_pattern_allow([^SDL_CFLAGS$])
+m4trace:configure.ac:32: -1- m4_pattern_allow([^SDL_LIBS$])
+m4trace:configure.ac:36: -1- m4_pattern_allow([^SDLMIXER_CFLAGS$])
+m4trace:configure.ac:37: -1- m4_pattern_allow([^SDLMIXER_LIBS$])
+m4trace:configure.ac:41: -1- m4_pattern_allow([^SDLNET_CFLAGS$])
+m4trace:configure.ac:42: -1- m4_pattern_allow([^SDLNET_LIBS$])
+m4trace:configure.ac:45: -1- m4_pattern_allow([^LIB@&t@OBJS$])
+m4trace:configure.ac:45: -1- m4_pattern_allow([^LTLIBOBJS$])
+m4trace:configure.ac:45: -1- AM_CONDITIONAL([am__EXEEXT], [test -n "$EXEEXT"])
+m4trace:configure.ac:45: -1- m4_pattern_allow([^am__EXEEXT_TRUE$])
+m4trace:configure.ac:45: -1- m4_pattern_allow([^am__EXEEXT_FALSE$])
+m4trace:configure.ac:45: -1- _AM_SUBST_NOTMAKE([am__EXEEXT_TRUE])
+m4trace:configure.ac:45: -1- _AM_SUBST_NOTMAKE([am__EXEEXT_FALSE])
+m4trace:configure.ac:45: -1- _AC_AM_CONFIG_HEADER_HOOK(["$ac_file"])
+m4trace:configure.ac:45: -1- _AM_OUTPUT_DEPENDENCY_COMMANDS
+m4trace:configure.ac:45: -1- _LT_PROG_LTMAIN

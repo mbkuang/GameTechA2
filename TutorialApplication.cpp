@@ -64,6 +64,9 @@ void TutorialApplication::createScene(void)
     Wall* southWall = new Wall("SouthWall", mSceneMgr, simulator,
         0, 0, 0, 100, 100, 20, "WallTextureInvisible");
 
+    Player* player1 = new Player("Player1", simulator);
+    Player* cpuPlayer = new Player("CPU", simulator);
+
     Ball* ball = new Ball("Ball", mSceneMgr, simulator);
     //ball->setPosition(0.0,5.0,0.0);
     //Ball* newball = new Ball("NewBall", mSceneMgr, simulator);
@@ -83,17 +86,13 @@ void TutorialApplication::createScene(void)
     //sheet->addChild(quit);
 
     playerScore = wmgr.createWindow("TaharezLook/StaticText", "CEGUIDemo/StaticText");
-    //playerScore->setText("Player 1: 0");
     playerScore->setSize(CEGUI::USize(CEGUI::UDim(0.08, 0), CEGUI::UDim(0.05, 0)));
 
     cpuScore = wmgr.createWindow("TaharezLook/StaticText", "CEGUIDemo/StaticText");
-    //cpuScore->setText("Player 2: 0");
     cpuScore->setSize(CEGUI::USize(CEGUI::UDim(0.08, 0), CEGUI::UDim(0.05, 0)));
     cpuScore->setPosition(CEGUI::UVector2(CEGUI::UDim(0.92, 0), CEGUI::UDim(0, 0)));
 
-    // sheet->addChild(playerScore);
-    // sheet->addChild(cpuScore);
-    //updateScore();
+    updateScore();
     CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(sheet);
 }
 
@@ -104,8 +103,8 @@ void TutorialApplication::updateScore() {
     ss1 << "Player 1: " <<simulator->getPlayer("Player1")->getScore();
     ss2 << "Player 2: " <<simulator->getPlayer("CPU")->getScore();
 
-    playerScore->setText(ss1.str());
-    cpuScore->setText(ss2.str());
+    playerScore->setText("[colour='FFFF0000']"+ ss1.str());
+    cpuScore->setText("[colour='FFFF0000']"+ ss2.str());
     sheet->addChild(playerScore);
     sheet->addChild(cpuScore);
 }
@@ -213,8 +212,9 @@ bool TutorialApplication::keyPressed(const OIS::KeyEvent& arg) {
         mShutDown = true;
     }
     else if(arg.key == OIS::KC_R) {
+        //Reset the ball's position
         GameObject* ball = simulator->getObject("Ball");
-        ball->setPosition(0, 0, 0);
+        ball->setPosition(0, 0, -200);
     }
     return true;
 }
@@ -230,6 +230,12 @@ bool TutorialApplication::mouseMoved(const OIS::MouseEvent& arg) {
     // Scroll wheel.
     if (arg.state.Z.rel)
         sys.injectMouseWheelChange(arg.state.Z.rel / 120.0f);
+
+    // GameObject* playerPaddle = simulator->getObject("PlayerPaddle");
+    // btVector3 pPosition = playerPaddle->getPosition();
+    // pPosition.setX(arg.state.X.abs);
+    // pPosition.setY(arg.state.Y.abs);
+    // playerPaddle->setPosition(pPosition);
     return true;
 }
 //---------------------------------------------------------------------------
