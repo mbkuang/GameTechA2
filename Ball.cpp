@@ -7,17 +7,26 @@
 Ball::Ball(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim)
     : GameObject(newName, scnMgr, sim) {
 
-    Ogre::Entity* ball = sceneMgr->createEntity(name, "sphere.mesh");
-    ball->setMaterialName("BallTexture");
+    geom = sceneMgr->createEntity(name, "sphere.mesh");
+    geom->setMaterialName("BallTexture");
 
     float radius = 2;
 
-    ball->setCastShadows(true);
+    geom->setCastShadows(true);
     rootNode = sceneMgr->getRootSceneNode()
         ->createChildSceneNode(name, Ogre::Vector3(0,0,0));
-    rootNode->attachObject(ball);
+    rootNode->attachObject(geom);
     rootNode->scale(radius * 0.01,radius * 0.01,radius * 0.01);
     rootNode->setPosition(0,0,-200);
+
+    marker = sceneMgr->createEntity("BallMarker", "cube.mesh");
+    marker->setMaterialName("TransparentRed");
+    marker->setCastShadows(false);
+    markerNode = sceneMgr->getRootSceneNode()
+        ->createChildSceneNode("BallMarker", Ogre::Vector3(0,0,0));
+    markerNode->attachObject(marker);
+    markerNode->scale(80 * 0.01, 80 * 0.01, .1 * 0.01);
+    markerNode->setPosition(0,0,-200);
 
     // Set the rigid Body
     transform.setIdentity();
@@ -49,4 +58,8 @@ Ball::Ball(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim)
 
 Ball::~Ball() {
 
+}
+
+Ogre::SceneNode* Ball::getMarkerNode() {
+    return markerNode;
 }

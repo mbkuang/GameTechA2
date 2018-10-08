@@ -224,6 +224,8 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
         simulator->stepSimulation(fe.timeSinceLastFrame);
 	}
 
+    ball->getMarkerNode()->setPosition(0, 0, ball->getPosition().getZ());
+
     return ret;
 }
 //---------------------------------------------------------------------------

@@ -1,0 +1,21 @@
+material TransparentRed
+{
+	technique
+	{
+		pass
+		{
+
+			texture_unit
+			{
+				texture TransparentRed.png
+			}
+
+            ambient 0.75 0.75 1 .5
+            diffuse .7 .7 1 .5
+            specular 1 1 1 1 20
+
+			scene_blend alpha_blend
+            depth_write off
+		}
+	}
+}
