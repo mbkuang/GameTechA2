@@ -25,6 +25,10 @@ Ogre::String GameObject::getName() {
     return this->name;
 }
 
+OgreMotionState* GameObject::getOgreMotionState() {
+    return this->motionState;
+}
+
 btVector3 GameObject::getPosition() {
 
     Ogre::SceneNode* gameNode = sceneMgr->getSceneNode(name);
@@ -65,5 +69,19 @@ void GameObject::setPosition(btVector3 newPosition) {
         transformation.setRotation(body->getOrientation());
         body->setWorldTransform(transformation);
         motionState->setWorldTransform(transformation);
+    }
+}
+
+void GameObject::move(Ogre::Real x, Ogre::Real y, Ogre::Real z) {
+    rootNode->translate(rootNode->getLocalAxes(), x, y, z);
+}
+
+void GameObject::updateTransform() {
+    Ogre::Vector3 position = rootNode->getPosition();
+    transform.setOrigin(btVector3(position.x, position.y, position.z));
+    Ogre::Quaternion quaternion = rootNode->getOrientation();
+    transform.setRotation(btQuaternion(quaternion.x, quaternion.y, quaternion.z));
+    if (motionState) {
+        motionState->updateTransform(transform);
     }
 }

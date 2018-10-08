@@ -34,7 +34,7 @@ Ball::Ball(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim)
     shape->calculateLocalInertia(mass, inertia);
 
     btRigidBody::btRigidBodyConstructionInfo bRBInfo(
-        mass, motionState->getMotionState(), shape, inertia);
+        mass, motionState, shape, inertia);
     body = new btRigidBody(bRBInfo);
     body->setRestitution(1);
     body->setUserPointer(rootNode);

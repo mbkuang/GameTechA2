@@ -5,6 +5,7 @@
     #define __GameObject_h_DEFINED
     class GameObject;
     #include "Simulator.h"
+    //#include "OgreMotionState.h"
 #endif
 
 
@@ -36,6 +37,7 @@ public:
     ~GameObject();
 	btRigidBody* getBody();
 	Ogre::String getName();
+	OgreMotionState* getOgreMotionState();
     Ogre::SceneNode* getNode() {return rootNode;}
     btVector3 getPosition();
     btVector3 getVelocity();
@@ -43,6 +45,9 @@ public:
     void setVelocity(btVector3 newVelocity);
     void setPosition(float xPosition, float yPosition, float zPosition);
     void setPosition(btVector3 newPosition);
+    void move(Ogre::Real x, Ogre::Real y, Ogre::Real z);
+    void updateTransform();
+
 };
 
 #endif

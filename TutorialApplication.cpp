@@ -61,8 +61,8 @@ void TutorialApplication::createScene(void)
         50, 0, -200, 20, 80, 400, "WallTextureInverse");
     Wall* northWall = new Wall("NorthWall", mSceneMgr, simulator,
         0, 0, -400, 100, 100, 20, "WallTextureInvisible");
-    // Wall* southWall = new Wall("SouthWall", mSceneMgr, simulator,
-    //     0, 0, 0, 100, 100, 20, "WallTextureInvisible");
+    Wall* southWall = new Wall("SouthWall", mSceneMgr, simulator,
+        0, 0, 0, 100, 100, 20, "WallTextureInvisible");
 
     Ball* ball = new Ball("Ball", mSceneMgr, simulator);
     //ball->setPosition(0.0,5.0,0.0);
@@ -246,31 +246,34 @@ bool TutorialApplication::mouseReleased(const OIS::MouseEvent& arg, OIS::MouseBu
 bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& fe)
 {
     float movementSpeed = .085;
+    GameObject* playerPaddle = simulator->getObject("PlayerPaddle");
 
     if (mKeyboard->isKeyDown(OIS::KC_R)) {
         //TODO ball->reset();
     }
 
     if (mKeyboard->isKeyDown(OIS::KC_W)) {
-        GameObject* playerPaddle = simulator->getObject("PlayerPaddle");
-        btVector3 pPosition = playerPaddle->getPosition();
-        pPosition.setY(std::min(yMax, pPosition.getY()+movementSpeed));
-        playerPaddle->setPosition(pPosition);
+        // GameObject* playerPaddle = simulator->getObject("PlayerPaddle");
+        // btVector3 pPosition = playerPaddle->getPosition();
+        // pPosition.setY(std::min(yMax, pPosition.getY()+movementSpeed));
+        // playerPaddle->setPosition(pPosition);
 
-        Ogre::Vector3 cPosition = mCamera->getPosition();
-        cPosition.y = (0 + pPosition.getY())/2;
-        mCamera->setPosition(cPosition);
+        // Ogre::Vector3 cPosition = mCamera->getPosition();
+        // cPosition.y = (0 + pPosition.getY())/2;
+        // mCamera->setPosition(cPosition);
+        playerPaddle->move(0.0f, 60.0f * fe.timeSinceLastFrame, 0.0f);
     }
 
     if (mKeyboard->isKeyDown(OIS::KC_S)) {
-        GameObject* playerPaddle = simulator->getObject("PlayerPaddle");
-        btVector3 pPosition = playerPaddle->getPosition();
-        pPosition.setY(std::max(yMin, pPosition.getY()-movementSpeed));
-        playerPaddle->setPosition(pPosition);
+        // GameObject* playerPaddle = simulator->getObject("PlayerPaddle");
+        // btVector3 pPosition = playerPaddle->getPosition();
+        // pPosition.setY(std::max(yMin, pPosition.getY()-movementSpeed));
+        // playerPaddle->setPosition(pPosition);
 
-        Ogre::Vector3 cPosition = mCamera->getPosition();
-        cPosition.y = (0 + pPosition.getY())/2;
-        mCamera->setPosition(cPosition);
+        // Ogre::Vector3 cPosition = mCamera->getPosition();
+        // cPosition.y = (0 + pPosition.getY())/2;
+        // mCamera->setPosition(cPosition);
+        playerPaddle->move(0.0f, -60.0f * fe.timeSinceLastFrame, 0.0f);
     }
 
     if (mKeyboard->isKeyDown(OIS::KC_Q)) {
@@ -290,26 +293,30 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& fe)
     }
 
     if (mKeyboard->isKeyDown(OIS::KC_A)) {
-        GameObject* playerPaddle = simulator->getObject("PlayerPaddle");
-        btVector3 pPosition = playerPaddle->getPosition();
-        pPosition.setX(std::max(xMin, pPosition.getX()-movementSpeed));
-        playerPaddle->setPosition(pPosition);
+        // GameObject* playerPaddle = simulator->getObject("PlayerPaddle");
+        // btVector3 pPosition = playerPaddle->getPosition();
+        // pPosition.setX(std::max(xMin, pPosition.getX()-movementSpeed));
+        // playerPaddle->setPosition(pPosition);
 
-        Ogre::Vector3 cPosition = mCamera->getPosition();
-        cPosition.x = (0 + pPosition.getX())/2;
-        mCamera->setPosition(cPosition);
+        // Ogre::Vector3 cPosition = mCamera->getPosition();
+        // cPosition.x = (0 + pPosition.getX())/2;
+        // mCamera->setPosition(cPosition);
+        playerPaddle->move(-60.0f * fe.timeSinceLastFrame, 0.0f, 0.0f);
     }
 
     if (mKeyboard->isKeyDown(OIS::KC_D)) {
-        GameObject* playerPaddle = simulator->getObject("PlayerPaddle");
-        btVector3 pPosition = playerPaddle->getPosition();
-        pPosition.setX(std::min(xMax, pPosition.getX()+movementSpeed));
-        playerPaddle->setPosition(pPosition);
+        // GameObject* playerPaddle = simulator->getObject("PlayerPaddle");
+        // btVector3 pPosition = playerPaddle->getPosition();
+        // pPosition.setX(std::min(xMax, pPosition.getX()+movementSpeed));
+        // playerPaddle->setPosition(pPosition);
 
-        Ogre::Vector3 cPosition = mCamera->getPosition();
-        cPosition.x = (0 + pPosition.getX())/2;
-        mCamera->setPosition(cPosition);
+        // Ogre::Vector3 cPosition = mCamera->getPosition();
+        // cPosition.x = (0 + pPosition.getX())/2;
+        // mCamera->setPosition(cPosition);
+        playerPaddle->move(60.0f * fe.timeSinceLastFrame, 0.0f, 0.0f);
     }
+
+    playerPaddle->updateTransform();
 
     return true;
 }

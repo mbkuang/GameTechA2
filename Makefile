@@ -117,7 +117,8 @@ am_assignment2_OBJECTS = assignment2-Ball.$(OBJEXT) \
 	assignment2-Simulator.$(OBJEXT) assignment2-Wall.$(OBJEXT) \
 	assignment2-Paddle.$(OBJEXT) \
 	assignment2-BaseApplication.$(OBJEXT) \
-	assignment2-TutorialApplication.$(OBJEXT)
+	assignment2-TutorialApplication.$(OBJEXT) \
+	assignment2-OgreMotionState.$(OBJEXT)
 assignment2_OBJECTS = $(am_assignment2_OBJECTS)
 am__DEPENDENCIES_1 =
 assignment2_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
@@ -213,13 +214,13 @@ distuninstallcheck_listfiles = find . -type f -print
 am__distuninstallcheck_listfiles = $(distuninstallcheck_listfiles) \
   | sed 's|^\./|$(prefix)/|' | grep -v '$(infodir)/dir$$'
 distcleancheck_listfiles = find . -type f -print
-ACLOCAL = ${SHELL} /u/mbkuang/Desktop/assignment2/GameTechA2/missing aclocal-1.15
+ACLOCAL = ${SHELL} /u/marshe/Desktop/Master/GameTechA2/missing aclocal-1.15
 AMTAR = $${TAR-tar}
 AM_DEFAULT_VERBOSITY = 1
 AR = ar
-AUTOCONF = ${SHELL} /u/mbkuang/Desktop/assignment2/GameTechA2/missing autoconf
-AUTOHEADER = ${SHELL} /u/mbkuang/Desktop/assignment2/GameTechA2/missing autoheader
-AUTOMAKE = ${SHELL} /u/mbkuang/Desktop/assignment2/GameTechA2/missing automake-1.15
+AUTOCONF = ${SHELL} /u/marshe/Desktop/Master/GameTechA2/missing autoconf
+AUTOHEADER = ${SHELL} /u/marshe/Desktop/Master/GameTechA2/missing autoheader
+AUTOMAKE = ${SHELL} /u/marshe/Desktop/Master/GameTechA2/missing automake-1.15
 AWK = gawk
 BULLET_CFLAGS = 
 BULLET_LIBS = 
@@ -263,7 +264,7 @@ LIPO =
 LN_S = ln -s
 LTLIBOBJS = 
 LT_SYS_LIBRARY_PATH = 
-MAKEINFO = ${SHELL} /u/mbkuang/Desktop/assignment2/GameTechA2/missing makeinfo
+MAKEINFO = ${SHELL} /u/marshe/Desktop/Master/GameTechA2/missing makeinfo
 MANIFEST_TOOL = :
 MKDIR_P = /bin/mkdir -p
 NM = /usr/bin/nm -B
@@ -293,10 +294,10 @@ SET_MAKE =
 SHELL = /bin/bash
 STRIP = strip
 VERSION = 0.1
-abs_builddir = /u/mbkuang/Desktop/assignment2/GameTechA2
-abs_srcdir = /u/mbkuang/Desktop/assignment2/GameTechA2
-abs_top_builddir = /u/mbkuang/Desktop/assignment2/GameTechA2
-abs_top_srcdir = /u/mbkuang/Desktop/assignment2/GameTechA2
+abs_builddir = /u/marshe/Desktop/Master/GameTechA2
+abs_srcdir = /u/marshe/Desktop/Master/GameTechA2
+abs_top_builddir = /u/marshe/Desktop/Master/GameTechA2
+abs_top_srcdir = /u/marshe/Desktop/Master/GameTechA2
 ac_ct_AR = ar
 ac_ct_CC = gcc
 ac_ct_CXX = g++
@@ -328,7 +329,7 @@ host_vendor = pc
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /u/mbkuang/Desktop/assignment2/GameTechA2/install-sh
+install_sh = ${SHELL} /u/marshe/Desktop/Master/GameTechA2/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -351,7 +352,7 @@ top_builddir = .
 top_srcdir = .
 noinst_HEADERS = Ball.h ControlListener.h GameObject.h OgreMotionState.h Overlay.h Player.h PlayerCamera.h PlayingField.h Simulator.h Wall.h Paddle.h BaseApplication.h TutorialApplication.h
 assignment2_CPPFLAGS = -I$(top_srcdir)
-assignment2_SOURCES = Ball.cpp ControlListener.cpp GameObject.cpp Overlay.cpp Player.cpp PlayerCamera.cpp PlayingField.cpp Simulator.cpp Wall.cpp Paddle.cpp BaseApplication.cpp TutorialApplication.cpp
+assignment2_SOURCES = Ball.cpp ControlListener.cpp GameObject.cpp Overlay.cpp Player.cpp PlayerCamera.cpp PlayingField.cpp Simulator.cpp Wall.cpp Paddle.cpp BaseApplication.cpp TutorialApplication.cpp OgreMotionState.cpp
 assignment2_CXXFLAGS = $(OGRE_CFLAGS) $(OIS_CFLAGS) $(bullet_CFLAGS) $(CEGUI_CFLAGS) $(CEGUI_OGRE_CFLAGS)
 assignment2_LDADD = $(OGRE_LIBS) $(OIS_LIBS) $(bullet_LIBS) $(CEGUI_LIBS) $(CEGUI_OGRE_LIBS)
 assignment2_LDFLAGS = -lOgreOverlay -lboost_system
@@ -474,6 +475,7 @@ include ./$(DEPDIR)/assignment2-Ball.Po
 include ./$(DEPDIR)/assignment2-BaseApplication.Po
 include ./$(DEPDIR)/assignment2-ControlListener.Po
 include ./$(DEPDIR)/assignment2-GameObject.Po
+include ./$(DEPDIR)/assignment2-OgreMotionState.Po
 include ./$(DEPDIR)/assignment2-Overlay.Po
 include ./$(DEPDIR)/assignment2-Paddle.Po
 include ./$(DEPDIR)/assignment2-Player.Po
@@ -671,6 +673,20 @@ assignment2-TutorialApplication.obj: TutorialApplication.cpp
 #	$(AM_V_CXX)source='TutorialApplication.cpp' object='assignment2-TutorialApplication.obj' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
 #	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(assignment2_CPPFLAGS) $(CPPFLAGS) $(assignment2_CXXFLAGS) $(CXXFLAGS) -c -o assignment2-TutorialApplication.obj `if test -f 'TutorialApplication.cpp'; then $(CYGPATH_W) 'TutorialApplication.cpp'; else $(CYGPATH_W) '$(srcdir)/TutorialApplication.cpp'; fi`
+
+assignment2-OgreMotionState.o: OgreMotionState.cpp
+	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(assignment2_CPPFLAGS) $(CPPFLAGS) $(assignment2_CXXFLAGS) $(CXXFLAGS) -MT assignment2-OgreMotionState.o -MD -MP -MF $(DEPDIR)/assignment2-OgreMotionState.Tpo -c -o assignment2-OgreMotionState.o `test -f 'OgreMotionState.cpp' || echo '$(srcdir)/'`OgreMotionState.cpp
+	$(AM_V_at)$(am__mv) $(DEPDIR)/assignment2-OgreMotionState.Tpo $(DEPDIR)/assignment2-OgreMotionState.Po
+#	$(AM_V_CXX)source='OgreMotionState.cpp' object='assignment2-OgreMotionState.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(assignment2_CPPFLAGS) $(CPPFLAGS) $(assignment2_CXXFLAGS) $(CXXFLAGS) -c -o assignment2-OgreMotionState.o `test -f 'OgreMotionState.cpp' || echo '$(srcdir)/'`OgreMotionState.cpp
+
+assignment2-OgreMotionState.obj: OgreMotionState.cpp
+	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(assignment2_CPPFLAGS) $(CPPFLAGS) $(assignment2_CXXFLAGS) $(CXXFLAGS) -MT assignment2-OgreMotionState.obj -MD -MP -MF $(DEPDIR)/assignment2-OgreMotionState.Tpo -c -o assignment2-OgreMotionState.obj `if test -f 'OgreMotionState.cpp'; then $(CYGPATH_W) 'OgreMotionState.cpp'; else $(CYGPATH_W) '$(srcdir)/OgreMotionState.cpp'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/assignment2-OgreMotionState.Tpo $(DEPDIR)/assignment2-OgreMotionState.Po
+#	$(AM_V_CXX)source='OgreMotionState.cpp' object='assignment2-OgreMotionState.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(assignment2_CPPFLAGS) $(CPPFLAGS) $(assignment2_CXXFLAGS) $(CXXFLAGS) -c -o assignment2-OgreMotionState.obj `if test -f 'OgreMotionState.cpp'; then $(CYGPATH_W) 'OgreMotionState.cpp'; else $(CYGPATH_W) '$(srcdir)/OgreMotionState.cpp'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo
