@@ -1,4 +1,7 @@
-To build this demo, execute ./build and run the resulting assignment2.exe
+# GameTechA2
+Project 2 for CS354R
+
+To build this demo, execute ./buildit and run the resulting assignment2.exe
 
 To play, use WASD to move the paddle and hit the ball when it approaches
 the camera.
