@@ -6,42 +6,35 @@
 
 Wall::Wall(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
     float xPosition, float yPosition, float zPosition,
-    float xScale, float yScale, float zScale) :
+    float xScale, float yScale, float zScale,
+    Ogre::String material) :
     GameObject(newName, scnMgr, sim) {
 
-    Ogre::Entity* wall = sceneMgr->createEntity(name, "cube.mesh");
-    wall->setMaterialName("WallTexture");
+    // Set the entity.
+    geom = sceneMgr->createEntity(name, "cube.mesh");
+    geom->setCastShadows(true);
+    if (material != "")
+        geom->setMaterialName(material);
 
-    wall->setCastShadows(true);
+    // Set the rootNode.
     rootNode = sceneMgr->getRootSceneNode()
         ->createChildSceneNode(name, Ogre::Vector3(xPosition, yPosition, zPosition));
-    rootNode->attachObject(wall);
+    rootNode->attachObject(geom);
     rootNode->scale(xScale * 0.01, yScale * 0.01, zScale * 0.01);
     rootNode->setPosition(xPosition, yPosition, zPosition);
 
-    // Set the rigid body
+    // Set the rigid body.
     transform.setIdentity();
     transform.setOrigin(btVector3(xPosition, yPosition, zPosition));
-
     shape = new btBoxShape(btVector3(xScale * 0.5, yScale * 0.5, zScale * 0.5));
-    //this->simulator->getCollisionShapes().push_back(shape);
-
     motionState = new OgreMotionState(transform, rootNode);
-
-    mass = 0; //the mass is 0, because the wall is static
+    mass = 0;
     inertia = btVector3(0, 0, 0);
-
     shape->calculateLocalInertia(mass, inertia);
-
     btRigidBody::btRigidBodyConstructionInfo bRBInfo(
-        mass, motionState->getMotionState(), shape, inertia);
+        mass, motionState, shape, inertia);
     body = new btRigidBody(bRBInfo);
     body->setRestitution(1);
     body->setUserPointer(rootNode);
-    //body->setWorldTransform(transform);
-
-    // Add to the physics simulator
-    //this->simulator->getDynamicsWorld()->addRigidBody(body);
     this->simulator->addObject(this);
-    //this->simulator->trackRigidBodyWithName(body, "wallBody")
 }

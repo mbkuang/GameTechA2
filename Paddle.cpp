@@ -10,7 +10,7 @@ Paddle::Paddle(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim)
     paddle->setMaterialName("PaddleTexture");
 
     float x = 0.0;
-    float y = 0.0;
+    float y = -45.0;
     float z = 0.0;
 
     paddle->setCastShadows(true);
@@ -19,6 +19,7 @@ Paddle::Paddle(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim)
     rootNode->attachObject(paddle);
     rootNode->scale(0.5, 0.5, 0.1);
     rootNode->setPosition(x,y,z);
+    paddle->setMaterialName("Examples/Rockwall");
 
     //TODO Set the rigid Body
     transform.setIdentity();
@@ -37,7 +38,10 @@ Paddle::Paddle(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim)
         mass, motionState->getMotionState(), shape, inertia);
     body = new btRigidBody(bRBInfo);
     body->setRestitution(1);
+    body->setFriction(0);
     body->setUserPointer(rootNode);
+    body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
+    body->setActivationState(DISABLE_DEACTIVATION);
 
     // Add to the physics simulator
     //this->simulator->getDynamicsWorld()->addRigidBody(body);

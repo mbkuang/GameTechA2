@@ -42,21 +42,21 @@ void TutorialApplication::createScene(void)
 
     mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
 
-    Wall* flooring = new Wall("Flooring", mSceneMgr, simulator, 0, -49.5, 0, 100, 1, 100);
-    Wall* ceiling = new Wall("Ceiling", mSceneMgr, simulator, 0, 49.5, 0, 100, 1, 100);
-    Wall* westWall = new Wall("WestWall", mSceneMgr, simulator, -49.5, 0, 0, 1, 100, 100);
-    Wall* eastWall = new Wall("EastWall", mSceneMgr, simulator, 49.5, 0, 0, 1, 100, 100);
-    Wall* northWall = new Wall("NorthWall", mSceneMgr, simulator, 0, 0, -49.5, 100, 100, 1);
-    Wall* southWall = new Wall("SouthWall", mSceneMgr, simulator, 0, 0, 49.5, 100, 100, 1);
+    Wall* flooring = new Wall("Flooring", mSceneMgr, simulator, 0, -49.5, 0, 100, 20, 100, "Examples/Rockwall");
+    Wall* ceiling = new Wall("Ceiling", mSceneMgr, simulator, 0, 49.5, 0, 100, 20, 100, "Examples/Rockwall");
+    Wall* westWall = new Wall("WestWall", mSceneMgr, simulator, -49.5, 0, 0, 20, 100, 100, "Examples/Rockwall");
+    Wall* eastWall = new Wall("EastWall", mSceneMgr, simulator, 49.5, 0, 0, 20, 100, 100, "Examples/Rockwall");
+    Wall* northWall = new Wall("NorthWall", mSceneMgr, simulator, 0, 0, -49.5, 100, 100, 20, "Examples/Rockwall");
+    Wall* southWall = new Wall("SouthWall", mSceneMgr, simulator, 0, 0, 49.5, 100, 100, 20, "Examples/Rockwall");
 
     Ball* ball = new Ball("Ball", mSceneMgr, simulator);
-    ball->setPosition(0.0,5.0,0.0);
-    Ball* newball = new Ball("NewBall", mSceneMgr, simulator);
-    newball->setPosition(0.0,5.0,10.0);
+    //ball->setPosition(0.0,5.0,0.0);
+    //Ball* newball = new Ball("NewBall", mSceneMgr, simulator);
+    //newball->setPosition(0.0,5.0,10.0);
     // Ball* newball2 = new Ball("NewBall2", mSceneMgr, simulator);
     // newball2->setPosition(0.0,50.0,25.0);
     Paddle* playerPaddle = new Paddle("PlayerPaddle", mSceneMgr, simulator);
-    playerPaddle->setPosition(0.0,0.0,0.0);
+    //playerPaddle->setPosition(0.0,0.0,-5.0);
 
     CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
     CEGUI::Window *sheet = wmgr.createWindow("DefaultWindow", "CEGUIDemo/Sheet");
