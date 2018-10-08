@@ -1,0 +1,15 @@
+material WallTexture2Inverse
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.75 0.75 0.75
+
+			texture_unit
+			{
+				texture WallTexture2Inverse.png
+			}
+		}
+	}
+}

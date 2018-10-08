@@ -38,7 +38,7 @@ public:
 protected:
     virtual void createScene(void);
     virtual bool frameRenderingQueued(const Ogre::FrameEvent& fe);
-    
+
     virtual void createFrameListener(void);
     virtual bool keyPressed(const OIS::KeyEvent& arg);
     virtual bool keyReleased(const OIS::KeyEvent& arg);
@@ -48,6 +48,8 @@ protected:
 
     Simulator* simulator;
     CEGUI::OgreRenderer* mRenderer;
+
+    float xMin, xMax, yMin, yMax, zMin, zMax;
 private:
     bool processUnbufferedInput(const Ogre::FrameEvent& fe);
     void initCEGUI();
