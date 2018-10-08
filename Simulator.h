@@ -5,6 +5,7 @@
     #define __Simulator_h_DEFINED
     class Simulator;
     #include "GameObject.h"
+    #include "Player.h"
 #endif
 
 #include <btBulletDynamicsCommon.h>
@@ -22,6 +23,7 @@ protected:
 	btAlignedObjectArray<btCollisionShape*> collisionShapes;
 	std::map<Ogre::String, GameObject*> objMap;
 	std::deque<GameObject*> objList;
+	std::map<Ogre::String, Player*> players;
 
 public:
 	Simulator();
@@ -33,6 +35,8 @@ public:
     //std::vector<btCollisionShape*> getCollisionShapes();
     //int getCollisionObjectCount();
     GameObject* getObject(Ogre::String oName);
+    void addPlayer(Player* p);
+    Player* getPlayer(Ogre::String pName);
 };
 
 #endif

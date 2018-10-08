@@ -16,6 +16,7 @@ http://www.ogre3d.org/wiki/
 */
 
 #include "TutorialApplication.h"
+#include <sstream>
 
 //---------------------------------------------------------------------------
 TutorialApplication::TutorialApplication(void)
@@ -73,17 +74,40 @@ void TutorialApplication::createScene(void)
     playerPaddle->setPosition(0.0,0.0,-11.0);
 
     CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
-    CEGUI::Window *sheet = wmgr.createWindow("DefaultWindow", "CEGUIDemo/Sheet");
+    sheet = wmgr.createWindow("DefaultWindow", "CEGUIDemo/Sheet");
 
     CEGUI::Window *quit = wmgr.createWindow("TaharezLook/Button", "CEGUIDemo/QuitButton");
     quit->setText("Quit");
     quit->setSize(CEGUI::USize(CEGUI::UDim(0.15, 0), CEGUI::UDim(0.05, 0)));
 
-    sheet->addChild(quit);
+    //sheet->addChild(quit);
+
+    playerScore = wmgr.createWindow("TaharezLook/StaticText", "CEGUIDemo/StaticText");
+    //playerScore->setText("Player 1: 0");
+    playerScore->setSize(CEGUI::USize(CEGUI::UDim(0.08, 0), CEGUI::UDim(0.05, 0)));
+
+    cpuScore = wmgr.createWindow("TaharezLook/StaticText", "CEGUIDemo/StaticText");
+    //cpuScore->setText("Player 2: 0");
+    cpuScore->setSize(CEGUI::USize(CEGUI::UDim(0.08, 0), CEGUI::UDim(0.05, 0)));
+    cpuScore->setPosition(CEGUI::UVector2(CEGUI::UDim(0.92, 0), CEGUI::UDim(0, 0)));
+
+    // sheet->addChild(playerScore);
+    // sheet->addChild(cpuScore);
+    //updateScore();
     CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(sheet);
+}
 
-    quit->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&TutorialApplication::quit, this));
+void TutorialApplication::updateScore() {
+    Ogre::stringstream ss1;
+    Ogre::stringstream ss2;
 
+    ss1 << "Player 1: " <<simulator->getPlayer("Player1")->getScore();
+    ss2 << "Player 2: " <<simulator->getPlayer("CPU")->getScore();
+
+    playerScore->setText(ss1.str());
+    cpuScore->setText(ss2.str());
+    sheet->addChild(playerScore);
+    sheet->addChild(cpuScore);
 }
 //---------------------------------------------------------------------------
 bool TutorialApplication::quit() {
@@ -187,6 +211,10 @@ bool TutorialApplication::keyPressed(const OIS::KeyEvent& arg) {
     context.injectChar((CEGUI::Key::Scan)arg.text);
     if(arg.key == OIS::KC_ESCAPE) {
         mShutDown = true;
+    }
+    else if(arg.key == OIS::KC_R) {
+        GameObject* ball = simulator->getObject("Ball");
+        ball->setPosition(0, 0, 0);
     }
     return true;
 }

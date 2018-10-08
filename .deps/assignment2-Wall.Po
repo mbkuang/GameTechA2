@@ -915,7 +915,7 @@ assignment2-Wall.o: Wall.cpp /usr/include/stdc-predef.h \
  /usr/include/OGRE/OgreShadowCameraSetupPSSM.h \
  /usr/include/OGRE/OgreEntity.h /usr/include/OGRE/OgreVector3.h \
  /usr/include/OGRE/OgreSceneManager.h Wall.h GameObject.h Simulator.h \
- GameObject.h /usr/include/bullet/btBulletDynamicsCommon.h \
+ GameObject.h Player.h /usr/include/bullet/btBulletDynamicsCommon.h \
  /usr/include/bullet/btBulletCollisionCommon.h \
  /usr/include/bullet/BulletCollision/CollisionDispatch/btCollisionWorld.h \
  /usr/include/bullet/LinearMath/btVector3.h \
@@ -3170,6 +3170,8 @@ GameObject.h:
 Simulator.h:
 
 GameObject.h:
+
+Player.h:
 
 /usr/include/bullet/btBulletDynamicsCommon.h:
 

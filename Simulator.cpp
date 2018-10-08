@@ -55,3 +55,11 @@ void Simulator::stepSimulation(const Ogre::Real elapsedTime, int maxSubSteps, co
 GameObject* Simulator::getObject(Ogre::String oName) {
     return objMap[oName];
 }
+
+void Simulator::addPlayer(Player* p) {
+	players[p->getName()] = p;
+}
+
+Player* Simulator::getPlayer(Ogre::String pName) {
+    return players[pName];
+}

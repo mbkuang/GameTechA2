@@ -49,11 +49,16 @@ protected:
     Simulator* simulator;
     CEGUI::OgreRenderer* mRenderer;
 
+    CEGUI::Window *sheet;
+    CEGUI::Window *playerScore;
+    CEGUI::Window *cpuScore;
+
     float xMin, xMax, yMin, yMax, zMin, zMax;
 private:
     bool processUnbufferedInput(const Ogre::FrameEvent& fe);
     void initCEGUI();
     bool quit();
+    void updateScore();
 };
 
 //---------------------------------------------------------------------------
