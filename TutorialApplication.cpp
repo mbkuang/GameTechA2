@@ -70,7 +70,7 @@ void TutorialApplication::createScene(void)
     // Ball* newball2 = new Ball("NewBall2", mSceneMgr, simulator);
     // newball2->setPosition(0.0,50.0,25.0);
     Paddle* playerPaddle = new Paddle("PlayerPaddle", mSceneMgr, simulator);
-    //playerPaddle->setPosition(0.0,0.0,-5.0);
+    playerPaddle->setPosition(0.0,0.0,-11.0);
 
     CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
     CEGUI::Window *sheet = wmgr.createWindow("DefaultWindow", "CEGUIDemo/Sheet");
@@ -174,26 +174,8 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
 
     // Update Ogre with Bullet's State
 	if (this->simulator != NULL){
-		//simulator->getDynamicsWorld()->stepSimulation(1.0f/60.0f); //suppose you have 60 frames per second
+		//suppose you have 60 frames per second
         simulator->stepSimulation(fe.timeSinceLastFrame);
-
-		// for (int i = 0; i < this->simulator->getCollisionObjectCount(); i++) {
-		// 	btCollisionObject* obj = this->simulator->getDynamicsWorld()->getCollisionObjectArray()[i];
-		// 	btRigidBody* body = btRigidBody::upcast(obj);
-
-		// 	if (body && body->getMotionState()){
-		// 		btTransform trans;
-		// 		body->getMotionState()->getWorldTransform(trans);
-
-		// 		void *userPointer = body->getUserPointer();
-		// 		if (userPointer) {
-		// 			btQuaternion orientation = trans.getRotation();
-		// 			Ogre::SceneNode *sceneNode = static_cast<Ogre::SceneNode *>(userPointer);
-		// 			sceneNode->setPosition(Ogre::Vector3(trans.getOrigin().getX(), trans.getOrigin().getY(), trans.getOrigin().getZ()));
-		// 			sceneNode->setOrientation(Ogre::Quaternion(orientation.getW(), orientation.getX(), orientation.getY(), orientation.getZ()));
-		// 		}
-		// 	}
-		// }
 	}
 
     return ret;

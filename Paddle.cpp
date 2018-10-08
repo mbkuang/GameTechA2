@@ -11,7 +11,7 @@ Paddle::Paddle(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim)
 
     float x = 0.0;
     float y = 0.0;
-    float z = -11.0;
+    float z = 0.0;//-11.0;
 
     float xScale = 12;
     float yScale = 10;
