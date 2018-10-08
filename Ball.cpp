@@ -10,18 +10,20 @@ Ball::Ball(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim)
     Ogre::Entity* ball = sceneMgr->createEntity(name, "sphere.mesh");
     ball->setMaterialName("BallTexture");
 
+    float radius = 2;
+
     ball->setCastShadows(true);
     rootNode = sceneMgr->getRootSceneNode()
         ->createChildSceneNode(name, Ogre::Vector3(0,0,0));
     rootNode->attachObject(ball);
-    rootNode->scale(0.01f,0.01f,0.01f);
-    rootNode->setPosition(0,0,0);
+    rootNode->scale(radius * 0.01,radius * 0.01,radius * 0.01);
+    rootNode->setPosition(0,0,-200);
 
     // Set the rigid Body
     transform.setIdentity();
-    transform.setOrigin(btVector3(0, 0, 0));
+    transform.setOrigin(btVector3(0, 0, -200));
 
-    shape = new btSphereShape(btScalar(.5));
+    shape = new btSphereShape(btScalar(radius * .5));
     //TODO this->simulator->getCollisionShapes().push_back(shape);
 
     motionState = new OgreMotionState(transform, rootNode);
@@ -37,7 +39,7 @@ Ball::Ball(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim)
     body->setRestitution(1);
     body->setUserPointer(rootNode);
 
-    body->setLinearVelocity(btVector3(0,0,-30));
+    body->setLinearVelocity(btVector3(-35,50,-75));
 
     // Add to the physics simulator
     //this->simulator->getDynamicsWorld()->addRigidBody(body);

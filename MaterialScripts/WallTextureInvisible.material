@@ -1,0 +1,20 @@
+material WallTextureInvisible
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture WallTexture.png
+			}
+
+            ambient 0.75 0.75 1 0.0
+            diffuse .7 .7 1 0.0
+            specular 1 1 1 1 20
+
+			scene_blend alpha_blend
+            depth_write off
+		}
+	}
+}

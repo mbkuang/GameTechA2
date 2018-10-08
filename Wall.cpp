@@ -9,13 +9,12 @@ Wall::Wall(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
     float xScale, float yScale, float zScale,
     Ogre::String material) :
     GameObject(newName, scnMgr, sim) {
-
     // Set the entity.
     geom = sceneMgr->createEntity(name, "cube.mesh");
     geom->setCastShadows(true);
     if (material != "")
         geom->setMaterialName(material);
-
+        
     // Set the rootNode.
     rootNode = sceneMgr->getRootSceneNode()
         ->createChildSceneNode(name, Ogre::Vector3(xPosition, yPosition, zPosition));
@@ -35,6 +34,7 @@ Wall::Wall(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
         mass, motionState, shape, inertia);
     body = new btRigidBody(bRBInfo);
     body->setRestitution(1);
+    body->setFriction(0);
     body->setUserPointer(rootNode);
     this->simulator->addObject(this);
 }

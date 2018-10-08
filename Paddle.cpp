@@ -10,22 +10,25 @@ Paddle::Paddle(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim)
     paddle->setMaterialName("PaddleTexture");
 
     float x = 0.0;
-    float y = -45.0;
-    float z = 0.0;
+    float y = 0.0;
+    float z = 0.0;//-11.0;
+
+    float xScale = 12;
+    float yScale = 10;
+    float zScale = .5;
 
     paddle->setCastShadows(true);
     rootNode = sceneMgr->getRootSceneNode()
         ->createChildSceneNode(name, Ogre::Vector3(x,y,z));
     rootNode->attachObject(paddle);
-    rootNode->scale(0.5, 0.5, 0.1);
+    rootNode->scale(xScale * .01, yScale * .01, zScale * .1 * .01);
     rootNode->setPosition(x,y,z);
-    paddle->setMaterialName("Examples/Rockwall");
 
     //TODO Set the rigid Body
     transform.setIdentity();
     transform.setOrigin(btVector3(x, y, z));
 
-    shape = new btBoxShape(btVector3(25,25,5));
+    shape = new btBoxShape(btVector3(xScale * .5,yScale * .5,zScale * .5));
 
     motionState = new OgreMotionState(transform, rootNode);
 

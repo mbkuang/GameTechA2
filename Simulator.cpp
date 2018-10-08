@@ -40,7 +40,7 @@ void Simulator::stepSimulation(const Ogre::Real elapsedTime, int maxSubSteps, co
     }
 }
 
-// btDiscreteDynamicsWorld* Simulator::getDynamicsWorld() {
+// TODO btDiscreteDynamicsWorld* Simulator::getDynamicsWorld() {
 //     return dynamicsWorld;
 // }
 
