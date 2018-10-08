@@ -54,3 +54,12 @@ Paddle::Paddle(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim)
 Paddle::~Paddle() {
 
 }
+
+void Paddle::move(Ogre::Real x, Ogre::Real y, Ogre::Real z,
+float xMin, float xMax, float yMin, float yMax) {
+    rootNode->translate(rootNode->getLocalAxes(), x, y, z);
+    Ogre::Vector3 pPosition = rootNode->getPosition();
+    pPosition.x = std::min(std::max(pPosition.x, xMin), xMax);
+    pPosition.y = std::min(std::max(pPosition.y, yMin), yMax);
+    rootNode->setPosition(pPosition);
+}

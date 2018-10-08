@@ -17,6 +17,7 @@ http://www.ogre3d.org/wiki/
 
 #include "TutorialApplication.h"
 #include <sstream>
+#include <cmath>
 
 //---------------------------------------------------------------------------
 TutorialApplication::TutorialApplication(void)
@@ -75,6 +76,9 @@ void TutorialApplication::createScene(void)
     // newball2->setPosition(0.0,50.0,25.0);
     Paddle* playerPaddle = new Paddle("PlayerPaddle", mSceneMgr, simulator);
     playerPaddle->setPosition(0.0,0.0,-11.0);
+
+    Paddle* cpuPaddle = new Paddle("CPUPaddle", mSceneMgr, simulator);
+    cpuPaddle->setPosition(0.0,0.0,-389.0);
 
     CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
     sheet = wmgr.createWindow("DefaultWindow", "CEGUIDemo/Sheet");
@@ -195,6 +199,25 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
     if (!processUnbufferedInput(fe))
         return false;
 
+    float movementSpeed = 60.0f;
+    Paddle* cpuPaddle = (Paddle*) simulator->getObject("CPUPaddle");
+    Ball* ball = (Ball*) simulator->getObject("Ball");
+
+    // Move the CPU paddle towards the ball
+    btVector3 bPosition = ball->getPosition();
+    btVector3 pPosition = cpuPaddle->getPosition();
+    float xDir = bPosition.getX() - pPosition.getX();
+    xDir = xDir < 0 ? -1 : 1;
+    float yDir = bPosition.getY() - pPosition.getY();
+    yDir = yDir < 0 ? -1 : 1;
+
+    cpuPaddle->move(
+        xDir * movementSpeed * fe.timeSinceLastFrame,
+        yDir * movementSpeed * fe.timeSinceLastFrame,
+        0.0f,
+        xMin, xMax, yMin, yMax
+    );
+
     // Update Ogre with Bullet's State
 	if (this->simulator != NULL){
 		//suppose you have 60 frames per second
@@ -251,8 +274,8 @@ bool TutorialApplication::mouseReleased(const OIS::MouseEvent& arg, OIS::MouseBu
 //---------------------------------------------------------------------------
 bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& fe)
 {
-    float movementSpeed = .085;
-    GameObject* playerPaddle = simulator->getObject("PlayerPaddle");
+    float movementSpeed = 60.0f;
+    Paddle* playerPaddle = (Paddle*) simulator->getObject("PlayerPaddle");
 
     if (mKeyboard->isKeyDown(OIS::KC_R)) {
         //TODO ball->reset();
@@ -264,10 +287,8 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& fe)
         // pPosition.setY(std::min(yMax, pPosition.getY()+movementSpeed));
         // playerPaddle->setPosition(pPosition);
 
-        // Ogre::Vector3 cPosition = mCamera->getPosition();
-        // cPosition.y = (0 + pPosition.getY())/2;
-        // mCamera->setPosition(cPosition);
-        playerPaddle->move(0.0f, 60.0f * fe.timeSinceLastFrame, 0.0f);
+        playerPaddle->move(0.0f, movementSpeed * fe.timeSinceLastFrame, 0.0f,
+            xMin, xMax, yMin, yMax);
     }
 
     if (mKeyboard->isKeyDown(OIS::KC_S)) {
@@ -279,24 +300,25 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& fe)
         // Ogre::Vector3 cPosition = mCamera->getPosition();
         // cPosition.y = (0 + pPosition.getY())/2;
         // mCamera->setPosition(cPosition);
-        playerPaddle->move(0.0f, -60.0f * fe.timeSinceLastFrame, 0.0f);
+        playerPaddle->move(0.0f, -movementSpeed * fe.timeSinceLastFrame, 0.0f,
+            xMin, xMax, yMin, yMax);
     }
 
-    if (mKeyboard->isKeyDown(OIS::KC_Q)) {
-        mCamera->yaw(Ogre::Degree(.05));
-    }
-
-    if (mKeyboard->isKeyDown(OIS::KC_E)) {
-        mCamera->yaw(Ogre::Degree(-.05));
-    }
-
-    if (mKeyboard->isKeyDown(OIS::KC_Z)) {
-        mCamera->pitch(Ogre::Degree(.05));
-    }
-
-    if (mKeyboard->isKeyDown(OIS::KC_C)) {
-        mCamera->pitch(Ogre::Degree(-.05));
-    }
+    // if (mKeyboard->isKeyDown(OIS::KC_Q)) {
+    //     mCamera->yaw(Ogre::Degree(.05));
+    // }
+    //
+    // if (mKeyboard->isKeyDown(OIS::KC_E)) {
+    //     mCamera->yaw(Ogre::Degree(-.05));
+    // }
+    //
+    // if (mKeyboard->isKeyDown(OIS::KC_Z)) {
+    //     mCamera->pitch(Ogre::Degree(.05));
+    // }
+    //
+    // if (mKeyboard->isKeyDown(OIS::KC_C)) {
+    //     mCamera->pitch(Ogre::Degree(-.05));
+    // }
 
     if (mKeyboard->isKeyDown(OIS::KC_A)) {
         // GameObject* playerPaddle = simulator->getObject("PlayerPaddle");
@@ -307,7 +329,8 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& fe)
         // Ogre::Vector3 cPosition = mCamera->getPosition();
         // cPosition.x = (0 + pPosition.getX())/2;
         // mCamera->setPosition(cPosition);
-        playerPaddle->move(-60.0f * fe.timeSinceLastFrame, 0.0f, 0.0f);
+        playerPaddle->move(-movementSpeed * fe.timeSinceLastFrame, 0.0f, 0.0f,
+            xMin, xMax, yMin, yMax);
     }
 
     if (mKeyboard->isKeyDown(OIS::KC_D)) {
@@ -319,10 +342,17 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& fe)
         // Ogre::Vector3 cPosition = mCamera->getPosition();
         // cPosition.x = (0 + pPosition.getX())/2;
         // mCamera->setPosition(cPosition);
-        playerPaddle->move(60.0f * fe.timeSinceLastFrame, 0.0f, 0.0f);
+        playerPaddle->move(movementSpeed * fe.timeSinceLastFrame, 0.0f, 0.0f,
+            xMin, xMax, yMin, yMax);
     }
 
     playerPaddle->updateTransform();
+
+    btVector3 pPosition = playerPaddle->getPosition();
+    Ogre::Vector3 cPosition = mCamera->getPosition();
+    cPosition.x = (0 + pPosition.getX())/2;
+    cPosition.y = (0 + pPosition.getY())/2;
+    mCamera->setPosition(cPosition);
 
     return true;
 }
