@@ -17,10 +17,13 @@ public:
 	void incrementScore();
 	Ogre::String getName();
 	int getScore();
+	int getHP();
+	int setHP(int);
 
 protected:
 	Ogre::String playerName;
 	int score;
+	int hp;
 	Simulator* simulator;
 };
 

@@ -240,6 +240,13 @@ bool TutorialApplication::keyPressed(const OIS::KeyEvent& arg) {
         //Reset the ball's position
         GameObject* ball = simulator->getObject("Ball");
         ball->setPosition(0, 0, -200);
+        btRigidBody* ballBody = ball->getBody();
+
+        Ogre::Real x_dir = Ogre::Math::RangeRandom(-200, 200);
+        Ogre::Real y_dir = Ogre::Math::RangeRandom(-200, 200);
+        Ogre::Real z_dir = Ogre::Math::RangeRandom(-200, 200);
+
+        ballBody->setLinearVelocity(btVector3(x_dir, y_dir, z_dir));
     }
     return true;
 }

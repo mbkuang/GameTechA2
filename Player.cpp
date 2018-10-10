@@ -17,3 +17,11 @@ Ogre::String Player::getName() {
 int Player::getScore() {
 	return score;
 }
+
+int Player::getHP() {
+	return hp;
+}
+
+int Player::setHP(int health) {
+	hp = health;
+}
