@@ -9,8 +9,8 @@ Sound::Sound() {
 
 	currentVolume = MAX_VOLUME/2;
 
-	wallSound = Mix_LoadWAV("media/snare_drum.wav");
-	paddleSound = Mix_LoadWAV("media/smw_jump.wav");
+	wallSound = Mix_LoadWAV("media/click.wav");
+	paddleSound = Mix_LoadWAV("media/Pew.wav");
 	scoreSound = Mix_LoadWAV("media/smw_1-up.wav");
 }
 

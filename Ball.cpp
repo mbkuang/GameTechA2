@@ -68,6 +68,7 @@ void Ball::update(float elapsedTime) {
         && (lastTime > 0.5 || (context->lastBody != context->body && lastTime > 0.1))) {
         //Handle the hit
         printf("HIT\n");
+        simulator->soundSystem->playSound("wallSound");
         lastTime = 0.0f;
     }
     context->hit = false;

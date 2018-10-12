@@ -94,10 +94,10 @@ void TutorialApplication::createScene(void)
     //sheet->addChild(quit);
 
     playerScore = wmgr.createWindow("TaharezLook/StaticText", "CEGUIDemo/StaticText");
-    playerScore->setSize(CEGUI::USize(CEGUI::UDim(0.1, 0), CEGUI::UDim(0.15, 0)));
+    playerScore->setSize(CEGUI::USize(CEGUI::UDim(0.1, 0), CEGUI::UDim(0.1, 0)));
 
     cpuScore = wmgr.createWindow("TaharezLook/StaticText", "CEGUIDemo/StaticText");
-    cpuScore->setSize(CEGUI::USize(CEGUI::UDim(0.1, 0), CEGUI::UDim(0.15, 0)));
+    cpuScore->setSize(CEGUI::USize(CEGUI::UDim(0.1, 0), CEGUI::UDim(0.1, 0)));
     cpuScore->setPosition(CEGUI::UVector2(CEGUI::UDim(0.9, 0), CEGUI::UDim(0, 0)));
 
     updateScore();
