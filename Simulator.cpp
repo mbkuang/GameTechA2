@@ -26,18 +26,13 @@ void Simulator::addObject (GameObject* o) {
 
 void Simulator::stepSimulation(const Ogre::Real elapsedTime, int maxSubSteps, const Ogre::Real fixedTimestep) {
     dynamicsWorld->stepSimulation(elapsedTime, maxSubSteps, fixedTimestep);
-
-  //   for (int i = 0; i < objList.size(); i++) {
-  //   	btRigidBody* body = objList[i]->getBody();
-  //   	Ogre::SceneNode* node = objList[i]->getNode();
-
-  //   	btTransform worldTrans;
-		// body->getMotionState()->getWorldTransform(worldTrans);
-		// btQuaternion rot = worldTrans.getRotation();
-		// node->setOrientation(rot.w(), rot.x(), rot.y(), rot.z());
-		// btVector3 pos = worldTrans.getOrigin();
-		// node->setPosition(pos.x(), pos.y(), pos.z());
-  //   }
+	//for (int i = 0; i != objList.size(); i++) idList[i] = 0;
+	dynamicsWorld->stepSimulation(elapsedTime, maxSubSteps, fixedTimestep);
+	for (unsigned int i = 0; i < objList.size(); i++) {
+		//if (objList[i]->doUpdates()) {
+			objList[i]->update(elapsedTime);
+		//}
+	}
 }
 
 btDiscreteDynamicsWorld* Simulator::getDynamicsWorld() {
