@@ -1047,7 +1047,7 @@ assignment2-AIManager.o: AIManager.cpp /usr/include/stdc-predef.h \
  /usr/include/bullet/BulletDynamics/Dynamics/btActionInterface.h \
  /usr/include/bullet/BulletDynamics/Dynamics/btRigidBody.h \
  /usr/include/bullet/btBulletCollisionCommon.h OgreMotionState.h \
- GameSettings.h Ball.h GameSettings.h
+ ContactSensorCallback.h GameSettings.h Ball.h GameSettings.h
 
 /usr/include/stdc-predef.h:
 
@@ -3442,6 +3442,8 @@ Player.h:
 /usr/include/bullet/btBulletCollisionCommon.h:
 
 OgreMotionState.h:
+
+ContactSensorCallback.h:
 
 GameSettings.h:
 

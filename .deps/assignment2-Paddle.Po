@@ -1046,11 +1046,7 @@ assignment2-Paddle.o: Paddle.cpp /usr/include/stdc-predef.h Paddle.h \
  /usr/include/bullet/BulletDynamics/Dynamics/btActionInterface.h \
  /usr/include/bullet/BulletDynamics/Dynamics/btRigidBody.h \
  /usr/include/bullet/btBulletCollisionCommon.h OgreMotionState.h \
-<<<<<<< HEAD
- GameSettings.h
-=======
- ContactSensorCallback.h
->>>>>>> contact
+ ContactSensorCallback.h GameSettings.h
 
 /usr/include/stdc-predef.h:
 
@@ -3444,8 +3440,6 @@ Player.h:
 
 OgreMotionState.h:
 
-<<<<<<< HEAD
-GameSettings.h:
-=======
 ContactSensorCallback.h:
->>>>>>> contact
+
+GameSettings.h:
