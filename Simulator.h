@@ -1,16 +1,13 @@
 #ifndef __Simulator_h_
 #define __Simulator_h_
 
-#ifndef __Simulator_h_DEFINED
-    #define __Simulator_h_DEFINED
-    class Simulator;
-    #include "GameObject.h"
-    #include "Player.h"
-#endif
-
-#include <btBulletDynamicsCommon.h>
-#include <btBulletCollisionCommon.h>
 #include <Ogre.h>
+#include <btBulletDynamicsCommon.h>
+#include "GameObject.h"
+#include "Player.h"
+
+class GameObject;
+class Player;
 
 class Simulator {
 protected:

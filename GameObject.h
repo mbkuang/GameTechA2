@@ -1,19 +1,12 @@
 #ifndef __GameObject_h_
 #define __GameObject_h_
 
-#ifndef __GameObject_h_DEFINED
-    #define __GameObject_h_DEFINED
-    class GameObject;
-    #include "Simulator.h"
-#endif
-
-#include "OgreMotionState.h"
 #include <Ogre.h>
-#include <OgreEntity.h>
-#include <OgreVector3.h>
-#include <OgreSceneManager.h>
 #include <btBulletDynamicsCommon.h>
+#include "OgreMotionState.h"
+#include "Simulator.h"
 #include "ContactSensorCallback.h"
+
 class Simulator;
 
 class GameObject {
@@ -37,7 +30,7 @@ protected:
     bool needsUpdates;
 
     CollisionContext* context;
-    BulletContactCallback* cCallBack;
+    ContactSensorCallback* cCallBack;
 
 public:
     GameObject(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim);

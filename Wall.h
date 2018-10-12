@@ -5,10 +5,7 @@
 
 class Wall : public GameObject {
 private:
-	Ogre::Vector3 position;
-	Ogre::Vector3 scale;
-	btVector3 setting;
-	Ogre::String material;
+    // TODO: Store information to edit wall.
 	float lastTime;
 
 public:

@@ -114,5 +114,7 @@ void GameObject::addToSimulator() {
         body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
         body->setActivationState(DISABLE_DEACTIVATION);
     }
+    context = new CollisionContext();
+    cCallBack = new ContactSensorCallback(*body, *context);
     simulator->addObject(this);
 }

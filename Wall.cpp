@@ -31,7 +31,7 @@ Wall::Wall(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
 }
 
 Wall::~Wall() {
-    //TODO:
+    // TODO:
 }
 
 // Specific game object update routine.

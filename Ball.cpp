@@ -6,62 +6,48 @@
 
 Ball::Ball(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim)
     : GameObject(newName, scnMgr, sim) {
-
+    // Set the entity.
     geom = sceneMgr->createEntity(name, "sphere.mesh");
+    geom->setCastShadows(true);
     geom->setMaterialName("BallTexture");
 
-    float radius = 2;
-
-    geom->setCastShadows(true);
+    // Set the rootNode.
+    radius = 2.0f;
     rootNode = sceneMgr->getRootSceneNode()
-        ->createChildSceneNode(name, Ogre::Vector3(0,0,0));
+        ->createChildSceneNode(name, Ogre::Vector3(0.0f, 0.0f, 0.0f));
     rootNode->attachObject(geom);
-    rootNode->scale(radius * 0.01,radius * 0.01,radius * 0.01);
-    rootNode->setPosition(0,0,-200);
+    rootNode->scale(radius * 0.01f,radius * 0.01f,radius * 0.01f);
+    rootNode->setPosition(0.0f, 0.0f, -200.0f);
 
+    // Setup marker.
     marker = sceneMgr->createEntity("BallMarker", "cube.mesh");
     marker->setMaterialName("TransparentRed");
     marker->setCastShadows(false);
     markerNode = sceneMgr->getRootSceneNode()
-        ->createChildSceneNode("BallMarker", Ogre::Vector3(0,0,0));
+        ->createChildSceneNode("BallMarker", Ogre::Vector3(0.0f, 0.0f, 0.0f));
     markerNode->attachObject(marker);
-    markerNode->scale(80 * 0.01, 80 * 0.01, .1 * 0.01);
-    markerNode->setPosition(0,0,-200);
+    markerNode->scale(80.0f * 0.01f, 80.0f * 0.01f, 0.1f * 0.01f);
+    markerNode->setPosition(0.0f, 0.0f, -200.0f);
 
-    // Set the rigid Body
-    transform.setIdentity();
+    // Set the rigid body.
     transform.setOrigin(btVector3(0, 0, -200));
-
     shape = new btSphereShape(btScalar(radius * .5));
-    //TODO this->simulator->getCollisionShapes().push_back(shape);
-
     motionState = new OgreMotionState(transform, rootNode);
+    mass = 1.0f;
+    restitution = 1.01f;
+    friction = 0.0f;
 
-    mass = 1; //the mass is 1, because the ball is movable (dynamic)
-    inertia = btVector3(0, 0, 0);
+    addToSimulator();
 
-    shape->calculateLocalInertia(mass, inertia);
-
-    btRigidBody::btRigidBodyConstructionInfo bRBInfo(
-        mass, motionState, shape, inertia);
-    body = new btRigidBody(bRBInfo);
-    body->setRestitution(1.01);
-    body->setUserPointer(rootNode);
-
+    // Set the ball's velocity.
     float random = rand(); //(rand()%100-50);
     float xdir = sin(random) * 50;
     float ydir = (1 - sin(random)) * 50;
-
     body->setLinearVelocity(btVector3(xdir,ydir,-75));
-
-    // Add to the physics simulator
-    //this->simulator->getDynamicsWorld()->addRigidBody(body);
-    this->simulator->addObject(this);
-    //TODO this->simulator->trackRigidBodyWithName(body, "ballBody");
 }
 
 Ball::~Ball() {
-
+ // TODO:
 }
 
 Ogre::SceneNode* Ball::getMarkerNode() {
