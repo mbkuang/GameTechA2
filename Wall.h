@@ -5,14 +5,15 @@
 
 class Wall : public GameObject {
 private:
-    // TODO: Store information to edit wall.
+    Ogre::Vector3 position;
+    Ogre::Vector3 scale;
+    Ogre::String material;
 	float lastTime;
 
 public:
-    Wall(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim, 
-    	float xPosition = 0, float yPosition = 0, float zPosition = 0,
-    	float xScale = 1, float yScale = 1, float zScale = 1,
-    	Ogre::String material = "");  
+    Wall(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
+        Ogre::Vector3 position, Ogre::Vector3 scale, Ogre::String material,
+        float mass, float restitution, float friction, bool kinematic);  
     ~Wall();
     void update(float elapsedTime);
 };

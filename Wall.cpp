@@ -1,10 +1,18 @@
 #include <Wall.h>
 
 Wall::Wall(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
-    float xPosition, float yPosition, float zPosition,
-    float xScale, float yScale, float zScale,
-    Ogre::String material) :
+    Ogre::Vector3 position, Ogre::Vector3 scale, Ogre::String material,
+    float mass, float restitution, float friction, bool kinematic) :
     GameObject(newName, scnMgr, sim) {
+    // Set variables.
+    this->position = position;
+    this->scale = scale;
+    this->material = material;
+    this->mass = mass;
+    this->restitution = restitution;
+    this->friction = friction;
+    this->kinematic = kinematic;
+
     // Set the entity.
     geom = sceneMgr->createEntity(name, "cube.mesh");
     geom->setCastShadows(true);
@@ -14,18 +22,15 @@ Wall::Wall(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
         
     // Set the rootNode.
     rootNode = sceneMgr->getRootSceneNode()->
-        createChildSceneNode(name, Ogre::Vector3(xPosition, yPosition, zPosition));
+        createChildSceneNode(name, Ogre::Vector3(position.x, position.y, position.z));
     rootNode->attachObject(geom);
-    rootNode->scale(xScale * 0.01f, yScale * 0.01f, zScale * 0.01f);
-    rootNode->setPosition(xPosition, yPosition, zPosition);
+    rootNode->scale(scale.x * 0.01f, scale.y * 0.01f, scale.z * 0.01f);
+    rootNode->setPosition(position.x, position.y, position.z);
 
     // Set the rigid body.
-    transform.setOrigin(btVector3(xPosition, yPosition, zPosition));
-    shape = new btBoxShape(btVector3(xScale * 0.5f, yScale * 0.5f, zScale * 0.5f));
+    transform.setOrigin(btVector3(position.x, position.y, position.z));
+    shape = new btBoxShape(btVector3(scale.x * 0.5f, scale.y * 0.5f, scale.z * 0.5f));
     motionState = new OgreMotionState(transform, rootNode);
-    mass = 0.0f;
-    restitution = 1.0f;
-    friction = 0.0f;
 
     addToSimulator();
 }

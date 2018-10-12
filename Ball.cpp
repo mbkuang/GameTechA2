@@ -13,21 +13,24 @@ Ball::Ball(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim)
 
     // Set the rootNode.
     radius = 2.0f;
+    x = 0.0f;
+    y = 0.0f;
+    z = -200.0f;
     rootNode = sceneMgr->getRootSceneNode()
-        ->createChildSceneNode(name, Ogre::Vector3(0.0f, 0.0f, 0.0f));
+        ->createChildSceneNode(name, Ogre::Vector3(x, y, z));
     rootNode->attachObject(geom);
     rootNode->scale(radius * 0.01f,radius * 0.01f,radius * 0.01f);
-    rootNode->setPosition(0.0f, 0.0f, -200.0f);
+    rootNode->setPosition(x, y, z);
 
     // Setup marker.
     marker = sceneMgr->createEntity("BallMarker", "cube.mesh");
     marker->setMaterialName("TransparentRed");
     marker->setCastShadows(false);
     markerNode = sceneMgr->getRootSceneNode()
-        ->createChildSceneNode("BallMarker", Ogre::Vector3(0.0f, 0.0f, 0.0f));
+        ->createChildSceneNode("BallMarker", Ogre::Vector3(x, y, z));
     markerNode->attachObject(marker);
     markerNode->scale(80.0f * 0.01f, 80.0f * 0.01f, 0.1f * 0.01f);
-    markerNode->setPosition(0.0f, 0.0f, -200.0f);
+    markerNode->setPosition(x, y, z);
 
     // Set the rigid body.
     transform.setOrigin(btVector3(0, 0, -200));

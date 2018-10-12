@@ -54,7 +54,8 @@ void TutorialApplication::createScene(void)
     // zMax = 400;
 
     Wall* flooring = new Wall("Flooring", mSceneMgr, simulator,
-        0, yFWall, -200, 100, 20, 400, "WallTexture2Inverse");
+        Ogre::Vector3(0.0f, yFWall, -200.0f), Ogre::Vector3(100.0f, 20.0f, 400.0f), 
+        "WallTexture2Inverse" 0.0f, 1.0f, 0.0f, false);
     Wall* ceiling = new Wall("Ceiling", mSceneMgr, simulator,
         0, yCWall, -200, 100, 20, 400, "WallTexture2Inverse");
     Wall* westWall = new Wall("WestWall", mSceneMgr, simulator,
