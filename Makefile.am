@@ -1,4 +1,4 @@
-noinst_HEADERS = Ball.h ControlListener.h GameObject.h OgreMotionState.h Overlay.h Player.h PlayerCamera.h PlayingField.h Simulator.h Wall.h Paddle.h BaseApplication.h TutorialApplication.h Sound.h
+noinst_HEADERS = Ball.h ControlListener.h GameObject.h OgreMotionState.h Overlay.h Player.h PlayerCamera.h PlayingField.h Simulator.h Wall.h Paddle.h BaseApplication.h TutorialApplication.h Sound.h ContactSensorCallback.h
 
 bin_PROGRAMS = assignment2
 assignment2_CPPFLAGS = -I$(top_srcdir)

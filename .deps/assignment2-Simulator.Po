@@ -1046,7 +1046,7 @@ assignment2-Simulator.o: Simulator.cpp /usr/include/stdc-predef.h \
  /usr/include/OGRE/OgreShadowCameraSetupPlaneOptimal.h \
  /usr/include/OGRE/OgreShadowCameraSetupPSSM.h \
  /usr/include/OGRE/OgreEntity.h /usr/include/OGRE/OgreVector3.h \
- /usr/include/OGRE/OgreSceneManager.h Player.h \
+ /usr/include/OGRE/OgreSceneManager.h ContactSensorCallback.h Player.h \
  /usr/include/bullet/btBulletCollisionCommon.h
 
 /usr/include/stdc-predef.h:
@@ -3432,6 +3432,8 @@ OgreMotionState.h:
 /usr/include/OGRE/OgreVector3.h:
 
 /usr/include/OGRE/OgreSceneManager.h:
+
+ContactSensorCallback.h:
 
 Player.h:
 
