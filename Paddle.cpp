@@ -1,4 +1,4 @@
-#include <Paddle.h>
+#include "Paddle.h"
 
 Paddle::Paddle(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
     Ogre::Vector3 position, Ogre::Vector3 scale, Ogre::String material,
@@ -12,6 +12,7 @@ Paddle::Paddle(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
     this->restitution = restitution;
     this->friction = friction;
     this->kinematic = kinematic;
+    lastTime = 0.0f;
 
     // Set the entity.
     geom = sceneMgr->createEntity(name, "cube.mesh");
@@ -28,22 +29,9 @@ Paddle::Paddle(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
     rootNode->setPosition(position.x, position.y, position.z);
 
     // Set the rigid body.
-    transform.setIdentity();
     transform.setOrigin(btVector3(position.x, position.y, position.z));
     shape = new btBoxShape(btVector3(scale.x * 0.5f, scale.y * 0.5f, scale.z * 0.5f));
     motionState = new OgreMotionState(transform, rootNode);
-
-    inertia = btVector3(0, 0, 0);
-    shape->calculateLocalInertia(mass, inertia);
-
-    btRigidBody::btRigidBodyConstructionInfo bRBInfo(
-        mass, motionState, shape, inertia);
-    body = new btRigidBody(bRBInfo);
-    body->setRestitution(this->restitution);
-    body->setFriction(this->friction);
-    body->setUserPointer(rootNode);
-    body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
-    body->setActivationState(DISABLE_DEACTIVATION);
 
     addToSimulator();
 }

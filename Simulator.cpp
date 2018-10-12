@@ -33,7 +33,7 @@ void Simulator::stepSimulation(const Ogre::Real elapsedTime, int maxSubSteps, co
 	dynamicsWorld->stepSimulation(elapsedTime, maxSubSteps, fixedTimestep);
 	for (unsigned int i = 0; i < objList.size(); i++) {
 		//if (objList[i]->doUpdates()) {
-			//objList[i]->update(elapsedTime);
+			objList[i]->update(elapsedTime);
 		//}
 	}
 }

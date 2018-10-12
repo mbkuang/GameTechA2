@@ -1,4 +1,4 @@
-#include <Wall.h>
+#include "Wall.h"
 
 Wall::Wall(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
     Ogre::Vector3 position, Ogre::Vector3 scale, Ogre::String material,
@@ -12,6 +12,7 @@ Wall::Wall(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
     this->restitution = restitution;
     this->friction = friction;
     this->kinematic = kinematic;
+    lastTime = 0.0f;
 
     // Set the entity.
     geom = sceneMgr->createEntity(name, "cube.mesh");

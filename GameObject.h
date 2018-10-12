@@ -48,7 +48,7 @@ public:
     void move(Ogre::Real x, Ogre::Real y, Ogre::Real z);
     void updateTransform();
     void addToSimulator();
-
+    virtual void update(float elapsedTime) {}
 };
 
 #endif

@@ -46,13 +46,6 @@ void TutorialApplication::createScene(void)
 
     mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
 
-    // xMin = -34;
-    // xMax = 34;
-    // yMin = -35;
-    // yMax = 35;
-    // zMin = 0;
-    // zMax = 400;
-
     Wall* flooring = new Wall("Flooring", mSceneMgr, simulator,
         Ogre::Vector3(0.0f, yFWall, -200.0f), Ogre::Vector3(100.0f, 20.0f, 400.0f),
         "WallTexture2Inverse", 0.0f, 1.0f, 0.0f, false);
@@ -75,21 +68,19 @@ void TutorialApplication::createScene(void)
     Player* player1 = new Player("Player1", simulator);
     Player* cpuPlayer = new Player("CPU", simulator);
 
-    Ball* ball = new Ball("Ball", mSceneMgr, simulator);
-    //ball->setPosition(0.0,5.0,0.0);
-    //Ball* newball = new Ball("NewBall", mSceneMgr, simulator);
-    //newball->setPosition(0.0,5.0,10.0);
-    // Ball* newball2 = new Ball("NewBall2", mSceneMgr, simulator);
-    // newball2->setPosition(0.0,50.0,25.0);
+    Ball* ball = new Ball("Ball", mSceneMgr, simulator,
+        Ogre::Vector3(0.0f, 0.0f, -200.0f), 2.0f, 
+        "BallTexture", 1.0f, 1.01f, 0.0f, false);
+
     Paddle* playerPaddle = new Paddle("PlayerPaddle", mSceneMgr, simulator,
-        Ogre::Vector3(0.0f, 0.0f, 0.0f), Ogre::Vector3(11.0,10.0,1.0),
+        Ogre::Vector3(0.0f, 0.0f, 0.0f), Ogre::Vector3(11.0f, 10.0f, 1.0f),
         "PaddleTexture", 1.0f, 1.0f, 0.0f, false);
-    playerPaddle->setPosition(0.0,0.0,0.0);
+    playerPaddle->setPosition(0.0f, 0.0f, 0.0f);
 
     Paddle* cpuPaddle = new Paddle("CPUPaddle", mSceneMgr, simulator,
-        Ogre::Vector3(0.0f, 0.0f, 400.0f), Ogre::Vector3(11.0,10.0,1.0),
+        Ogre::Vector3(0.0f, 0.0f, 400.0f), Ogre::Vector3(11.0f, 10.0f, 1.0f),
         "PaddleTexture", 1.0f, 1.0f, 0.0f, false);
-    cpuPaddle->setPosition(0.0,0.0,-400.0);
+    cpuPaddle->setPosition(0.0f, 0.0f, -400.0f);
 
     aimanager->update(mSceneMgr, simulator, cpuPaddle, ball);
 

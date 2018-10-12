@@ -1,7 +1,7 @@
 #ifndef __Wall_h_
 #define __Wall_h_
 
-#include <GameObject.h>
+#include "GameObject.h"
 
 class Wall : public GameObject {
 private:
