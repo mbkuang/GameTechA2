@@ -75,12 +75,10 @@ void TutorialApplication::createScene(void)
     Paddle* playerPaddle = new Paddle("PlayerPaddle", mSceneMgr, simulator,
         Ogre::Vector3(0.0f, 0.0f, 0.0f), Ogre::Vector3(11.0f, 10.0f, 1.0f),
         "PaddleTexture", 1.0f, 1.0f, 0.0f, false);
-    playerPaddle->setPosition(0.0f, 0.0f, 0.0f);
 
     Paddle* cpuPaddle = new Paddle("CPUPaddle", mSceneMgr, simulator,
-        Ogre::Vector3(0.0f, 0.0f, 400.0f), Ogre::Vector3(11.0f, 10.0f, 1.0f),
+        Ogre::Vector3(0.0f, 0.0f, -400.0f), Ogre::Vector3(11.0f, 10.0f, 1.0f),
         "PaddleTexture", 1.0f, 1.0f, 0.0f, false);
-    cpuPaddle->setPosition(0.0f, 0.0f, -400.0f);
 
     aimanager->update(mSceneMgr, simulator, cpuPaddle, ball);
 
@@ -291,7 +289,7 @@ bool TutorialApplication::mouseReleased(const OIS::MouseEvent& arg, OIS::MouseBu
 //---------------------------------------------------------------------------
 bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& fe)
 {
-    float movementSpeed = 60.0f;
+    float movementSpeed = 120.0f;
     Paddle* playerPaddle = (Paddle*) simulator->getObject("PlayerPaddle");
 
     if (mKeyboard->isKeyDown(OIS::KC_R)) {
@@ -299,24 +297,20 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& fe)
     }
 
     if (mKeyboard->isKeyDown(OIS::KC_W)) {
-        // GameObject* playerPaddle = simulator->getObject("PlayerPaddle");
-        // btVector3 pPosition = playerPaddle->getPosition();
-        // pPosition.setY(std::min(yMax, pPosition.getY()+movementSpeed));
-        // playerPaddle->setPosition(pPosition);
-
         playerPaddle->move(0.0f, movementSpeed * fe.timeSinceLastFrame, 0.0f);
     }
 
     if (mKeyboard->isKeyDown(OIS::KC_S)) {
-        // GameObject* playerPaddle = simulator->getObject("PlayerPaddle");
-        // btVector3 pPosition = playerPaddle->getPosition();
-        // pPosition.setY(std::max(yMin, pPosition.getY()-movementSpeed));
-        // playerPaddle->setPosition(pPosition);
-
-        // Ogre::Vector3 cPosition = mCamera->getPosition();
-        // cPosition.y = (0 + pPosition.getY())/2;
-        // mCamera->setPosition(cPosition);
         playerPaddle->move(0.0f, -movementSpeed * fe.timeSinceLastFrame, 0.0f);
+    }
+
+
+    if (mKeyboard->isKeyDown(OIS::KC_A)) {
+        playerPaddle->move(-movementSpeed * fe.timeSinceLastFrame, 0.0f, 0.0f);
+    }
+
+    if (mKeyboard->isKeyDown(OIS::KC_D)) {
+        playerPaddle->move(movementSpeed * fe.timeSinceLastFrame, 0.0f, 0.0f);
     }
 
     // if (mKeyboard->isKeyDown(OIS::KC_Q)) {
@@ -334,30 +328,6 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& fe)
     // if (mKeyboard->isKeyDown(OIS::KC_C)) {
     //     mCamera->pitch(Ogre::Degree(-.05));
     // }
-
-    if (mKeyboard->isKeyDown(OIS::KC_A)) {
-        // GameObject* playerPaddle = simulator->getObject("PlayerPaddle");
-        // btVector3 pPosition = playerPaddle->getPosition();
-        // pPosition.setX(std::max(xMin, pPosition.getX()-movementSpeed));
-        // playerPaddle->setPosition(pPosition);
-
-        // Ogre::Vector3 cPosition = mCamera->getPosition();
-        // cPosition.x = (0 + pPosition.getX())/2;
-        // mCamera->setPosition(cPosition);
-        playerPaddle->move(-movementSpeed * fe.timeSinceLastFrame, 0.0f, 0.0f);
-    }
-
-    if (mKeyboard->isKeyDown(OIS::KC_D)) {
-        // GameObject* playerPaddle = simulator->getObject("PlayerPaddle");
-        // btVector3 pPosition = playerPaddle->getPosition();
-        // pPosition.setX(std::min(xMax, pPosition.getX()+movementSpeed));
-        // playerPaddle->setPosition(pPosition);
-
-        // Ogre::Vector3 cPosition = mCamera->getPosition();
-        // cPosition.x = (0 + pPosition.getX())/2;
-        // mCamera->setPosition(cPosition);
-        playerPaddle->move(movementSpeed * fe.timeSinceLastFrame, 0.0f, 0.0f);
-    }
 
     playerPaddle->updateTransform();
 
