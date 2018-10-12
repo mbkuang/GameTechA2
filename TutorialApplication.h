@@ -24,6 +24,9 @@ http://www.ogre3d.org/wiki/
 #include "Ball.h"
 #include "Wall.h"
 #include "Paddle.h"
+#include "GameSettings.h"
+#include "AIManager.h"
+
 #include <CEGUI/CEGUI.h>
 #include <CEGUI/RendererModules/Ogre/Renderer.h>
 
@@ -47,6 +50,7 @@ protected:
     virtual bool mouseReleased(const OIS::MouseEvent& me, OIS::MouseButtonID id);
 
     Simulator* simulator;
+    AIManager* aimanager;
     CEGUI::OgreRenderer* mRenderer;
 
     CEGUI::Window *sheet;

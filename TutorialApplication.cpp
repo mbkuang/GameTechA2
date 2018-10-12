@@ -23,6 +23,7 @@ http://www.ogre3d.org/wiki/
 TutorialApplication::TutorialApplication(void)
 {
     simulator = new Simulator();
+    aimanager = new AIManager(simulator);
 }
 //---------------------------------------------------------------------------
 TutorialApplication::~TutorialApplication(void)
@@ -45,25 +46,25 @@ void TutorialApplication::createScene(void)
 
     mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
 
-    xMin = -34;
-    xMax = 34;
-    yMin = -35;
-    yMax = 35;
-    zMin = 10;
-    zMax = 390;
+    // xMin = -34;
+    // xMax = 34;
+    // yMin = -35;
+    // yMax = 35;
+    // zMin = 0;
+    // zMax = 400;
 
     Wall* flooring = new Wall("Flooring", mSceneMgr, simulator,
-        0, -50, -200, 100, 20, 400, "WallTexture2Inverse");
+        0, yFWall, -200, 100, 20, 400, "WallTexture2Inverse");
     Wall* ceiling = new Wall("Ceiling", mSceneMgr, simulator,
-        0, 50, -200, 100, 20, 400, "WallTexture2Inverse");
+        0, yCWall, -200, 100, 20, 400, "WallTexture2Inverse");
     Wall* westWall = new Wall("WestWall", mSceneMgr, simulator,
-        -50, 0, -200, 20, 80, 400, "WallTexture");
+        xWWall, 0, -200, 20, 80, 400, "WallTexture");
     Wall* eastWall = new Wall("EastWall", mSceneMgr, simulator,
-        50, 0, -200, 20, 80, 400, "WallTextureInverse");
+        xEWall, 0, -200, 20, 80, 400, "WallTextureInverse");
     Wall* northWall = new Wall("NorthWall", mSceneMgr, simulator,
-        0, 0, -400, 100, 100, 20, "WallTextureInvisible");
+        0, 0, zNWall, 100, 100, 20, "WallTextureInvisible");
     Wall* southWall = new Wall("SouthWall", mSceneMgr, simulator,
-        0, 0, 0, 100, 100, 20, "WallTextureInvisible");
+        0, 0, zSWall, 100, 100, 20, "WallTextureInvisible");
 
     Player* player1 = new Player("Player1", simulator);
     Player* cpuPlayer = new Player("CPU", simulator);
@@ -75,10 +76,12 @@ void TutorialApplication::createScene(void)
     // Ball* newball2 = new Ball("NewBall2", mSceneMgr, simulator);
     // newball2->setPosition(0.0,50.0,25.0);
     Paddle* playerPaddle = new Paddle("PlayerPaddle", mSceneMgr, simulator);
-    playerPaddle->setPosition(0.0,0.0,-11.0);
+    playerPaddle->setPosition(0.0,0.0,0.0);//-11.0);
 
     Paddle* cpuPaddle = new Paddle("CPUPaddle", mSceneMgr, simulator);
-    cpuPaddle->setPosition(0.0,0.0,-389.0);
+    cpuPaddle->setPosition(0.0,0.0,-400.0);
+
+    aimanager->update(mSceneMgr, simulator, cpuPaddle, ball);
 
     CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
     sheet = wmgr.createWindow("DefaultWindow", "CEGUIDemo/Sheet");
@@ -199,24 +202,7 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
     if (!processUnbufferedInput(fe))
         return false;
 
-    float movementSpeed = 60.0f;
-    Paddle* cpuPaddle = (Paddle*) simulator->getObject("CPUPaddle");
-    Ball* ball = (Ball*) simulator->getObject("Ball");
-
-    // Move the CPU paddle towards the ball
-    btVector3 bPosition = ball->getPosition();
-    btVector3 pPosition = cpuPaddle->getPosition();
-    float xDir = bPosition.getX() - pPosition.getX();
-    xDir = xDir < 0 ? -1 : 1;
-    float yDir = bPosition.getY() - pPosition.getY();
-    yDir = yDir < 0 ? -1 : 1;
-
-    cpuPaddle->move(
-        xDir * movementSpeed * fe.timeSinceLastFrame,
-        yDir * movementSpeed * fe.timeSinceLastFrame,
-        0.0f,
-        xMin, xMax, yMin, yMax
-    );
+    aimanager->move(fe);
 
     // Update Ogre with Bullet's State
 	if (this->simulator != NULL){
@@ -224,6 +210,7 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
         simulator->stepSimulation(fe.timeSinceLastFrame);
 	}
 
+    Ball* ball = (Ball*) simulator->getObject("Ball");
     ball->getMarkerNode()->setPosition(0, 0, ball->getPosition().getZ());
 
     return ret;
@@ -233,18 +220,21 @@ bool TutorialApplication::keyPressed(const OIS::KeyEvent& arg) {
     CEGUI::GUIContext& context = CEGUI::System::getSingleton().getDefaultGUIContext();
     context.injectKeyDown((CEGUI::Key::Scan)arg.key);
     context.injectChar((CEGUI::Key::Scan)arg.text);
-    if(arg.key == OIS::KC_ESCAPE) {
+    if (arg.key == OIS::KC_ESCAPE) {
         mShutDown = true;
-    }
-    else if(arg.key == OIS::KC_R) {
+    } else if (arg.key == OIS::KC_R) {
         //Reset the ball's position
         GameObject* ball = simulator->getObject("Ball");
         ball->setPosition(0, 0, -200);
         btRigidBody* ballBody = ball->getBody();
 
-        Ogre::Real x_dir = Ogre::Math::RangeRandom(-200, 200);
-        Ogre::Real y_dir = Ogre::Math::RangeRandom(-200, 200);
-        Ogre::Real z_dir = Ogre::Math::RangeRandom(-200, 200);
+        // Ogre::Real x_dir = Ogre::Math::RangeRandom(0, 200);
+        // Ogre::Real y_dir = (200-x_dir)-100;
+        // x_dir = x_dir-100;
+        float random = rand(); //(rand()%100-50);
+        Ogre::Real x_dir = sin(random) * 50;
+        Ogre::Real y_dir = (1 - sin(random)) * 50;
+        Ogre::Real z_dir = -75;
 
         ballBody->setLinearVelocity(btVector3(x_dir, y_dir, z_dir));
     }
@@ -296,8 +286,7 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& fe)
         // pPosition.setY(std::min(yMax, pPosition.getY()+movementSpeed));
         // playerPaddle->setPosition(pPosition);
 
-        playerPaddle->move(0.0f, movementSpeed * fe.timeSinceLastFrame, 0.0f,
-            xMin, xMax, yMin, yMax);
+        playerPaddle->move(0.0f, movementSpeed * fe.timeSinceLastFrame, 0.0f);
     }
 
     if (mKeyboard->isKeyDown(OIS::KC_S)) {
@@ -309,8 +298,7 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& fe)
         // Ogre::Vector3 cPosition = mCamera->getPosition();
         // cPosition.y = (0 + pPosition.getY())/2;
         // mCamera->setPosition(cPosition);
-        playerPaddle->move(0.0f, -movementSpeed * fe.timeSinceLastFrame, 0.0f,
-            xMin, xMax, yMin, yMax);
+        playerPaddle->move(0.0f, -movementSpeed * fe.timeSinceLastFrame, 0.0f);
     }
 
     // if (mKeyboard->isKeyDown(OIS::KC_Q)) {
@@ -338,8 +326,7 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& fe)
         // Ogre::Vector3 cPosition = mCamera->getPosition();
         // cPosition.x = (0 + pPosition.getX())/2;
         // mCamera->setPosition(cPosition);
-        playerPaddle->move(-movementSpeed * fe.timeSinceLastFrame, 0.0f, 0.0f,
-            xMin, xMax, yMin, yMax);
+        playerPaddle->move(-movementSpeed * fe.timeSinceLastFrame, 0.0f, 0.0f);
     }
 
     if (mKeyboard->isKeyDown(OIS::KC_D)) {
@@ -351,8 +338,7 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& fe)
         // Ogre::Vector3 cPosition = mCamera->getPosition();
         // cPosition.x = (0 + pPosition.getX())/2;
         // mCamera->setPosition(cPosition);
-        playerPaddle->move(movementSpeed * fe.timeSinceLastFrame, 0.0f, 0.0f,
-            xMin, xMax, yMin, yMax);
+        playerPaddle->move(movementSpeed * fe.timeSinceLastFrame, 0.0f, 0.0f);
     }
 
     playerPaddle->updateTransform();

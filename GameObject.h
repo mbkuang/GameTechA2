@@ -5,9 +5,7 @@
     #define __GameObject_h_DEFINED
     class GameObject;
     #include "Simulator.h"
-    //#include "OgreMotionState.h"
 #endif
-
 
 #include "OgreMotionState.h"
 #include <Ogre.h>

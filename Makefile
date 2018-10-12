@@ -119,7 +119,7 @@ am_assignment2_OBJECTS = assignment2-Ball.$(OBJEXT) \
 	assignment2-BaseApplication.$(OBJEXT) \
 	assignment2-TutorialApplication.$(OBJEXT) \
 	assignment2-OgreMotionState.$(OBJEXT) \
-	assignment2-Sound.$(OBJEXT)
+	assignment2-Sound.$(OBJEXT) assignment2-AIManager.$(OBJEXT)
 assignment2_OBJECTS = $(am_assignment2_OBJECTS)
 am__DEPENDENCIES_1 =
 assignment2_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
@@ -215,13 +215,13 @@ distuninstallcheck_listfiles = find . -type f -print
 am__distuninstallcheck_listfiles = $(distuninstallcheck_listfiles) \
   | sed 's|^\./|$(prefix)/|' | grep -v '$(infodir)/dir$$'
 distcleancheck_listfiles = find . -type f -print
-ACLOCAL = ${SHELL} /u/mbkuang/Desktop/assignment2/GameTechA2/missing aclocal-1.15
+ACLOCAL = ${SHELL} /u/ethan555/Documents/GameTechnology/Assignment2/GameTechA2/missing aclocal-1.15
 AMTAR = $${TAR-tar}
 AM_DEFAULT_VERBOSITY = 1
 AR = ar
-AUTOCONF = ${SHELL} /u/mbkuang/Desktop/assignment2/GameTechA2/missing autoconf
-AUTOHEADER = ${SHELL} /u/mbkuang/Desktop/assignment2/GameTechA2/missing autoheader
-AUTOMAKE = ${SHELL} /u/mbkuang/Desktop/assignment2/GameTechA2/missing automake-1.15
+AUTOCONF = ${SHELL} /u/ethan555/Documents/GameTechnology/Assignment2/GameTechA2/missing autoconf
+AUTOHEADER = ${SHELL} /u/ethan555/Documents/GameTechnology/Assignment2/GameTechA2/missing autoheader
+AUTOMAKE = ${SHELL} /u/ethan555/Documents/GameTechnology/Assignment2/GameTechA2/missing automake-1.15
 AWK = gawk
 BULLET_CFLAGS = 
 BULLET_LIBS = 
@@ -265,7 +265,7 @@ LIPO =
 LN_S = ln -s
 LTLIBOBJS = 
 LT_SYS_LIBRARY_PATH = 
-MAKEINFO = ${SHELL} /u/mbkuang/Desktop/assignment2/GameTechA2/missing makeinfo
+MAKEINFO = ${SHELL} /u/ethan555/Documents/GameTechnology/Assignment2/GameTechA2/missing makeinfo
 MANIFEST_TOOL = :
 MKDIR_P = /bin/mkdir -p
 NM = /usr/bin/nm -B
@@ -301,10 +301,10 @@ SET_MAKE =
 SHELL = /bin/bash
 STRIP = strip
 VERSION = 0.1
-abs_builddir = /u/mbkuang/Desktop/assignment2/GameTechA2
-abs_srcdir = /u/mbkuang/Desktop/assignment2/GameTechA2
-abs_top_builddir = /u/mbkuang/Desktop/assignment2/GameTechA2
-abs_top_srcdir = /u/mbkuang/Desktop/assignment2/GameTechA2
+abs_builddir = /u/ethan555/Documents/GameTechnology/Assignment2/GameTechA2
+abs_srcdir = /u/ethan555/Documents/GameTechnology/Assignment2/GameTechA2
+abs_top_builddir = /u/ethan555/Documents/GameTechnology/Assignment2/GameTechA2
+abs_top_srcdir = /u/ethan555/Documents/GameTechnology/Assignment2/GameTechA2
 ac_ct_AR = ar
 ac_ct_CC = gcc
 ac_ct_CXX = g++
@@ -336,7 +336,7 @@ host_vendor = pc
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /u/mbkuang/Desktop/assignment2/GameTechA2/install-sh
+install_sh = ${SHELL} /u/ethan555/Documents/GameTechnology/Assignment2/GameTechA2/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -359,9 +359,9 @@ target_alias =
 top_build_prefix = 
 top_builddir = .
 top_srcdir = .
-noinst_HEADERS = Ball.h ControlListener.h GameObject.h OgreMotionState.h Overlay.h Player.h PlayerCamera.h PlayingField.h Simulator.h Wall.h Paddle.h BaseApplication.h TutorialApplication.h Sound.h
+noinst_HEADERS = Ball.h ControlListener.h GameObject.h OgreMotionState.h Overlay.h Player.h PlayerCamera.h PlayingField.h Simulator.h Wall.h Paddle.h BaseApplication.h TutorialApplication.h Sound.h AIManager.h GameSettings.h
 assignment2_CPPFLAGS = -I$(top_srcdir)
-assignment2_SOURCES = Ball.cpp ControlListener.cpp GameObject.cpp Overlay.cpp Player.cpp PlayerCamera.cpp PlayingField.cpp Simulator.cpp Wall.cpp Paddle.cpp BaseApplication.cpp TutorialApplication.cpp OgreMotionState.cpp Sound.cpp
+assignment2_SOURCES = Ball.cpp ControlListener.cpp GameObject.cpp Overlay.cpp Player.cpp PlayerCamera.cpp PlayingField.cpp Simulator.cpp Wall.cpp Paddle.cpp BaseApplication.cpp TutorialApplication.cpp OgreMotionState.cpp Sound.cpp AIManager.cpp
 assignment2_CXXFLAGS = $(OGRE_CFLAGS) $(OIS_CFLAGS) $(bullet_CFLAGS) $(CEGUI_CFLAGS) $(CEGUI_OGRE_CFLAGS) $(SDL_mixer_CFLAGS) $(SDL_net_CFLAGS)
 assignment2_LDADD = $(OGRE_LIBS) $(OIS_LIBS) $(bullet_LIBS) $(CEGUI_LIBS) $(CEGUI_OGRE_LIBS) $(SDL_mixer_LIBS) $(SDL_net_LIBS)
 assignment2_LDFLAGS = -lOgreOverlay -lboost_system -lSDL -lSDL_mixer
@@ -480,6 +480,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+include ./$(DEPDIR)/assignment2-AIManager.Po
 include ./$(DEPDIR)/assignment2-Ball.Po
 include ./$(DEPDIR)/assignment2-BaseApplication.Po
 include ./$(DEPDIR)/assignment2-ControlListener.Po
@@ -711,6 +712,20 @@ assignment2-Sound.obj: Sound.cpp
 #	$(AM_V_CXX)source='Sound.cpp' object='assignment2-Sound.obj' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
 #	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(assignment2_CPPFLAGS) $(CPPFLAGS) $(assignment2_CXXFLAGS) $(CXXFLAGS) -c -o assignment2-Sound.obj `if test -f 'Sound.cpp'; then $(CYGPATH_W) 'Sound.cpp'; else $(CYGPATH_W) '$(srcdir)/Sound.cpp'; fi`
+
+assignment2-AIManager.o: AIManager.cpp
+	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(assignment2_CPPFLAGS) $(CPPFLAGS) $(assignment2_CXXFLAGS) $(CXXFLAGS) -MT assignment2-AIManager.o -MD -MP -MF $(DEPDIR)/assignment2-AIManager.Tpo -c -o assignment2-AIManager.o `test -f 'AIManager.cpp' || echo '$(srcdir)/'`AIManager.cpp
+	$(AM_V_at)$(am__mv) $(DEPDIR)/assignment2-AIManager.Tpo $(DEPDIR)/assignment2-AIManager.Po
+#	$(AM_V_CXX)source='AIManager.cpp' object='assignment2-AIManager.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(assignment2_CPPFLAGS) $(CPPFLAGS) $(assignment2_CXXFLAGS) $(CXXFLAGS) -c -o assignment2-AIManager.o `test -f 'AIManager.cpp' || echo '$(srcdir)/'`AIManager.cpp
+
+assignment2-AIManager.obj: AIManager.cpp
+	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(assignment2_CPPFLAGS) $(CPPFLAGS) $(assignment2_CXXFLAGS) $(CXXFLAGS) -MT assignment2-AIManager.obj -MD -MP -MF $(DEPDIR)/assignment2-AIManager.Tpo -c -o assignment2-AIManager.obj `if test -f 'AIManager.cpp'; then $(CYGPATH_W) 'AIManager.cpp'; else $(CYGPATH_W) '$(srcdir)/AIManager.cpp'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/assignment2-AIManager.Tpo $(DEPDIR)/assignment2-AIManager.Po
+#	$(AM_V_CXX)source='AIManager.cpp' object='assignment2-AIManager.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(assignment2_CPPFLAGS) $(CPPFLAGS) $(assignment2_CXXFLAGS) $(CXXFLAGS) -c -o assignment2-AIManager.obj `if test -f 'AIManager.cpp'; then $(CYGPATH_W) 'AIManager.cpp'; else $(CYGPATH_W) '$(srcdir)/AIManager.cpp'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo

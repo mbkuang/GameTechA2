@@ -45,10 +45,14 @@ Ball::Ball(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim)
     btRigidBody::btRigidBodyConstructionInfo bRBInfo(
         mass, motionState, shape, inertia);
     body = new btRigidBody(bRBInfo);
-    body->setRestitution(1);
+    body->setRestitution(1.01);
     body->setUserPointer(rootNode);
 
-    body->setLinearVelocity(btVector3(-35,50,-75));
+    float random = rand(); //(rand()%100-50);
+    float xdir = sin(random) * 50;
+    float ydir = (1 - sin(random)) * 50;
+
+    body->setLinearVelocity(btVector3(xdir,ydir,-75));
 
     // Add to the physics simulator
     //this->simulator->getDynamicsWorld()->addRigidBody(body);

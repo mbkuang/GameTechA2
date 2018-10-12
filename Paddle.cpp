@@ -1,7 +1,3 @@
-#include <Ogre.h>
-#include <OgreEntity.h>
-#include <OgreVector3.h>
-#include <OgreSceneManager.h>
 #include <Paddle.h>
 
 Paddle::Paddle(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim)
@@ -55,8 +51,7 @@ Paddle::~Paddle() {
 
 }
 
-void Paddle::move(Ogre::Real x, Ogre::Real y, Ogre::Real z,
-float xMin, float xMax, float yMin, float yMax) {
+void Paddle::move(Ogre::Real x, Ogre::Real y, Ogre::Real z) {
     rootNode->translate(rootNode->getLocalAxes(), x, y, z);
     Ogre::Vector3 pPosition = rootNode->getPosition();
     pPosition.x = std::min(std::max(pPosition.x, xMin), xMax);

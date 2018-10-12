@@ -1080,7 +1080,8 @@ assignment2-TutorialApplication.o: TutorialApplication.cpp \
  /usr/include/OGRE/OgreShadowCameraSetupPSSM.h \
  /usr/include/OGRE/OgreVector3.h Player.h \
  /usr/include/bullet/btBulletCollisionCommon.h Ball.h GameObject.h Wall.h \
- Paddle.h /lusr/opt/cegui-0.8.7/include/cegui-0/CEGUI/CEGUI.h \
+ Paddle.h GameSettings.h GameSettings.h AIManager.h \
+ /lusr/opt/cegui-0.8.7/include/cegui-0/CEGUI/CEGUI.h \
  /lusr/opt/cegui-0.8.7/include/cegui-0/CEGUI/Affector.h \
  /lusr/opt/cegui-0.8.7/include/cegui-0/CEGUI/String.h \
  /lusr/opt/cegui-0.8.7/include/cegui-0/CEGUI/Base.h \
@@ -3838,6 +3839,12 @@ GameObject.h:
 Wall.h:
 
 Paddle.h:
+
+GameSettings.h:
+
+GameSettings.h:
+
+AIManager.h:
 
 /lusr/opt/cegui-0.8.7/include/cegui-0/CEGUI/CEGUI.h:
 
