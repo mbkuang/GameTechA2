@@ -2,16 +2,12 @@
 #define __AIManager_h_
 
 #include <Ogre.h>
+#include "Simulator.h"
+#include "Paddle.h"
+#include "Ball.h"
+#include "GameSettings.h"
 
-#ifndef __AIManager_h_DEFINED
-    #define __AIManager_h_DEFINED
-    class AIManager;
-    #include "Paddle.h"
-    #include "Ball.h"
-    #include "GameSettings.h"
-    #include "Simulator.h"
-#endif
-
+class Simulator;
 class Paddle;
 class Ball;
 
@@ -21,7 +17,8 @@ protected:
     Simulator* simulator;
     Paddle* paddle;
     Ball* ball;
-    float movementSpeed = 60.0f;
+    float movementSpeed;
+
 public:
     AIManager(Simulator* sim);
     AIManager(Ogre::SceneManager* scnMgr, Simulator* sim, Paddle* pad, Ball* nBall);
