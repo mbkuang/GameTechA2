@@ -54,18 +54,23 @@ void TutorialApplication::createScene(void)
     // zMax = 400;
 
     Wall* flooring = new Wall("Flooring", mSceneMgr, simulator,
-        Ogre::Vector3(0.0f, yFWall, -200.0f), Ogre::Vector3(100.0f, 20.0f, 400.0f), 
-        "WallTexture2Inverse" 0.0f, 1.0f, 0.0f, false);
+        Ogre::Vector3(0.0f, yFWall, -200.0f), Ogre::Vector3(100.0f, 20.0f, 400.0f),
+        "WallTexture2Inverse", 0.0f, 1.0f, 0.0f, false);
     Wall* ceiling = new Wall("Ceiling", mSceneMgr, simulator,
-        0, yCWall, -200, 100, 20, 400, "WallTexture2Inverse");
+        Ogre::Vector3(0.0f, yCWall, -200.0f), Ogre::Vector3(100.0f, 20.0f, 400.0f),
+        "WallTexture2Inverse", 0.0f, 1.0f, 0.0f, false);
     Wall* westWall = new Wall("WestWall", mSceneMgr, simulator,
-        xWWall, 0, -200, 20, 80, 400, "WallTexture");
+        Ogre::Vector3(xWWall, 0.0f, -200.0f), Ogre::Vector3(20.0f, 80.0f, 400.0f),
+        "WallTexture", 0.0f, 1.0f, 0.0f, false);
     Wall* eastWall = new Wall("EastWall", mSceneMgr, simulator,
-        xEWall, 0, -200, 20, 80, 400, "WallTextureInverse");
+        Ogre::Vector3(xEWall, 0.0f, -200.0f), Ogre::Vector3(20.0f, 80.0f, 400.0f),
+        "WallTextureInverse", 0.0f, 1.0f, 0.0f, false);
     Wall* northWall = new Wall("NorthWall", mSceneMgr, simulator,
-        0, 0, zNWall, 100, 100, 20, "WallTextureInvisible");
+        Ogre::Vector3(0.0f, 0.0f, zNWall), Ogre::Vector3(100.0f, 100.0f, 20.0f),
+        "WallTextureInvisible", 0.0f, 1.0f, 0.0f, false);
     Wall* southWall = new Wall("SouthWall", mSceneMgr, simulator,
-        0, 0, zSWall, 100, 100, 20, "WallTextureInvisible");
+        Ogre::Vector3(0.0f, 0.0f, zSWall), Ogre::Vector3(100.0f, 100.0f, 20.0f),
+        "WallTextureInvisible", 0.0f, 1.0f, 0.0f, false);
 
     Player* player1 = new Player("Player1", simulator);
     Player* cpuPlayer = new Player("CPU", simulator);
@@ -76,10 +81,14 @@ void TutorialApplication::createScene(void)
     //newball->setPosition(0.0,5.0,10.0);
     // Ball* newball2 = new Ball("NewBall2", mSceneMgr, simulator);
     // newball2->setPosition(0.0,50.0,25.0);
-    Paddle* playerPaddle = new Paddle("PlayerPaddle", mSceneMgr, simulator);
-    playerPaddle->setPosition(0.0,0.0,0.0);//-11.0);
+    Paddle* playerPaddle = new Paddle("PlayerPaddle", mSceneMgr, simulator,
+        Ogre::Vector3(0.0f, 0.0f, 0.0f), Ogre::Vector3(11.0,10.0,1.0),
+        "PaddleTexture", 1.0f, 1.0f, 0.0f, false);
+    playerPaddle->setPosition(0.0,0.0,0.0);
 
-    Paddle* cpuPaddle = new Paddle("CPUPaddle", mSceneMgr, simulator);
+    Paddle* cpuPaddle = new Paddle("CPUPaddle", mSceneMgr, simulator,
+        Ogre::Vector3(0.0f, 0.0f, 400.0f), Ogre::Vector3(11.0,10.0,1.0),
+        "PaddleTexture", 1.0f, 1.0f, 0.0f, false);
     cpuPaddle->setPosition(0.0,0.0,-400.0);
 
     aimanager->update(mSceneMgr, simulator, cpuPaddle, ball);

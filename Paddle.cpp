@@ -1,50 +1,51 @@
 #include <Paddle.h>
 
-Paddle::Paddle(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim)
+Paddle::Paddle(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
+    Ogre::Vector3 position, Ogre::Vector3 scale, Ogre::String material,
+    float mass, float restitution, float friction, bool kinematic)
     : GameObject(newName, scnMgr, sim) {
-    Ogre::Entity* paddle = sceneMgr->createEntity(name, "cube.mesh");
-    paddle->setMaterialName("PaddleTexture");
+    // Set variables.
+    this->position = position;
+    this->scale = scale;
+    this->material = material;
+    this->mass = mass;
+    this->restitution = restitution;
+    this->friction = friction;
+    this->kinematic = kinematic;
 
-    float x = 0.0;
-    float y = 0.0;
-    float z = 0.0;//-11.0;
+    // Set the entity.
+    geom = sceneMgr->createEntity(name, "cube.mesh");
+    geom->setCastShadows(true);
+    if (material != "") {
+        geom->setMaterialName(material);
+    }
 
-    float xScale = 12;
-    float yScale = 10;
-    float zScale = .5;
+    // Set the rootNode.
+    rootNode = sceneMgr->getRootSceneNode()->
+        createChildSceneNode(name, Ogre::Vector3(position.x, position.y, position.z));
+    rootNode->attachObject(geom);
+    rootNode->scale(scale.x * 0.01f, scale.y * 0.01f, scale.z * 0.01f);
+    rootNode->setPosition(position.x, position.y, position.z);
 
-    paddle->setCastShadows(true);
-    rootNode = sceneMgr->getRootSceneNode()
-        ->createChildSceneNode(name, Ogre::Vector3(x,y,z));
-    rootNode->attachObject(paddle);
-    rootNode->scale(xScale * .01, yScale * .01, zScale * .1 * .01);
-    rootNode->setPosition(x,y,z);
-
-    //TODO Set the rigid Body
+    // Set the rigid body.
     transform.setIdentity();
-    transform.setOrigin(btVector3(x, y, z));
-
-    shape = new btBoxShape(btVector3(xScale * .5,yScale * .5,zScale * .5));
-
+    transform.setOrigin(btVector3(position.x, position.y, position.z));
+    shape = new btBoxShape(btVector3(scale.x * 0.5f, scale.y * 0.5f, scale.z * 0.5f));
     motionState = new OgreMotionState(transform, rootNode);
 
-    mass = 0; //the mass is 0, because the paddle is moved (controlled)
     inertia = btVector3(0, 0, 0);
-
     shape->calculateLocalInertia(mass, inertia);
 
     btRigidBody::btRigidBodyConstructionInfo bRBInfo(
         mass, motionState, shape, inertia);
     body = new btRigidBody(bRBInfo);
-    body->setRestitution(1);
-    body->setFriction(0);
+    body->setRestitution(this->restitution);
+    body->setFriction(this->friction);
     body->setUserPointer(rootNode);
     body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
     body->setActivationState(DISABLE_DEACTIVATION);
 
-    // Add to the physics simulator
-    //this->simulator->getDynamicsWorld()->addRigidBody(body);
-    this->simulator->addObject(this);
+    addToSimulator();
 }
 
 Paddle::~Paddle() {
@@ -57,4 +58,16 @@ void Paddle::move(Ogre::Real x, Ogre::Real y, Ogre::Real z) {
     pPosition.x = std::min(std::max(pPosition.x, xMin), xMax);
     pPosition.y = std::min(std::max(pPosition.y, yMin), yMax);
     rootNode->setPosition(pPosition);
+}
+
+// Specific game object update routine.
+void Paddle::update(float elapsedTime) {
+    lastTime += elapsedTime;
+    simulator->getDynamicsWorld()->contactTest(body, *cCallBack);
+    if (context->hit && (context->velNorm > 2.0 || context->velNorm < -2.0)
+        && (lastTime > 0.5 || (context->lastBody != context->body && lastTime > 0.1))) {
+        //Handle the hit
+        lastTime = 0.0f;
+    }
+    context->hit = false;
 }
