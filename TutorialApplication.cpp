@@ -248,6 +248,21 @@ bool TutorialApplication::keyPressed(const OIS::KeyEvent& arg) {
 
         ballBody->setLinearVelocity(btVector3(x_dir, y_dir, z_dir));
     }
+    else if(arg.key == OIS::KC_SPACE) {
+        GameObject* paddle = simulator->getObject("playerPaddle");
+        //paddle->getNode()->pitch(Ogre::Degree(45));
+
+        simulator->soundSystem->playSound("paddleSound");
+    }
+    else if(arg.key == OIS::KC_UP) {
+        simulator->soundSystem->volumeUp();
+    }
+    else if(arg.key == OIS::KC_DOWN) {
+        simulator->soundSystem->volumeDown();
+    }
+    else if(arg.key == OIS::KC_P) {
+        simulator->soundSystem->playSound("bg_music");
+    }
     return true;
 }
 //---------------------------------------------------------------------------

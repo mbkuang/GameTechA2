@@ -7,15 +7,21 @@
 #include <iostream>
 #include <Ogre.h>
 
+const int MAX_VOLUME = 128;
+
 class Sound {
 public:
 	Sound();
 	~Sound();
 	void playSound(Ogre::String);
+	void volumeUp();
+	void volumeDown();
+	int currentVolume;
 protected:
 	Mix_Music *bg_music;
     Mix_Chunk *wallSound;
     Mix_Chunk *paddleSound;
+    Mix_Chunk *scoreSound;
 };
 
 #endif

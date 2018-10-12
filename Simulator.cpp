@@ -11,6 +11,9 @@ Simulator::Simulator() {
 			collisionConfiguration);
 	dynamicsWorld->setGravity(btVector3(0.0, 0.0, 0.0));
 	//Add collision shapes to reuse among rigid bodies
+
+	soundSystem = new Sound();
+	soundOn = false;
 }
 
 void Simulator::addObject (GameObject* o) {

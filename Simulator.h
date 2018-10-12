@@ -5,6 +5,7 @@
 #include <btBulletDynamicsCommon.h>
 #include "GameObject.h"
 #include "Player.h"
+#include "Sound.h"
 
 class GameObject;
 class Player;
@@ -34,6 +35,9 @@ public:
     GameObject* getObject(Ogre::String oName);
     void addPlayer(Player* p);
     Player* getPlayer(Ogre::String pName);
+
+    Sound *soundSystem;
+    bool soundOn;
 };
 
 #endif
