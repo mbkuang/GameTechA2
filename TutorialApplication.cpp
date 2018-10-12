@@ -103,11 +103,11 @@ void TutorialApplication::createScene(void)
     //sheet->addChild(quit);
 
     playerScore = wmgr.createWindow("TaharezLook/StaticText", "CEGUIDemo/StaticText");
-    playerScore->setSize(CEGUI::USize(CEGUI::UDim(0.08, 0), CEGUI::UDim(0.05, 0)));
+    playerScore->setSize(CEGUI::USize(CEGUI::UDim(0.1, 0), CEGUI::UDim(0.15, 0)));
 
     cpuScore = wmgr.createWindow("TaharezLook/StaticText", "CEGUIDemo/StaticText");
-    cpuScore->setSize(CEGUI::USize(CEGUI::UDim(0.08, 0), CEGUI::UDim(0.05, 0)));
-    cpuScore->setPosition(CEGUI::UVector2(CEGUI::UDim(0.92, 0), CEGUI::UDim(0, 0)));
+    cpuScore->setSize(CEGUI::USize(CEGUI::UDim(0.1, 0), CEGUI::UDim(0.15, 0)));
+    cpuScore->setPosition(CEGUI::UVector2(CEGUI::UDim(0.9, 0), CEGUI::UDim(0, 0)));
 
     updateScore();
     CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(sheet);
@@ -117,8 +117,10 @@ void TutorialApplication::updateScore() {
     Ogre::stringstream ss1;
     Ogre::stringstream ss2;
 
-    ss1 << "Player 1: " <<simulator->getPlayer("Player1")->getScore();
-    ss2 << "Player 2: " <<simulator->getPlayer("CPU")->getScore();
+    ss1 << "Player 1\nScore: " <<simulator->getPlayer("Player1")->getScore()
+                            <<"\nHP: "<<simulator->getPlayer("Player1")->getHP();
+    ss2 << "Player 2\nScore: " <<simulator->getPlayer("CPU")->getScore()
+                            <<"\nHP: "<<simulator->getPlayer("CPU")->getHP();
 
     playerScore->setText("[colour='FFFF0000']"+ ss1.str());
     cpuScore->setText("[colour='FFFF0000']"+ ss2.str());

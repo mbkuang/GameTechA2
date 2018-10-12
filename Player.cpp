@@ -3,6 +3,7 @@
 Player::Player(Ogre::String name, Simulator* sim) {
 	playerName = name;
 	score = 0;
+	hp = 5;
 	sim->addPlayer(this);
 }
 
