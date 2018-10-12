@@ -13,22 +13,31 @@
 #include <OgreVector3.h>
 #include <OgreSceneManager.h>
 #include <btBulletDynamicsCommon.h>
-#include <btBulletDynamicsCommon.h>
+#include "ContactSensorCallback.h"
 class Simulator;
 
 class GameObject {
 protected:
 	Ogre::String name;
-	Ogre::SceneManager* sceneMgr;
-	Simulator* simulator;
-	Ogre::SceneNode* rootNode;
-	Ogre::Entity* geom;
-	btCollisionShape* shape;
-	btScalar mass;
-	btRigidBody* body;
-	btTransform transform;
-	btVector3 inertia;
-	OgreMotionState* motionState;
+    Ogre::SceneManager* sceneMgr;
+    Ogre::SceneNode* rootNode;
+    Ogre::Entity* geom;
+    OgreMotionState* motionState;
+
+    Simulator* simulator;
+    btCollisionShape* shape;
+    btRigidBody* body;
+    btTransform transform;
+    btVector3 inertia;
+
+    btScalar mass;
+    btScalar restitution;
+    btScalar friction;
+    bool kinematic;
+    bool needsUpdates;
+
+    CollisionContext* context;
+    BulletContactCallback* cCallBack;
 
 public:
     GameObject(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim);
@@ -45,6 +54,7 @@ public:
     void setPosition(btVector3 newPosition);
     void move(Ogre::Real x, Ogre::Real y, Ogre::Real z);
     void updateTransform();
+    void addToSimulator();
 
 };
 

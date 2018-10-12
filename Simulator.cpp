@@ -40,9 +40,9 @@ void Simulator::stepSimulation(const Ogre::Real elapsedTime, int maxSubSteps, co
   //   }
 }
 
-// TODO btDiscreteDynamicsWorld* Simulator::getDynamicsWorld() {
-//     return dynamicsWorld;
-// }
+btDiscreteDynamicsWorld* Simulator::getDynamicsWorld() {
+    return dynamicsWorld;
+}
 
 // std::vector<btCollisionShape*> Simulator::getCollisionShapes() {
 //     return collisionShapes;

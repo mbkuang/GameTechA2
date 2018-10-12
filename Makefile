@@ -215,6 +215,7 @@ distuninstallcheck_listfiles = find . -type f -print
 am__distuninstallcheck_listfiles = $(distuninstallcheck_listfiles) \
   | sed 's|^\./|$(prefix)/|' | grep -v '$(infodir)/dir$$'
 distcleancheck_listfiles = find . -type f -print
+<<<<<<< HEAD
 ACLOCAL = ${SHELL} /u/ethan555/Documents/GameTechnology/Assignment2/GameTechA2/missing aclocal-1.15
 AMTAR = $${TAR-tar}
 AM_DEFAULT_VERBOSITY = 1
@@ -222,6 +223,15 @@ AR = ar
 AUTOCONF = ${SHELL} /u/ethan555/Documents/GameTechnology/Assignment2/GameTechA2/missing autoconf
 AUTOHEADER = ${SHELL} /u/ethan555/Documents/GameTechnology/Assignment2/GameTechA2/missing autoheader
 AUTOMAKE = ${SHELL} /u/ethan555/Documents/GameTechnology/Assignment2/GameTechA2/missing automake-1.15
+=======
+ACLOCAL = ${SHELL} /u/marshe/Desktop/Master/GameTechA2/missing aclocal-1.15
+AMTAR = $${TAR-tar}
+AM_DEFAULT_VERBOSITY = 1
+AR = ar
+AUTOCONF = ${SHELL} /u/marshe/Desktop/Master/GameTechA2/missing autoconf
+AUTOHEADER = ${SHELL} /u/marshe/Desktop/Master/GameTechA2/missing autoheader
+AUTOMAKE = ${SHELL} /u/marshe/Desktop/Master/GameTechA2/missing automake-1.15
+>>>>>>> contact
 AWK = gawk
 BULLET_CFLAGS = 
 BULLET_LIBS = 
@@ -265,7 +275,11 @@ LIPO =
 LN_S = ln -s
 LTLIBOBJS = 
 LT_SYS_LIBRARY_PATH = 
+<<<<<<< HEAD
 MAKEINFO = ${SHELL} /u/ethan555/Documents/GameTechnology/Assignment2/GameTechA2/missing makeinfo
+=======
+MAKEINFO = ${SHELL} /u/marshe/Desktop/Master/GameTechA2/missing makeinfo
+>>>>>>> contact
 MANIFEST_TOOL = :
 MKDIR_P = /bin/mkdir -p
 NM = /usr/bin/nm -B
@@ -301,10 +315,17 @@ SET_MAKE =
 SHELL = /bin/bash
 STRIP = strip
 VERSION = 0.1
+<<<<<<< HEAD
 abs_builddir = /u/ethan555/Documents/GameTechnology/Assignment2/GameTechA2
 abs_srcdir = /u/ethan555/Documents/GameTechnology/Assignment2/GameTechA2
 abs_top_builddir = /u/ethan555/Documents/GameTechnology/Assignment2/GameTechA2
 abs_top_srcdir = /u/ethan555/Documents/GameTechnology/Assignment2/GameTechA2
+=======
+abs_builddir = /u/marshe/Desktop/Master/GameTechA2
+abs_srcdir = /u/marshe/Desktop/Master/GameTechA2
+abs_top_builddir = /u/marshe/Desktop/Master/GameTechA2
+abs_top_srcdir = /u/marshe/Desktop/Master/GameTechA2
+>>>>>>> contact
 ac_ct_AR = ar
 ac_ct_CC = gcc
 ac_ct_CXX = g++
@@ -336,7 +357,11 @@ host_vendor = pc
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
+<<<<<<< HEAD
 install_sh = ${SHELL} /u/ethan555/Documents/GameTechnology/Assignment2/GameTechA2/install-sh
+=======
+install_sh = ${SHELL} /u/marshe/Desktop/Master/GameTechA2/install-sh
+>>>>>>> contact
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -359,7 +384,11 @@ target_alias =
 top_build_prefix = 
 top_builddir = .
 top_srcdir = .
+<<<<<<< HEAD
 noinst_HEADERS = Ball.h ControlListener.h GameObject.h OgreMotionState.h Overlay.h Player.h PlayerCamera.h PlayingField.h Simulator.h Wall.h Paddle.h BaseApplication.h TutorialApplication.h Sound.h AIManager.h GameSettings.h
+=======
+noinst_HEADERS = Ball.h ControlListener.h GameObject.h OgreMotionState.h Overlay.h Player.h PlayerCamera.h PlayingField.h Simulator.h Wall.h Paddle.h BaseApplication.h TutorialApplication.h Sound.h ContactSensorCallback.h
+>>>>>>> contact
 assignment2_CPPFLAGS = -I$(top_srcdir)
 assignment2_SOURCES = Ball.cpp ControlListener.cpp GameObject.cpp Overlay.cpp Player.cpp PlayerCamera.cpp PlayingField.cpp Simulator.cpp Wall.cpp Paddle.cpp BaseApplication.cpp TutorialApplication.cpp OgreMotionState.cpp Sound.cpp AIManager.cpp
 assignment2_CXXFLAGS = $(OGRE_CFLAGS) $(OIS_CFLAGS) $(bullet_CFLAGS) $(CEGUI_CFLAGS) $(CEGUI_OGRE_CFLAGS) $(SDL_mixer_CFLAGS) $(SDL_net_CFLAGS)

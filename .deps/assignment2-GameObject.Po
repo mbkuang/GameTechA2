@@ -1046,7 +1046,7 @@ assignment2-GameObject.o: GameObject.cpp /usr/include/stdc-predef.h \
  /usr/include/bullet/BulletDynamics/Dynamics/btRigidBody.h \
  /usr/include/bullet/btBulletCollisionCommon.h OgreMotionState.h \
  /usr/include/OGRE/OgreEntity.h /usr/include/OGRE/OgreVector3.h \
- /usr/include/OGRE/OgreSceneManager.h
+ /usr/include/OGRE/OgreSceneManager.h ContactSensorCallback.h
 
 /usr/include/stdc-predef.h:
 
@@ -3435,3 +3435,5 @@ OgreMotionState.h:
 /usr/include/OGRE/OgreVector3.h:
 
 /usr/include/OGRE/OgreSceneManager.h:
+
+ContactSensorCallback.h:

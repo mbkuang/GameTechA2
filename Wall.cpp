@@ -1,7 +1,3 @@
-#include <Ogre.h>
-#include <OgreEntity.h>
-#include <OgreVector3.h>
-#include <OgreSceneManager.h>
 #include <Wall.h>
 
 Wall::Wall(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
@@ -12,29 +8,40 @@ Wall::Wall(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
     // Set the entity.
     geom = sceneMgr->createEntity(name, "cube.mesh");
     geom->setCastShadows(true);
-    if (material != "")
+    if (material != "") {
         geom->setMaterialName(material);
+    }
         
     // Set the rootNode.
-    rootNode = sceneMgr->getRootSceneNode()
-        ->createChildSceneNode(name, Ogre::Vector3(xPosition, yPosition, zPosition));
+    rootNode = sceneMgr->getRootSceneNode()->
+        createChildSceneNode(name, Ogre::Vector3(xPosition, yPosition, zPosition));
     rootNode->attachObject(geom);
-    rootNode->scale(xScale * 0.01, yScale * 0.01, zScale * 0.01);
+    rootNode->scale(xScale * 0.01f, yScale * 0.01f, zScale * 0.01f);
     rootNode->setPosition(xPosition, yPosition, zPosition);
 
     // Set the rigid body.
-    transform.setIdentity();
     transform.setOrigin(btVector3(xPosition, yPosition, zPosition));
-    shape = new btBoxShape(btVector3(xScale * 0.5, yScale * 0.5, zScale * 0.5));
+    shape = new btBoxShape(btVector3(xScale * 0.5f, yScale * 0.5f, zScale * 0.5f));
     motionState = new OgreMotionState(transform, rootNode);
-    mass = 0;
-    inertia = btVector3(0, 0, 0);
-    shape->calculateLocalInertia(mass, inertia);
-    btRigidBody::btRigidBodyConstructionInfo bRBInfo(
-        mass, motionState, shape, inertia);
-    body = new btRigidBody(bRBInfo);
-    body->setRestitution(1);
-    body->setFriction(0);
-    body->setUserPointer(rootNode);
-    this->simulator->addObject(this);
+    mass = 0.0f;
+    restitution = 1.0f;
+    friction = 0.0f;
+
+    addToSimulator();
+}
+
+Wall::~Wall() {
+    //TODO:
+}
+
+// Specific game object update routine.
+void Wall::update(float elapsedTime) {
+    lastTime += elapsedTime;
+    simulator->getDynamicsWorld()->contactTest(body, *cCallBack);
+    if (context->hit && (context->velNorm > 2.0 || context->velNorm < -2.0) 
+        && (lastTime > 0.5 || (context->lastBody != context->body && lastTime > 0.1))) {
+        //Handle the hit
+        lastTime = 0.0f;
+    }
+    context->hit = false;
 }
