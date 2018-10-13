@@ -17,6 +17,7 @@ public:
     	Ogre::Vector3 position, float radius, Ogre::String material,
     	float mass, float restitution, float friction, bool kinematic);
     ~Ball();
+    void init();
     Ogre::SceneNode* getMarkerNode();
     void update(float elapsedTime);
 };

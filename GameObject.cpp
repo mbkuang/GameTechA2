@@ -98,7 +98,7 @@ void GameObject::updateTransform() {
 
 // Add the game object to the simulator.
 void GameObject::addToSimulator() {
-    // Using motionstate is recommended, it provides interpolation capabilities, 
+    // Using motionstate is recommended, it provides interpolation capabilities,
     // and only synchronizes 'active' objects.
     updateTransform();
     // Rigid body is dynamic if and only if mass is non zero, otherwise static.

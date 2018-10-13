@@ -46,14 +46,31 @@ Ball::Ball(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
     addToSimulator();
 
     // Set the ball's velocity.
-    float random = rand(); //(rand()%100-50);
-    float xdir = sin(random) * 50.0f;
-    float ydir = (1.0f - sin(random)) * 50.0f;
-    body->setLinearVelocity(btVector3(xdir, ydir, -75.0f));
+    this->init();
 }
 
 Ball::~Ball() {
  // TODO:
+}
+
+void Ball::init() {
+    this->setPosition(0, 0, -200);
+
+    int c2random = 1000;
+
+    int sign = rand() % 2 - 1;
+    sign = sign < 0 ? -1 : 1;
+    int arandom = sign * sqrt(rand() % c2random);
+
+    sign = rand() % 2 - 1;
+    sign = sign < 0 ? -1 : 1;
+    int brandom = sign * sqrt(c2random - arandom*arandom);
+
+    Ogre::Real x_dir = arandom;
+    Ogre::Real y_dir = brandom;
+    Ogre::Real z_dir = -75;
+
+    this->body->setLinearVelocity(btVector3(x_dir, y_dir, z_dir));
 }
 
 Ogre::SceneNode* Ball::getMarkerNode() {
@@ -64,7 +81,7 @@ Ogre::SceneNode* Ball::getMarkerNode() {
 void Ball::update(float elapsedTime) {
     lastTime += elapsedTime;
     simulator->getDynamicsWorld()->contactTest(body, *cCallBack);
-    if (context->hit && (context->velNorm > 2.0 || context->velNorm < -2.0) 
+    if (context->hit && (context->velNorm > 2.0 || context->velNorm < -2.0)
         && (lastTime > 0.5 || (context->lastBody != context->body && lastTime > 0.1))) {
         //Handle the hit
         printf("HIT\n");

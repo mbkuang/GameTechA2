@@ -48,37 +48,37 @@ void TutorialApplication::createScene(void)
 
     Wall* flooring = new Wall("Flooring", mSceneMgr, simulator,
         Ogre::Vector3(0.0f, yFWall, -200.0f), Ogre::Vector3(100.0f, 20.0f, 400.0f),
-        "WallTexture2Inverse", 0.0f, 1.0f, 0.0f, false);
+        "WallTexture2Inverse", wallMass, wallRestitution, wallFriction, wallKinematic);
     Wall* ceiling = new Wall("Ceiling", mSceneMgr, simulator,
         Ogre::Vector3(0.0f, yCWall, -200.0f), Ogre::Vector3(100.0f, 20.0f, 400.0f),
-        "WallTexture2Inverse", 0.0f, 1.0f, 0.0f, false);
+        "WallTexture2Inverse", wallMass, wallRestitution, wallFriction, wallKinematic);
     Wall* westWall = new Wall("WestWall", mSceneMgr, simulator,
         Ogre::Vector3(xWWall, 0.0f, -200.0f), Ogre::Vector3(20.0f, 80.0f, 400.0f),
-        "WallTexture", 0.0f, 1.0f, 0.0f, false);
+        "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
     Wall* eastWall = new Wall("EastWall", mSceneMgr, simulator,
         Ogre::Vector3(xEWall, 0.0f, -200.0f), Ogre::Vector3(20.0f, 80.0f, 400.0f),
-        "WallTextureInverse", 0.0f, 1.0f, 0.0f, false);
+        "WallTextureInverse", wallMass, wallRestitution, wallFriction, wallKinematic);
     Wall* northWall = new Wall("NorthWall", mSceneMgr, simulator,
         Ogre::Vector3(0.0f, 0.0f, zNWall), Ogre::Vector3(100.0f, 100.0f, 20.0f),
-        "WallTextureInvisible", 0.0f, 1.0f, 0.0f, false);
+        "WallTextureInvisible", wallMass, wallRestitution, wallFriction, wallKinematic);
     Wall* southWall = new Wall("SouthWall", mSceneMgr, simulator,
         Ogre::Vector3(0.0f, 0.0f, zSWall), Ogre::Vector3(100.0f, 100.0f, 20.0f),
-        "WallTextureInvisible", 0.0f, 1.0f, 0.0f, false);
+        "WallTextureInvisible", wallMass, wallRestitution, wallFriction, wallKinematic);
 
     Player* player1 = new Player("Player1", simulator);
     Player* cpuPlayer = new Player("CPU", simulator);
 
     Ball* ball = new Ball("Ball", mSceneMgr, simulator,
-        Ogre::Vector3(0.0f, 0.0f, -200.0f), 2.0f, 
-        "BallTexture", 1.0f, 1.01f, 0.0f, false);
+        Ogre::Vector3(0.0f, 0.0f, -200.0f), 2.0f,
+        "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic);
 
     Paddle* playerPaddle = new Paddle("PlayerPaddle", mSceneMgr, simulator,
-        Ogre::Vector3(0.0f, 0.0f, 0.0f), Ogre::Vector3(11.0f, 10.0f, 1.0f),
-        "PaddleTexture", 1.0f, 1.0f, 0.0f, false);
+        Ogre::Vector3(0.0f, 0.0f, 0.0f), Ogre::Vector3(12.0f, 10.0f, 1.0f),
+        "PaddleTexture", paddleMass, paddleRestitution, paddleFriction, paddleKinematic);
 
     Paddle* cpuPaddle = new Paddle("CPUPaddle", mSceneMgr, simulator,
-        Ogre::Vector3(0.0f, 0.0f, -400.0f), Ogre::Vector3(11.0f, 10.0f, 1.0f),
-        "PaddleTexture", 1.0f, 1.0f, 0.0f, false);
+        Ogre::Vector3(0.0f, 0.0f, -400.0f), Ogre::Vector3(12.0f, 10.0f, 1.0f),
+        "PaddleTexture", paddleMass, paddleRestitution, paddleFriction, paddleKinematic);
 
     aimanager->update(mSceneMgr, simulator, cpuPaddle, ball);
 
@@ -225,19 +225,8 @@ bool TutorialApplication::keyPressed(const OIS::KeyEvent& arg) {
         mShutDown = true;
     } else if (arg.key == OIS::KC_R) {
         //Reset the ball's position
-        GameObject* ball = simulator->getObject("Ball");
-        ball->setPosition(0, 0, -200);
-        btRigidBody* ballBody = ball->getBody();
-
-        // Ogre::Real x_dir = Ogre::Math::RangeRandom(0, 200);
-        // Ogre::Real y_dir = (200-x_dir)-100;
-        // x_dir = x_dir-100;
-        float random = rand(); //(rand()%100-50);
-        Ogre::Real x_dir = sin(random) * 50;
-        Ogre::Real y_dir = (1 - sin(random)) * 50;
-        Ogre::Real z_dir = -75;
-
-        ballBody->setLinearVelocity(btVector3(x_dir, y_dir, z_dir));
+        Ball* ball = (Ball*) simulator->getObject("Ball");
+        ball->init();
     }
     else if(arg.key == OIS::KC_SPACE) {
         GameObject* paddle = simulator->getObject("playerPaddle");
@@ -292,10 +281,6 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& fe)
     float movementSpeed = 120.0f;
     Paddle* playerPaddle = (Paddle*) simulator->getObject("PlayerPaddle");
 
-    if (mKeyboard->isKeyDown(OIS::KC_R)) {
-        //TODO ball->reset();
-    }
-
     if (mKeyboard->isKeyDown(OIS::KC_W)) {
         playerPaddle->move(0.0f, movementSpeed * fe.timeSinceLastFrame, 0.0f);
     }
@@ -313,21 +298,21 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& fe)
         playerPaddle->move(movementSpeed * fe.timeSinceLastFrame, 0.0f, 0.0f);
     }
 
-    // if (mKeyboard->isKeyDown(OIS::KC_Q)) {
-    //     mCamera->yaw(Ogre::Degree(.05));
-    // }
-    //
-    // if (mKeyboard->isKeyDown(OIS::KC_E)) {
-    //     mCamera->yaw(Ogre::Degree(-.05));
-    // }
-    //
-    // if (mKeyboard->isKeyDown(OIS::KC_Z)) {
-    //     mCamera->pitch(Ogre::Degree(.05));
-    // }
-    //
-    // if (mKeyboard->isKeyDown(OIS::KC_C)) {
-    //     mCamera->pitch(Ogre::Degree(-.05));
-    // }
+    if (mKeyboard->isKeyDown(OIS::KC_Q)) {
+        mCamera->yaw(Ogre::Degree(.05));
+    }
+
+    if (mKeyboard->isKeyDown(OIS::KC_E)) {
+        mCamera->yaw(Ogre::Degree(-.05));
+    }
+
+    if (mKeyboard->isKeyDown(OIS::KC_Z)) {
+        mCamera->pitch(Ogre::Degree(.05));
+    }
+
+    if (mKeyboard->isKeyDown(OIS::KC_C)) {
+        mCamera->pitch(Ogre::Degree(-.05));
+    }
 
     playerPaddle->updateTransform();
 
