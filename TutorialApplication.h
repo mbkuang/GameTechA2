@@ -26,9 +26,7 @@ http://www.ogre3d.org/wiki/
 #include "Paddle.h"
 #include "GameSettings.h"
 #include "AIManager.h"
-
-#include <CEGUI/CEGUI.h>
-#include <CEGUI/RendererModules/Ogre/Renderer.h>
+#include "Overlay.h"
 
 //---------------------------------------------------------------------------
 
@@ -51,18 +49,19 @@ protected:
 
     Simulator* simulator;
     AIManager* aimanager;
-    CEGUI::OgreRenderer* mRenderer;
+    //CEGUI::OgreRenderer* mRenderer;
+    Overlay* overlay;
 
-    CEGUI::Window *sheet;
-    CEGUI::Window *playerScore;
-    CEGUI::Window *cpuScore;
+    //CEGUI::Window *sheet;
+    //CEGUI::Window *playerScore;
+    //CEGUI::Window *cpuScore;
 
     float xMin, xMax, yMin, yMax, zMin, zMax;
 private:
     bool processUnbufferedInput(const Ogre::FrameEvent& fe);
-    void initCEGUI();
+    //void initCEGUI();
     bool quit();
-    void updateScore();
+    //void updateScore();
 };
 
 //---------------------------------------------------------------------------

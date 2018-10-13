@@ -14,6 +14,8 @@ Simulator::Simulator() {
 
 	soundSystem = new Sound();
 	soundOn = false;
+
+	overlay = new Overlay(this);
 }
 
 void Simulator::addObject (GameObject* o) {

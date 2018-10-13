@@ -6,9 +6,11 @@
 #include "GameObject.h"
 #include "Player.h"
 #include "Sound.h"
+#include "Overlay.h"
 
 class GameObject;
 class Player;
+class Overlay;
 
 class Simulator {
 protected:
@@ -38,6 +40,8 @@ public:
 
     Sound *soundSystem;
     bool soundOn;
+
+    Overlay* overlay;
 };
 
 #endif
