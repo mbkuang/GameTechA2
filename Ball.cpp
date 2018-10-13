@@ -84,8 +84,20 @@ void Ball::update(float elapsedTime) {
     if (context->hit && (context->velNorm > 2.0 || context->velNorm < -2.0)
         && (lastTime > 0.5 || (context->lastBody != context->body && lastTime > 0.1))) {
         //Handle the hit
-        printf("HIT\n");
+        Ogre::String sw = "SouthWall";
+        Ogre::String nw = "NorthWall";
+
         simulator->soundSystem->playSound("wallSound");
+        if(sw.compare(context->theObject->getName()) == 0) {
+            simulator->getPlayer("CPU")->incrementScore();
+            simulator->overlay->updateScore();
+            this->setPosition(0, 0, -200);
+        }
+        else if(nw.compare(context->theObject->getName()) == 0) {
+            simulator->getPlayer("Player1")->incrementScore();
+            simulator->overlay->updateScore();
+            this->setPosition(0, 0, -200);
+        }
         lastTime = 0.0f;
     }
     context->hit = false;

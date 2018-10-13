@@ -2,6 +2,7 @@
 #define __Ball_h_
 
 #include "GameObject.h"
+#include <string>
 
 class Ball : public GameObject {
 protected:

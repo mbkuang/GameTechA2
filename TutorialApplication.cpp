@@ -16,7 +16,6 @@ http://www.ogre3d.org/wiki/
 */
 
 #include "TutorialApplication.h"
-#include <sstream>
 #include <cmath>
 
 //---------------------------------------------------------------------------
@@ -35,7 +34,7 @@ void TutorialApplication::createScene(void)
 {
     // Create your scene here :)
 
-    initCEGUI();
+    simulator->overlay->initCEGUI();
     mCamera->setPosition(Ogre::Vector3(0,0,100));
 
     Ogre::Light* light = mSceneMgr->createLight("MainLight");
@@ -43,6 +42,7 @@ void TutorialApplication::createScene(void)
     lightNode->setPosition(0, 25, 50);
     light->setDiffuseColour(1.0,1.0,1.0);
     lightNode->attachObject(light);
+
 
     mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
 
@@ -82,62 +82,63 @@ void TutorialApplication::createScene(void)
 
     aimanager->update(mSceneMgr, simulator, cpuPaddle, ball);
 
-    CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
-    sheet = wmgr.createWindow("DefaultWindow", "CEGUIDemo/Sheet");
+    simulator->overlay->createScoreboard();
+    // CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
+    // sheet = wmgr.createWindow("DefaultWindow", "CEGUIDemo/Sheet");
 
-    CEGUI::Window *quit = wmgr.createWindow("TaharezLook/Button", "CEGUIDemo/QuitButton");
-    quit->setText("Quit");
-    quit->setSize(CEGUI::USize(CEGUI::UDim(0.15, 0), CEGUI::UDim(0.05, 0)));
+    // CEGUI::Window *quit = wmgr.createWindow("TaharezLook/Button", "CEGUIDemo/QuitButton");
+    // quit->setText("Quit");
+    // quit->setSize(CEGUI::USize(CEGUI::UDim(0.15, 0), CEGUI::UDim(0.05, 0)));
 
     //sheet->addChild(quit);
 
-    playerScore = wmgr.createWindow("TaharezLook/StaticText", "CEGUIDemo/StaticText");
-    playerScore->setSize(CEGUI::USize(CEGUI::UDim(0.1, 0), CEGUI::UDim(0.1, 0)));
+    // playerScore = wmgr.createWindow("TaharezLook/StaticText", "CEGUIDemo/StaticText");
+    // playerScore->setSize(CEGUI::USize(CEGUI::UDim(0.1, 0), CEGUI::UDim(0.1, 0)));
 
-    cpuScore = wmgr.createWindow("TaharezLook/StaticText", "CEGUIDemo/StaticText");
-    cpuScore->setSize(CEGUI::USize(CEGUI::UDim(0.1, 0), CEGUI::UDim(0.1, 0)));
-    cpuScore->setPosition(CEGUI::UVector2(CEGUI::UDim(0.9, 0), CEGUI::UDim(0, 0)));
+    // cpuScore = wmgr.createWindow("TaharezLook/StaticText", "CEGUIDemo/StaticText");
+    // cpuScore->setSize(CEGUI::USize(CEGUI::UDim(0.1, 0), CEGUI::UDim(0.1, 0)));
+    // cpuScore->setPosition(CEGUI::UVector2(CEGUI::UDim(0.9, 0), CEGUI::UDim(0, 0)));
 
-    updateScore();
-    CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(sheet);
+    // updateScore();
+    // CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(sheet);
 }
 
-void TutorialApplication::updateScore() {
-    Ogre::stringstream ss1;
-    Ogre::stringstream ss2;
+// void TutorialApplication::updateScore() {
+//     Ogre::stringstream ss1;
+//     Ogre::stringstream ss2;
 
-    ss1 << "Player 1\nScore: " <<simulator->getPlayer("Player1")->getScore()
-                            <<"\nHP: "<<simulator->getPlayer("Player1")->getHP();
-    ss2 << "Player 2\nScore: " <<simulator->getPlayer("CPU")->getScore()
-                            <<"\nHP: "<<simulator->getPlayer("CPU")->getHP();
+//     ss1 << "Player 1\nScore: " <<simulator->getPlayer("Player1")->getScore()
+//                             <<"\nHP: "<<simulator->getPlayer("Player1")->getHP();
+//     ss2 << "Player 2\nScore: " <<simulator->getPlayer("CPU")->getScore()
+//                             <<"\nHP: "<<simulator->getPlayer("CPU")->getHP();
 
-    playerScore->setText("[colour='FFFF0000']"+ ss1.str());
-    cpuScore->setText("[colour='FFFF0000']"+ ss2.str());
-    sheet->addChild(playerScore);
-    sheet->addChild(cpuScore);
-}
+//     playerScore->setText("[colour='FFFF0000']"+ ss1.str());
+//     cpuScore->setText("[colour='FFFF0000']"+ ss2.str());
+//     sheet->addChild(playerScore);
+//     sheet->addChild(cpuScore);
+// }
 //---------------------------------------------------------------------------
 bool TutorialApplication::quit() {
     mShutDown = true;
     return true;
 }
 //---------------------------------------------------------------------------
-void TutorialApplication::initCEGUI() {
-    /* Code taken/inspired by Ogre wiki */
+// void TutorialApplication::initCEGUI() {
+//     /* Code taken/inspired by Ogre wiki */
 
-    mRenderer = &CEGUI::OgreRenderer::bootstrapSystem();
+//     mRenderer = &CEGUI::OgreRenderer::bootstrapSystem();
 
-    CEGUI::ImageManager::setImagesetDefaultResourceGroup("Imagesets");
-    CEGUI::Font::setDefaultResourceGroup("Fonts");
-    CEGUI::Scheme::setDefaultResourceGroup("Schemes");
-    CEGUI::WidgetLookManager::setDefaultResourceGroup("LookNFeel");
-    CEGUI::WindowManager::setDefaultResourceGroup("Layouts");
+//     CEGUI::ImageManager::setImagesetDefaultResourceGroup("Imagesets");
+//     CEGUI::Font::setDefaultResourceGroup("Fonts");
+//     CEGUI::Scheme::setDefaultResourceGroup("Schemes");
+//     CEGUI::WidgetLookManager::setDefaultResourceGroup("LookNFeel");
+//     CEGUI::WindowManager::setDefaultResourceGroup("Layouts");
 
-    CEGUI::SchemeManager::getSingleton().createFromFile("TaharezLook.scheme");
+//     CEGUI::SchemeManager::getSingleton().createFromFile("TaharezLook.scheme");
 
-    CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("TaharezLook/MouseArrow");
+//     CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("TaharezLook/MouseArrow");
 
-}
+// }
 //---------------------------------------------------------------------------
 CEGUI::MouseButton convertButton(OIS::MouseButtonID buttonID) {
     switch (buttonID)
