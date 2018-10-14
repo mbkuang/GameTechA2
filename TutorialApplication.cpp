@@ -83,62 +83,18 @@ void TutorialApplication::createScene(void)
     aimanager->update(mSceneMgr, simulator, cpuPaddle, ball);
 
     simulator->overlay->createScoreboard();
-    // CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
-    // sheet = wmgr.createWindow("DefaultWindow", "CEGUIDemo/Sheet");
 
-    // CEGUI::Window *quit = wmgr.createWindow("TaharezLook/Button", "CEGUIDemo/QuitButton");
-    // quit->setText("Quit");
-    // quit->setSize(CEGUI::USize(CEGUI::UDim(0.15, 0), CEGUI::UDim(0.05, 0)));
-
-    //sheet->addChild(quit);
-
-    // playerScore = wmgr.createWindow("TaharezLook/StaticText", "CEGUIDemo/StaticText");
-    // playerScore->setSize(CEGUI::USize(CEGUI::UDim(0.1, 0), CEGUI::UDim(0.1, 0)));
-
-    // cpuScore = wmgr.createWindow("TaharezLook/StaticText", "CEGUIDemo/StaticText");
-    // cpuScore->setSize(CEGUI::USize(CEGUI::UDim(0.1, 0), CEGUI::UDim(0.1, 0)));
-    // cpuScore->setPosition(CEGUI::UVector2(CEGUI::UDim(0.9, 0), CEGUI::UDim(0, 0)));
-
-    // updateScore();
-    // CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(sheet);
+    // Ball* laser = new Ball("Laser", mSceneMgr, simulator,
+    //             location, 0.5f,
+    //             "greenball", ballMass, ballRestitution, ballFriction, ballKinematic);
+    // laser->setVelocity(btVector3(0, 0, -100));
+    // laser->~Ball();
 }
-
-// void TutorialApplication::updateScore() {
-//     Ogre::stringstream ss1;
-//     Ogre::stringstream ss2;
-
-//     ss1 << "Player 1\nScore: " <<simulator->getPlayer("Player1")->getScore()
-//                             <<"\nHP: "<<simulator->getPlayer("Player1")->getHP();
-//     ss2 << "Player 2\nScore: " <<simulator->getPlayer("CPU")->getScore()
-//                             <<"\nHP: "<<simulator->getPlayer("CPU")->getHP();
-
-//     playerScore->setText("[colour='FFFF0000']"+ ss1.str());
-//     cpuScore->setText("[colour='FFFF0000']"+ ss2.str());
-//     sheet->addChild(playerScore);
-//     sheet->addChild(cpuScore);
-// }
 //---------------------------------------------------------------------------
 bool TutorialApplication::quit() {
     mShutDown = true;
     return true;
 }
-//---------------------------------------------------------------------------
-// void TutorialApplication::initCEGUI() {
-//     /* Code taken/inspired by Ogre wiki */
-
-//     mRenderer = &CEGUI::OgreRenderer::bootstrapSystem();
-
-//     CEGUI::ImageManager::setImagesetDefaultResourceGroup("Imagesets");
-//     CEGUI::Font::setDefaultResourceGroup("Fonts");
-//     CEGUI::Scheme::setDefaultResourceGroup("Schemes");
-//     CEGUI::WidgetLookManager::setDefaultResourceGroup("LookNFeel");
-//     CEGUI::WindowManager::setDefaultResourceGroup("Layouts");
-
-//     CEGUI::SchemeManager::getSingleton().createFromFile("TaharezLook.scheme");
-
-//     CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("TaharezLook/MouseArrow");
-
-// }
 //---------------------------------------------------------------------------
 CEGUI::MouseButton convertButton(OIS::MouseButtonID buttonID) {
     switch (buttonID)
@@ -230,8 +186,21 @@ bool TutorialApplication::keyPressed(const OIS::KeyEvent& arg) {
         ball->init();
     }
     else if(arg.key == OIS::KC_SPACE) {
-        GameObject* paddle = simulator->getObject("playerPaddle");
-        simulator->soundSystem->playSound("paddleSound");
+        //btVector3 pLocation = paddle->getPosition();
+
+        // ****** CHECK SIMULATOR TO SEE IF LASER ALREADY EXISTS, IF SO DO NOTHING!!!!!! ****** //
+        Player* p = simulator->getPlayer("Player1");
+        if(!p->hasFired()) {
+            p->shot();
+            GameObject* paddle = simulator->getObject("PlayerPaddle");
+            Ogre::Vector3 location = (Ogre::Vector3) paddle->getPosition(); 
+            Ball* laser = new Ball("Laser", mSceneMgr, simulator,
+                location, 0.5f,
+                "greenball", ballMass, ballRestitution, ballFriction, ballKinematic);
+            laser->setVelocity(btVector3(0, 0, -100));        
+            simulator->soundSystem->playSound("paddleSound");
+        }
+        
     }
     else if(arg.key == OIS::KC_UP) {
         simulator->soundSystem->volumeUp();

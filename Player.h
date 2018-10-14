@@ -16,12 +16,17 @@ public:
 	int getScore();
 	int getHP();
 	int setHP(int);
+	bool hasFired();
+	void shot();
+	int getNumShots();
 
 protected:
 	Ogre::String playerName;
 	int score;
 	int hp;
 	Simulator* simulator;
+	bool fired;
+	int numShots;
 };
 
 #endif

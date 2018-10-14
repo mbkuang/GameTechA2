@@ -5,6 +5,8 @@ Player::Player(Ogre::String name, Simulator* sim) {
 	score = 0;
 	hp = 5;
 	sim->addPlayer(this);
+	fired = false;
+	numShots = 0;
 }
 
 void Player::incrementScore() {
@@ -25,4 +27,19 @@ int Player::getHP() {
 
 int Player::setHP(int health) {
 	hp = health;
+}
+
+// Has the player already shot at the oponent?
+bool Player::hasFired() {
+	return fired;
+}
+
+// Either the player just shot or the shot collided with something
+void Player::shot() {
+	fired = !fired;
+	numShots++;
+}
+
+int Player::getNumShots() {
+	return numShots;
 }

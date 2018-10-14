@@ -37,6 +37,7 @@ public:
     ~GameObject();
 	btRigidBody* getBody();
 	Ogre::String getName();
+    //void setName();
 	OgreMotionState* getOgreMotionState();
     Ogre::SceneNode* getNode() {return rootNode;}
     btVector3 getPosition();

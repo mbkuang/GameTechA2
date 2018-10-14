@@ -25,9 +25,13 @@ void Simulator::addObject (GameObject* o) {
 	dynamicsWorld->addRigidBody(o->getBody());
 }
 
-/*bool Simulator::removeObject(GameObject*  o) {
-
-}*/
+bool Simulator::removeObject(GameObject*  o) {
+	objList.pop_back();
+	objMap.erase(o->getName());
+	Ogre::SceneNode* n = o->getNode();
+	n = NULL;
+	return true;
+}
 
 void Simulator::stepSimulation(const Ogre::Real elapsedTime, int maxSubSteps, const Ogre::Real fixedTimestep) {
     dynamicsWorld->stepSimulation(elapsedTime, maxSubSteps, fixedTimestep);

@@ -14,6 +14,8 @@ Ball::Ball(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
     this->kinematic = kinematic;
     lastTime = 0.0f;
 
+    sm = sceneMgr;
+
     // Set the entity.
     geom = sceneMgr->createEntity(name, "sphere.mesh");
     geom->setCastShadows(true);
@@ -28,15 +30,17 @@ Ball::Ball(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
     rootNode->scale(radius * 0.01f, radius * 0.01f, radius * 0.01f);
     rootNode->setPosition(position.x, position.y, position.z);
 
-    // Setup marker.
-    marker = sceneMgr->createEntity("BallMarker", "cube.mesh");
-    marker->setMaterialName("TransparentRed");
-    marker->setCastShadows(false);
-    markerNode = sceneMgr->getRootSceneNode()
-        ->createChildSceneNode("BallMarker", Ogre::Vector3(position.x, position.y, position.z));
-    markerNode->attachObject(marker);
-    markerNode->scale(80.0f * 0.01f, 80.0f * 0.01f, 0.1f * 0.01f);
-    markerNode->setPosition(position.x, position.y, position.z);
+    if(newName.compare("Ball") == 0) {
+        // Setup marker.
+        marker = sceneMgr->createEntity("BallMarker", "cube.mesh");
+        marker->setMaterialName("TransparentRed");
+        marker->setCastShadows(false);
+        markerNode = sceneMgr->getRootSceneNode()
+            ->createChildSceneNode("BallMarker", Ogre::Vector3(position.x, position.y, position.z));
+        markerNode->attachObject(marker);
+        markerNode->scale(80.0f * 0.01f, 80.0f * 0.01f, 0.1f * 0.01f);
+        markerNode->setPosition(position.x, position.y, position.z);
+    }
 
     // Set the rigid body.
     transform.setOrigin(btVector3(position.x, position.y, position.z));
@@ -46,11 +50,25 @@ Ball::Ball(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
     addToSimulator();
 
     // Set the ball's velocity.
-    this->init();
+    if(newName.compare("Ball") == 0)
+        this->init();
 }
 
 Ball::~Ball() {
  // TODO:
+    simulator->removeObject(this);
+    sm->destroyEntity(this->getName());
+    this->rootNode = NULL;
+    // this->geom = NULL;
+    // this->motionState = NULL;
+    // this->shape = NULL;
+    // this->body = NULL;
+    // this->context = NULL;
+    // this->cCallBack = NULL;
+}
+
+void Ball::setVelocity(btVector3 vel) {
+    this->body->setLinearVelocity(vel);
 }
 
 void Ball::init() {
@@ -87,6 +105,15 @@ void Ball::update(float elapsedTime) {
         Ogre::String sw = "SouthWall";
         Ogre::String nw = "NorthWall";
 
+        if(this->getName().compare("Laser") == 0) {
+            this->~Ball();
+            Player* p = simulator->getPlayer("Player1");
+            p->shot();
+            Ogre::stringstream ss;
+            ss << p->getNumShots();
+            this->setName(ss.str());
+        }
+
         Ogre::String contactName = context->theObject->getName();
         if(contactName.compare("PlayerPaddle") == 0 
             || contactName.compare("CPUPaddle") == 0)
@@ -107,4 +134,8 @@ void Ball::update(float elapsedTime) {
         lastTime = 0.0f;
     }
     context->hit = false;
+}
+
+void Ball::setName(Ogre::String newName) {
+    this->name = newName;
 }

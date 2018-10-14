@@ -3,6 +3,7 @@
 
 #include "GameObject.h"
 #include <string>
+#include <sstream>
 
 class Ball : public GameObject {
 protected:
@@ -12,6 +13,7 @@ protected:
 	float lastTime;
 	Ogre::SceneNode* markerNode;
 	Ogre::Entity* marker;
+    Ogre::SceneManager* sm;
 
 public:
     Ball(Ogre::String name, Ogre::SceneManager* sceneMgr, Simulator* simulator,
@@ -21,6 +23,8 @@ public:
     void init();
     Ogre::SceneNode* getMarkerNode();
     void update(float elapsedTime);
+    void setVelocity(btVector3 vel);
+    void setName(Ogre::String);
 };
 
 #endif

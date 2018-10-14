@@ -35,6 +35,10 @@ Ogre::String GameObject::getName() {
     return this->name;
 }
 
+// void GameObject::setName(Ogre::String newName) {
+//     this->name = newName;
+// }
+
 OgreMotionState* GameObject::getOgreMotionState() {
     return this->motionState;
 }
