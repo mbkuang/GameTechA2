@@ -46,4 +46,5 @@ void Overlay::updateScore() {
     cpuScore->setText("[colour='FFFF0000']"+ ss2.str());
     sheet->addChild(playerScore);
     sheet->addChild(cpuScore);
+    simulator->soundSystem->playSound("scoreSound");
 }

@@ -231,8 +231,6 @@ bool TutorialApplication::keyPressed(const OIS::KeyEvent& arg) {
     }
     else if(arg.key == OIS::KC_SPACE) {
         GameObject* paddle = simulator->getObject("playerPaddle");
-        //paddle->getNode()->pitch(Ogre::Degree(45));
-
         simulator->soundSystem->playSound("paddleSound");
     }
     else if(arg.key == OIS::KC_UP) {
@@ -259,11 +257,6 @@ bool TutorialApplication::mouseMoved(const OIS::MouseEvent& arg) {
     if (arg.state.Z.rel)
         sys.injectMouseWheelChange(arg.state.Z.rel / 120.0f);
 
-    // GameObject* playerPaddle = simulator->getObject("PlayerPaddle");
-    // btVector3 pPosition = playerPaddle->getPosition();
-    // pPosition.setX(arg.state.X.abs);
-    // pPosition.setY(arg.state.Y.abs);
-    // playerPaddle->setPosition(pPosition);
     return true;
 }
 //---------------------------------------------------------------------------
