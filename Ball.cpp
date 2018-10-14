@@ -87,13 +87,19 @@ void Ball::update(float elapsedTime) {
         Ogre::String sw = "SouthWall";
         Ogre::String nw = "NorthWall";
 
-        simulator->soundSystem->playSound("wallSound");
-        if(sw.compare(context->theObject->getName()) == 0) {
+        Ogre::String contactName = context->theObject->getName();
+        if(contactName.compare("PlayerPaddle") == 0 
+            || contactName.compare("CPUPaddle") == 0)
+            simulator->soundSystem->playSound("paddleSound");
+        else 
+            simulator->soundSystem->playSound("wallSound");
+
+        if(sw.compare(contactName) == 0) {
             simulator->getPlayer("CPU")->incrementScore();
             simulator->overlay->updateScore();
             this->init();
         }
-        else if(nw.compare(context->theObject->getName()) == 0) {
+        else if(nw.compare(contactName) == 0) {
             simulator->getPlayer("Player1")->incrementScore();
             simulator->overlay->updateScore();
             this->init();
