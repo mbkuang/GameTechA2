@@ -77,13 +77,15 @@ void GameObject::setPosition(btVector3 newPosition) {
         btTransform transformation;
         transformation.setOrigin(newPosition);
         transformation.setRotation(body->getOrientation());
-        body->setWorldTransform(transformation);
+        //body->setWorldTransform(transformation);
         motionState->setWorldTransform(transformation);
+        motionState->updateTransform(transformation);
     }
 }
 
 void GameObject::move(Ogre::Real x, Ogre::Real y, Ogre::Real z) {
     rootNode->translate(rootNode->getLocalAxes(), x, y, z);
+    this->updateTransform();
 }
 
 void GameObject::updateTransform() {

@@ -41,21 +41,25 @@ Paddle::~Paddle() {
 }
 
 void Paddle::move(Ogre::Real x, Ogre::Real y, Ogre::Real z) {
-    rootNode->translate(rootNode->getLocalAxes(), x, y, z);
     Ogre::Vector3 pPosition = rootNode->getPosition();
-    pPosition.x = std::min(std::max(pPosition.x, xMin), xMax);
-    pPosition.y = std::min(std::max(pPosition.y, yMin), yMax);
-    rootNode->setPosition(pPosition);
+    float xNew = std::min(std::max(pPosition.x + x, xMin), xMax);
+    float yNew = std::min(std::max(pPosition.y + y, yMin), yMax);
+    float zNew = pPosition.z + z;
+    this->setPosition(xNew, yNew, zNew);
+    // float xt = std::min(std::max(x, xMin - pPosition.x), xMax - pPosition.x);
+    // float yt = std::min(std::max(y, yMin - pPosition.y), yMax - pPosition.y);
+    // rootNode->translate(rootNode->getLocalAxes(), xt, yt, z);
+    // this->updateTransform();
 }
 
 // Specific game object update routine.
 void Paddle::update(float elapsedTime) {
-    lastTime += elapsedTime;
-    simulator->getDynamicsWorld()->contactTest(body, *cCallBack);
-    if (context->hit && (context->velNorm > 2.0 || context->velNorm < -2.0)
-        && (lastTime > 0.5 || (context->lastBody != context->body && lastTime > 0.1))) {
-        //Handle the hit
-        lastTime = 0.0f;
-    }
-    context->hit = false;
+    // lastTime += elapsedTime;
+    // simulator->getDynamicsWorld()->contactTest(body, *cCallBack);
+    // if (context->hit && (context->velNorm > 2.0 || context->velNorm < -2.0)
+    //     && (lastTime > 0.5 || (context->lastBody != context->body && lastTime > 0.1))) {
+    //     //Handle the hit
+    //     lastTime = 0.0f;
+    // }
+    // context->hit = false;
 }

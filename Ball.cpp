@@ -91,12 +91,12 @@ void Ball::update(float elapsedTime) {
         if(sw.compare(context->theObject->getName()) == 0) {
             simulator->getPlayer("CPU")->incrementScore();
             simulator->overlay->updateScore();
-            this->setPosition(0, 0, -200);
+            //this->init();
         }
         else if(nw.compare(context->theObject->getName()) == 0) {
             simulator->getPlayer("Player1")->incrementScore();
             simulator->overlay->updateScore();
-            this->setPosition(0, 0, -200);
+            //this->init();
         }
         lastTime = 0.0f;
     }

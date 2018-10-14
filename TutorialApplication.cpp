@@ -73,11 +73,11 @@ void TutorialApplication::createScene(void)
         "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic);
 
     Paddle* playerPaddle = new Paddle("PlayerPaddle", mSceneMgr, simulator,
-        Ogre::Vector3(0.0f, 0.0f, 0.0f), Ogre::Vector3(12.0f, 10.0f, 1.0f),
+        Ogre::Vector3(0.0f, 0.0f, -1.0f), Ogre::Vector3(16.0f, 15.0f, 1.0f),
         "PaddleTexture", paddleMass, paddleRestitution, paddleFriction, paddleKinematic);
 
     Paddle* cpuPaddle = new Paddle("CPUPaddle", mSceneMgr, simulator,
-        Ogre::Vector3(0.0f, 0.0f, -400.0f), Ogre::Vector3(12.0f, 10.0f, 1.0f),
+        Ogre::Vector3(0.0f, 0.0f, -399.0f), Ogre::Vector3(16.0f, 15.0f, 1.0f),//12.0f, 100.0f, 1.0f),
         "PaddleTexture", paddleMass, paddleRestitution, paddleFriction, paddleKinematic);
 
     aimanager->update(mSceneMgr, simulator, cpuPaddle, ball);
@@ -209,7 +209,7 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
     // Update Ogre with Bullet's State
 	if (this->simulator != NULL){
 		//suppose you have 60 frames per second
-        simulator->stepSimulation(fe.timeSinceLastFrame);
+        simulator->stepSimulation(fe.timeSinceLastFrame, 60.0f, 1.0f/60.0f);
 	}
 
     Ball* ball = (Ball*) simulator->getObject("Ball");
@@ -315,7 +315,7 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& fe)
         mCamera->pitch(Ogre::Degree(-.05));
     }
 
-    playerPaddle->updateTransform();
+    // playerPaddle->updateTransform();
 
     btVector3 pPosition = playerPaddle->getPosition();
     Ogre::Vector3 cPosition = mCamera->getPosition();
