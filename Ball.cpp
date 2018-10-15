@@ -123,13 +123,11 @@ void Ball::update(float elapsedTime) {
             simulator->soundSystem->playSound("deathSound");
             this->context->reset(); //Reset the callback
             if(contactName.compare("PlayerPaddle") == 0) {
-                printf("calling here\n");
                 p->setHP(p->getHP()-1);
                 simulator->overlay->updateScore();
                 return;
             }
             else if(contactName.compare("CPUPaddle") == 0) {
-                printf("Lowering cpu hp\n");
                 cpu->setHP(cpu->getHP()-1);
                 simulator->overlay->updateScore();
                 return;
