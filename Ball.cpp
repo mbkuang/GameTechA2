@@ -111,13 +111,16 @@ void Ball::update(float elapsedTime) {
             Player* p = simulator->getPlayer("Player1");
             Player* cpu = simulator->getPlayer("CPU");
             p->shot();
+            simulator->soundSystem->playSound("deathSound");
             if(sw.compare(contactName) == 0) {
                 p->setHP(p->getHP()-1);
                 simulator->overlay->updateScore();
+                return;
             }
             else if(nw.compare(contactName) == 0) {
                 cpu->setHP(cpu->getHP()-1);
                 simulator->overlay->updateScore();
+                return;
             }
         }
 

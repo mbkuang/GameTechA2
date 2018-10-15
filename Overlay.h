@@ -7,6 +7,7 @@
 #include "Simulator.h"
 
 class Simulator;
+class TutorialApplication;
 
 class Overlay {
 public:
@@ -15,6 +16,7 @@ public:
 	void initCEGUI();
 	void updateScore();
 	void createScoreboard();
+	bool quit();
 
 protected:
 	CEGUI::OgreRenderer* mRenderer;

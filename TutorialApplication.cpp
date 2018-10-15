@@ -83,17 +83,15 @@ void TutorialApplication::createScene(void)
     aimanager->update(mSceneMgr, simulator, cpuPaddle, ball);
 
     simulator->overlay->createScoreboard();
-
-    // Ball* laser = new Ball("Laser", mSceneMgr, simulator,
-    //             location, 0.5f,
-    //             "greenball", ballMass, ballRestitution, ballFriction, ballKinematic);
-    // laser->setVelocity(btVector3(0, 0, -100));
-    // laser->~Ball();
 }
 //---------------------------------------------------------------------------
 bool TutorialApplication::quit() {
     mShutDown = true;
     return true;
+}
+//---------------------------------------------------------------------------
+bool Overlay::quit() {
+    return quit();
 }
 //---------------------------------------------------------------------------
 CEGUI::MouseButton convertButton(OIS::MouseButtonID buttonID) {
@@ -200,7 +198,7 @@ bool TutorialApplication::keyPressed(const OIS::KeyEvent& arg) {
                 location, 0.5f,
                 "greenball", ballMass, ballRestitution, ballFriction, ballKinematic);
             laser->setVelocity(btVector3(0, 0, -100));        
-            simulator->soundSystem->playSound("paddleSound");
+            simulator->soundSystem->playSound("laserSound");
         }
         
     }

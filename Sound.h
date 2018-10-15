@@ -17,11 +17,15 @@ public:
 	void volumeUp();
 	void volumeDown();
 	int currentVolume;
+	void shutOffSound();
 protected:
 	Mix_Music *bg_music;
     Mix_Chunk *wallSound;
     Mix_Chunk *paddleSound;
     Mix_Chunk *scoreSound;
+    Mix_Chunk *laserSound;
+    Mix_Chunk *deathSound;
+    bool soundOn;
 };
 
 #endif

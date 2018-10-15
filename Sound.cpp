@@ -10,11 +10,18 @@ Sound::Sound() {
 	currentVolume = MAX_VOLUME/2;
 
 	wallSound = Mix_LoadWAV("media/click.wav");
-	paddleSound = Mix_LoadWAV("media/Pew.wav");
+	paddleSound = Mix_LoadWAV("media/smw_jump.wav");
 	scoreSound = Mix_LoadWAV("media/smw_1-up.wav");
+	laserSound = Mix_LoadWAV("media/Pew.wav");
+	deathSound = Mix_LoadWAV("media/robot_blip.mp3");
+
+	soundOn = true;
 }
 
 void Sound::playSound(Ogre::String soundType) {
+	if(!soundOn)
+		return;
+
 	if(soundType.compare("bg_music") == 0) {
 		if(Mix_PlayingMusic() == 0)
 			Mix_PlayMusic(bg_music, -1);
@@ -29,6 +36,12 @@ void Sound::playSound(Ogre::String soundType) {
 	else if(soundType.compare("wallSound") == 0) {
 		Mix_PlayChannel(-1, wallSound, 0);
 	}
+	else if(soundType.compare("laserSound") == 0) {
+		Mix_PlayChannel(-1, laserSound, 0);
+	}
+	else if(soundType.compare("deathSound") == 0) {
+		Mix_PlayChannel(-1, deathSound, 0);
+	}
 	else
 		Mix_PlayChannel(-1, scoreSound, 0);
 }
@@ -41,4 +54,10 @@ void Sound::volumeDown() {
 void Sound::volumeUp() {
 	currentVolume += 2;
 	Mix_VolumeMusic(currentVolume);
+}
+
+void Sound::shutOffSound() {
+	currentVolume = 0;
+	Mix_VolumeMusic(currentVolume);
+	soundOn = false;
 }
