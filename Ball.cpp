@@ -14,8 +14,6 @@ Ball::Ball(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
     this->kinematic = kinematic;
     lastTime = 0.0f;
 
-    sm = sceneMgr;
-
     // Set the entity.
     geom = sceneMgr->createEntity(name, "sphere.mesh");
     geom->setCastShadows(true);
@@ -55,16 +53,7 @@ Ball::Ball(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
 }
 
 Ball::~Ball() {
- // TODO:
-    // simulator->removeObject(this);
-    // sm->destroyEntity(this->getName());
-    // this->rootNode = NULL;
-    // this->geom = NULL;
-    // this->motionState = NULL;
-    // this->shape = NULL;
-    // this->body = NULL;
-    // this->context = NULL;
-    // this->cCallBack = NULL;
+
 }
 
 void Ball::setVelocity(btVector3 vel) {
@@ -119,7 +108,7 @@ void Ball::update(float elapsedTime) {
                 cpu->shot();    //Update the firing status
 
             this->setPosition(0, 2000, 0);  //Hide the ball off screen
-            this->setVelocity(btVector3(0, 0, 0));
+            this->setVelocity(btVector3(0, 1, 0));
             this->inertia = btVector3(0.0f, 0.0f, 0.0f);
             simulator->soundSystem->playSound("deathSound");
             this->context->reset(); //Reset the callback
@@ -136,7 +125,6 @@ void Ball::update(float elapsedTime) {
             return;
         }
         /* End of projectiles */
-
         if(contactName.compare("PlayerPaddle") == 0
             || contactName.compare("CPUPaddle") == 0)
         {
@@ -152,12 +140,12 @@ void Ball::update(float elapsedTime) {
         else
             simulator->soundSystem->playSound("wallSound");
 
-        if(sw.compare(contactName) == 0) {
+        if(contactName.compare(sw) == 0) {
             simulator->getPlayer("CPU")->incrementScore();
             simulator->overlay->updateScore();
             this->init();
         }
-        else if(nw.compare(contactName) == 0) {
+        else if(contactName.compare(nw) == 0) {
             simulator->getPlayer("Player1")->incrementScore();
             simulator->overlay->updateScore();
             this->init();

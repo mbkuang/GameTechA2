@@ -13,7 +13,6 @@ protected:
 	float lastTime;
 	Ogre::SceneNode* markerNode;
 	Ogre::Entity* marker;
-    Ogre::SceneManager* sm;
 
 public:
     Ball(Ogre::String name, Ogre::SceneManager* sceneMgr, Simulator* simulator,

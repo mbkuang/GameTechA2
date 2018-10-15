@@ -25,6 +25,9 @@ GameObject::GameObject(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulat
 
 GameObject::~GameObject() {
 	//TODO:
+    simulator->removeObject(this);
+    sceneMgr->destroyEntity(this->getName());
+    this->rootNode = NULL;
 }
 
 btRigidBody* GameObject::getBody() {

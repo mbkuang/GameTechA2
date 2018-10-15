@@ -19,6 +19,10 @@ protected:
     Ball* ball;
     float movementSpeed;
     int level;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 4777af90bb8c329a6f0437c3a1bc0d1a879f42e8
 public:
     AIManager(Simulator* sim);
     AIManager(Ogre::SceneManager* scnMgr, Simulator* sim, Paddle* pad, Ball* nBall);
