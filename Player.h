@@ -12,6 +12,7 @@ public:
 	~Player();
 
 	void incrementScore();
+    void setScore(int newScore);
 	Ogre::String getName();
 	int getScore();
 	int getHP();

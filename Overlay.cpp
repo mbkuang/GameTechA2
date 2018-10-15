@@ -2,6 +2,7 @@
 
 Overlay::Overlay(Simulator* sim) {
 	simulator = sim;
+    alarm = 0;
 }
 
 void Overlay::initCEGUI() {
@@ -45,8 +46,37 @@ void Overlay::updateScore() {
     int p1hp = p1->getHP();
     int cpuhp = cpu->getHP();
 
+    if(p1score == 3 || cpuhp == 0) {
+        CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
+        p1wins = wmgr.createWindow("TaharezLook/Button", "CEGUIDemo/QuitButton");
+        p1wins->setSize(CEGUI::USize(CEGUI::UDim(.4, 0), CEGUI::UDim(.1, 0)));
+        p1wins->setPosition(CEGUI::UVector2(CEGUI::UDim(.3, 0), CEGUI::UDim(0, 0)));
+        p1wins->setText("[colour='FFFF0000']Player 1 wins!\n\nCPU gets tougher...");
+        //p1wins->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::quit(), this));
+        sheet->addChild(p1wins);
+        p1->setScore(0);
+        p1->setHP(5);
+        cpu->setScore(0);
+        cpu->setHP(5);
+        alarm = 60*10*3;
+    }
+    else if(cpuscore == 3 || p1hp == 0) {
+        CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
+        p1wins = wmgr.createWindow("TaharezLook/Button", "CEGUIDemo/QuitButton");
+        p1wins->setSize(CEGUI::USize(CEGUI::UDim(.4, 0), CEGUI::UDim(.1, 0)));
+        p1wins->setPosition(CEGUI::UVector2(CEGUI::UDim(.3, 0), CEGUI::UDim(0, 0)));
+        p1wins->setText("[colour='FFFF0000']CPU wins!\n\nYou must prove your worth!");
+        //p1wins->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::quit(), this));
+        sheet->addChild(p1wins);
+        p1->setScore(0);
+        p1->setHP(5);
+        cpu->setScore(0);
+        cpu->setHP(5);
+        alarm = 60*10*3;
+    }
+
     ss1 << "Player 1\nScore: "<<p1score<<"\nHP: "<<p1hp;
-    ss2 << "Player 2\nScore: "<<cpuscore <<"\nHP: "<<cpuhp;
+    ss2 << "CPU\nScore: "<<cpuscore <<"\nHP: "<<cpuhp;
 
     playerScore->setText("[colour='FFFF0000']"+ ss1.str());
     cpuScore->setText("[colour='FFFF0000']"+ ss2.str());
@@ -54,22 +84,17 @@ void Overlay::updateScore() {
     sheet->addChild(cpuScore);
     simulator->soundSystem->playSound("scoreSound");
 
-    if(p1score == 5 || cpuhp == 0) {
-        CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
-        CEGUI::Window *p1wins = wmgr.createWindow("TaharezLook/Button", "CEGUIDemo/QuitButton");
-        p1wins->setSize(CEGUI::USize(CEGUI::UDim(1, 0), CEGUI::UDim(1, 0)));
-        p1wins->setText("[colour='FFFF0000']Player 1 wins!\n\nPress 'Esc' to quit");
-        //p1wins->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::quit(), this));
-        sheet->addChild(p1wins);
-        simulator->soundSystem->shutOffSound();
+}
+
+bool Overlay::countdown() {
+    if (alarm > 0) {
+        alarm --;
+        if (alarm <= 0) {
+            CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
+            wmgr.destroyWindow(p1wins);
+            updateScore();
+            return true;
+        }
     }
-    else if(cpuscore == 5 || p1hp == 0) {
-        CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
-        CEGUI::Window *p1wins = wmgr.createWindow("TaharezLook/Button", "CEGUIDemo/QuitButton");
-        p1wins->setSize(CEGUI::USize(CEGUI::UDim(1, 0), CEGUI::UDim(1, 0)));
-        p1wins->setText("[colour='FFFF0000']CPU wins!\n\nPress 'Esc' to quit");
-        //p1wins->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::quit(), this));
-        sheet->addChild(p1wins);
-        simulator->soundSystem->shutOffSound();
-    }
+    return false;
 }

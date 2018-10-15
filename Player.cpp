@@ -13,6 +13,10 @@ void Player::incrementScore() {
 	score++;
 }
 
+void Player::setScore(int newScore) {
+    score = newScore;
+}
+
 Ogre::String Player::getName() {
 	return playerName;
 }

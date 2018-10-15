@@ -17,12 +17,14 @@ public:
 	void updateScore();
 	void createScoreboard();
 	bool quit();
-
+    bool countdown();
 protected:
 	CEGUI::OgreRenderer* mRenderer;
 	CEGUI::Window *sheet;
 	CEGUI::Window *playerScore;
 	CEGUI::Window *cpuScore;
+    CEGUI::Window *p1wins;
+    int alarm;
 	Simulator *simulator;
 };
 

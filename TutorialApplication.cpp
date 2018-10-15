@@ -172,6 +172,13 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
     Ball* ball = (Ball*) simulator->getObject("Ball");
     ball->getMarkerNode()->setPosition(0, 0, ball->getPosition().getZ());
 
+    if (simulator->overlay->countdown()) {
+        aimanager->advance();
+        ball->init();
+        Paddle* cpuPaddle = (Paddle*) simulator->getObject("CPUPaddle");
+        cpuPaddle->setPosition(btVector3(0.0f, 0.0f, -299.0f));
+    }
+
     return ret;
 }
 //---------------------------------------------------------------------------

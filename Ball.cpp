@@ -61,7 +61,8 @@ void Ball::setVelocity(btVector3 vel) {
 }
 
 void Ball::init() {
-    this->setPosition(0, 0, -200);
+    float zMid = -150.0f;
+    this->setPosition(0, 0, zMid);
 
     int c2random = 1000;
 
@@ -107,7 +108,7 @@ void Ball::update(float elapsedTime) {
             else if(objName.compare("cpulaser") == 0)
                 cpu->shot();    //Update the firing status
 
-            this->setPosition(0, -2000, 0);  //Hide the ball off screen
+            this->setPosition(0, 200, 0);  //Hide the ball off screen
             this->setVelocity(btVector3(0, 1, 0));
             this->inertia = btVector3(0.0f, 0.0f, 0.0f);
             simulator->soundSystem->playSound("deathSound");
