@@ -26,6 +26,18 @@ void Simulator::addObject (GameObject* o) {
 }
 
 bool Simulator::removeObject(GameObject*  o) {
+	// for(std::deque<GameObject*>::iterator it = objList.begin(); it != objList.end(); ) {
+	// 	if((&it)->getName().compare(o->getName()) == 0) {
+	// 		objList.erase(it);
+	// 		//printf("Yeah yeah\n");
+	// 		break;
+	// 	}
+	// }
+	// for(int i = objList.size()-1; i >= 0; i--) {
+	// 	if(objList[i]->getName().compare(o->getName()) == 0) {
+	// 		objList.erase
+	// 	}
+	// }
 	objList.pop_back();
 	objMap.erase(o->getName());
 	Ogre::SceneNode* n = o->getNode();

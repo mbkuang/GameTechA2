@@ -105,23 +105,33 @@ void Ball::update(float elapsedTime) {
         Ogre::String sw = "SouthWall";
         Ogre::String nw = "NorthWall";
         Ogre::String contactName = context->theObject->getName();
-
-        if(this->getName().compare("Ball") != 0) {
-            this->~Ball();
+        printf("Hit\n");
+        Ogre::String objName = this->getName();
+        if(objName.compare("Ball") != 0) {
             Player* p = simulator->getPlayer("Player1");
             Player* cpu = simulator->getPlayer("CPU");
-            p->shot();
+            if(objName.compare("plaser") == 0)
+                p->shot();
+            else if(objName.compare("cpulaser") == 0)
+                cpu->shot();
+
+            this->setPosition(0, 200, 0);
+            this->setVelocity(btVector3(0, 0, 0));
+            this->inertia = btVector3(0.0f, 0.0f, 0.0f);
             simulator->soundSystem->playSound("deathSound");
-            if(sw.compare(contactName) == 0) {
+            if(contactName.compare("PlayerPaddle") == 0) {
+                printf("calling here\n");
                 p->setHP(p->getHP()-1);
                 simulator->overlay->updateScore();
                 return;
             }
-            else if(nw.compare(contactName) == 0) {
+            else if(contactName.compare("CPUPaddle") == 0) {
+                printf("Lowering cpu hp\n");
                 cpu->setHP(cpu->getHP()-1);
                 simulator->overlay->updateScore();
                 return;
             }
+            return;
         }
 
         if(contactName.compare("PlayerPaddle") == 0 

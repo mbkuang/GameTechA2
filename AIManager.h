@@ -25,6 +25,7 @@ public:
     ~AIManager();
     void update(Ogre::SceneManager* scnMgr, Simulator* sim, Paddle* pad, Ball* nBall);
     void move(const Ogre::FrameEvent& fe);
+    void shoot();
 };
 
 #endif

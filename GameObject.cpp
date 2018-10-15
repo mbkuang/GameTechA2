@@ -57,13 +57,15 @@ btVector3 GameObject::getVelocity() {
 }
 
 void GameObject::setVelocity(float xVelocity, float yVelocity, float zVelocity) {
-    if (body != NULL)
+    if (body != NULL) {
         body->setLinearVelocity(btVector3(xVelocity, yVelocity, zVelocity));
+    }
 }
 
 void GameObject::setVelocity(btVector3 newVelocity) {
-    if (body != NULL)
+    if (body != NULL) {
         body->setLinearVelocity(newVelocity);
+    }
 }
 
 void GameObject::setPosition(float xPosition, float yPosition, float zPosition) {
@@ -81,9 +83,9 @@ void GameObject::setPosition(btVector3 newPosition) {
         btTransform transformation;
         transformation.setOrigin(newPosition);
         transformation.setRotation(body->getOrientation());
-        //body->setWorldTransform(transformation);
+        body->setWorldTransform(transformation);
         motionState->setWorldTransform(transformation);
-        motionState->updateTransform(transformation);
+        //motionState->updateTransform(transformation);
     }
 }
 

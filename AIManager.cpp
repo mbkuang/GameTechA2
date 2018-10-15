@@ -43,3 +43,35 @@ void AIManager::move(const Ogre::FrameEvent& fe) {
         0.0f
     );
 }
+
+void AIManager::shoot() {
+    int random = rand() % 10;
+    if(random > 2)
+        return;
+
+    Player* cpu = simulator->getPlayer("CPU");
+    if(!cpu->hasFired()) {
+        printf("Shooting\n");
+        //cpu->shot();
+        GameObject* paddle = simulator->getObject("CPUPaddle");
+        Ogre::Vector3 location = (Ogre::Vector3) paddle->getPosition();
+        // Ogre::stringstream ss;
+        // ss << cpu->getNumShots()*-1;
+        GameObject* laser;
+        if(cpu->getNumShots() == 0) {
+            printf("Here\n");
+            GameObject* laser = new Ball("cpulaser", sceneMgr, simulator,
+                location, 0.5f,
+                "greenball", ballMass, ballRestitution, ballFriction, ballKinematic);
+        }
+        else {
+            printf("now\n");
+            laser = simulator->getObject("plaser");
+            laser->setPosition(btVector3(location.x, location.y, location.z));
+        }
+        cpu->shot();
+        laser->setVelocity(btVector3(0, 0, 100));        
+        simulator->soundSystem->playSound("laserSound");
+        printf("hello\n");
+    } 
+}

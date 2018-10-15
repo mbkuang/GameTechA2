@@ -159,6 +159,7 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
         return false;
 
     aimanager->move(fe);
+    //aimanager->shoot();
 
     // Update Ogre with Bullet's State
 	if (this->simulator != NULL){
@@ -185,20 +186,34 @@ bool TutorialApplication::keyPressed(const OIS::KeyEvent& arg) {
     }
     else if(arg.key == OIS::KC_SPACE) {
         //btVector3 pLocation = paddle->getPosition();
-
-        // ****** CHECK SIMULATOR TO SEE IF LASER ALREADY EXISTS, IF SO DO NOTHING!!!!!! ****** //
+        printf("Starting\n");
         Player* p = simulator->getPlayer("Player1");
         if(!p->hasFired()) {
-            p->shot();
+            printf("has not fired\n");
+            // p->shot();
             GameObject* paddle = simulator->getObject("PlayerPaddle");
             Ogre::Vector3 location = (Ogre::Vector3) paddle->getPosition();
-            Ogre::stringstream ss;
-            ss << p->getNumShots(); 
-            Ball* laser = new Ball(ss.str(), mSceneMgr, simulator,
-                location, 0.5f,
+            // Ogre::stringstream ss;
+            // ss << p->getNumShots();
+            if(p->getNumShots() == 0) {
+                printf("In here\n");
+                Ball* laser = new Ball("plaser", mSceneMgr, simulator,
+                Ogre::Vector3(location.x, location.y, location.z-20), 0.5f,
                 "greenball", ballMass, ballRestitution, ballFriction, ballKinematic);
-            laser->setVelocity(btVector3(0, 0, -100));        
+                laser->setVelocity(btVector3(0, 0, -100)); 
+                printf("Created ball");
+            }
+            else {
+                printf("tewstinbg\n");
+                Ball* laser = (Ball*) simulator->getObject("plaser");
+                laser->setPosition(btVector3(location.x, location.y, location.z-20));
+                laser->setVelocity(btVector3(0, 0, -100));
+                printf("kljel;r\n");
+            }
+            p->shot();
+            //laser->setVelocity(btVector3(0, 0, -100));        
             simulator->soundSystem->playSound("laserSound");
+            printf("Done\n");
         }
         
     }
