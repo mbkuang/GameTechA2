@@ -26,18 +26,6 @@ void Simulator::addObject (GameObject* o) {
 }
 
 bool Simulator::removeObject(GameObject*  o) {
-	// for(std::deque<GameObject*>::iterator it = objList.begin(); it != objList.end(); ) {
-	// 	if((&it)->getName().compare(o->getName()) == 0) {
-	// 		objList.erase(it);
-	// 		//printf("Yeah yeah\n");
-	// 		break;
-	// 	}
-	// }
-	// for(int i = objList.size()-1; i >= 0; i--) {
-	// 	if(objList[i]->getName().compare(o->getName()) == 0) {
-	// 		objList.erase
-	// 	}
-	// }
 	objList.pop_back();
 	objMap.erase(o->getName());
 	Ogre::SceneNode* n = o->getNode();
@@ -47,26 +35,15 @@ bool Simulator::removeObject(GameObject*  o) {
 
 void Simulator::stepSimulation(const Ogre::Real elapsedTime, int maxSubSteps, const Ogre::Real fixedTimestep) {
     dynamicsWorld->stepSimulation(elapsedTime, maxSubSteps, fixedTimestep);
-	//for (int i = 0; i != objList.size(); i++) idList[i] = 0;
-	//dynamicsWorld->stepSimulation(elapsedTime, maxSubSteps, fixedTimestep);
 	for (unsigned int i = 0; i < objList.size(); i++) {
-		//if (objList[i]->doUpdates()) {
-			objList[i]->update(elapsedTime);
-		//}
+		objList[i]->update(elapsedTime);
+
 	}
 }
 
 btDiscreteDynamicsWorld* Simulator::getDynamicsWorld() {
     return dynamicsWorld;
 }
-
-// std::vector<btCollisionShape*> Simulator::getCollisionShapes() {
-//     return collisionShapes;
-// }
-
-// int Simulator::getCollisionObjectCount() {
-//     return objMap.size();
-// }
 
 GameObject* Simulator::getObject(Ogre::String oName) {
     return objMap[oName];
