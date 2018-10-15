@@ -38,7 +38,6 @@ bool Player::hasFired() {
 void Player::shot() {
 	fired = !fired;
 	numShots++;
-	printf("shot\n");
 }
 
 int Player::getNumShots() {

@@ -56,9 +56,9 @@ Ball::Ball(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
 
 Ball::~Ball() {
  // TODO:
-    simulator->removeObject(this);
-    sm->destroyEntity(this->getName());
-    this->rootNode = NULL;
+    // simulator->removeObject(this);
+    // sm->destroyEntity(this->getName());
+    // this->rootNode = NULL;
     // this->geom = NULL;
     // this->motionState = NULL;
     // this->shape = NULL;
@@ -105,20 +105,23 @@ void Ball::update(float elapsedTime) {
         Ogre::String sw = "SouthWall";
         Ogre::String nw = "NorthWall";
         Ogre::String contactName = context->theObject->getName();
-        printf("Hit\n");
+
         Ogre::String objName = this->getName();
+
+        /* Handle the projectiles */
         if(objName.compare("Ball") != 0) {
             Player* p = simulator->getPlayer("Player1");
             Player* cpu = simulator->getPlayer("CPU");
             if(objName.compare("plaser") == 0)
-                p->shot();
+                p->shot();      //Update the firing status
             else if(objName.compare("cpulaser") == 0)
-                cpu->shot();
+                cpu->shot();    //Update the firing status
 
-            this->setPosition(0, 200, 0);
+            this->setPosition(0, 2000, 0);  //Hide the ball off screen
             this->setVelocity(btVector3(0, 0, 0));
             this->inertia = btVector3(0.0f, 0.0f, 0.0f);
             simulator->soundSystem->playSound("deathSound");
+            this->context->reset(); //Reset the callback
             if(contactName.compare("PlayerPaddle") == 0) {
                 printf("calling here\n");
                 p->setHP(p->getHP()-1);
@@ -133,6 +136,7 @@ void Ball::update(float elapsedTime) {
             }
             return;
         }
+        /* End of projectiles */
 
         if(contactName.compare("PlayerPaddle") == 0 
             || contactName.compare("CPUPaddle") == 0)
