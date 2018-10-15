@@ -14,8 +14,6 @@ Ball::Ball(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
     this->kinematic = kinematic;
     lastTime = 0.0f;
 
-    sm = sceneMgr;
-
     // Set the entity.
     geom = sceneMgr->createEntity(name, "sphere.mesh");
     geom->setCastShadows(true);
@@ -55,16 +53,7 @@ Ball::Ball(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
 }
 
 Ball::~Ball() {
- // TODO:
-    // simulator->removeObject(this);
-    // sm->destroyEntity(this->getName());
-    // this->rootNode = NULL;
-    // this->geom = NULL;
-    // this->motionState = NULL;
-    // this->shape = NULL;
-    // this->body = NULL;
-    // this->context = NULL;
-    // this->cCallBack = NULL;
+
 }
 
 void Ball::setVelocity(btVector3 vel) {
@@ -104,7 +93,8 @@ void Ball::update(float elapsedTime) {
         //Handle the hit
         Ogre::String sw = "SouthWall";
         Ogre::String nw = "NorthWall";
-        Ogre::String contactName = context->theObject->getName();
+        GameObject* contact = context->theObject;
+        Ogre::String contactName = contact->getName();
 
         Ogre::String objName = this->getName();
 
@@ -118,7 +108,8 @@ void Ball::update(float elapsedTime) {
                 cpu->shot();    //Update the firing status
 
             this->setPosition(0, 2000, 0);  //Hide the ball off screen
-            this->setVelocity(btVector3(0, 0, 0));
+            this->setVelocity(btVector3(0, 1, 0));
+            printf("Freezing the ball for no fucking reason\n");
             this->inertia = btVector3(0.0f, 0.0f, 0.0f);
             simulator->soundSystem->playSound("deathSound");
             this->context->reset(); //Reset the callback
@@ -137,17 +128,25 @@ void Ball::update(float elapsedTime) {
         /* End of projectiles */
 
         if(contactName.compare("PlayerPaddle") == 0 
-            || contactName.compare("CPUPaddle") == 0)
-            simulator->soundSystem->playSound("paddleSound");
+            || contactName.compare("CPUPaddle") == 0) {
+             simulator->soundSystem->playSound("paddleSound");
+            btVector3 vel = this->getVelocity();
+            btVector3 cPosition = contact->getPosition();
+            btVector3 bPosition = this->getPosition();
+            float xDiff = vel.getX() + (bPosition.getX() - cPosition.getX());
+            float yDiff = vel.getY() + (bPosition.getY() - cPosition.getY());
+            float zDiff = vel.getZ();
+            this->setVelocity(btVector3(xDiff, yDiff, zDiff));
+        }
         else 
             simulator->soundSystem->playSound("wallSound");
 
-        if(sw.compare(contactName) == 0) {
+        if(contactName.compare(sw) == 0) {
             simulator->getPlayer("CPU")->incrementScore();
             simulator->overlay->updateScore();
             this->init();
         }
-        else if(nw.compare(contactName) == 0) {
+        else if(contactName.compare(nw) == 0) {
             simulator->getPlayer("Player1")->incrementScore();
             simulator->overlay->updateScore();
             this->init();

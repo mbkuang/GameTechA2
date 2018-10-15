@@ -18,6 +18,7 @@ protected:
     Paddle* paddle;
     Ball* ball;
     float movementSpeed;
+    int level;
 
 public:
     AIManager(Simulator* sim);

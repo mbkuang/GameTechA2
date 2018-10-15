@@ -46,30 +46,32 @@ void TutorialApplication::createScene(void)
 
     mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
 
+    float zMid = -150.0f;
+
     Wall* flooring = new Wall("Flooring", mSceneMgr, simulator,
-        Ogre::Vector3(0.0f, yFWall, -200.0f), Ogre::Vector3(100.0f, 20.0f, 400.0f),
+        Ogre::Vector3(0.0f, yFWall, zMid), Ogre::Vector3(wallWidth, wallThickness, wallLength),
         "WallTexture2Inverse", wallMass, wallRestitution, wallFriction, wallKinematic);
     Wall* ceiling = new Wall("Ceiling", mSceneMgr, simulator,
-        Ogre::Vector3(0.0f, yCWall, -200.0f), Ogre::Vector3(100.0f, 20.0f, 400.0f),
+        Ogre::Vector3(0.0f, yCWall, zMid), Ogre::Vector3(wallWidth, wallThickness, wallLength),
         "WallTexture2Inverse", wallMass, wallRestitution, wallFriction, wallKinematic);
     Wall* westWall = new Wall("WestWall", mSceneMgr, simulator,
-        Ogre::Vector3(xWWall, 0.0f, -200.0f), Ogre::Vector3(20.0f, 80.0f, 400.0f),
+        Ogre::Vector3(xWWall, 0.0f, zMid), Ogre::Vector3(wallThickness, wallWidth-20.0f, wallLength),
         "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
     Wall* eastWall = new Wall("EastWall", mSceneMgr, simulator,
-        Ogre::Vector3(xEWall, 0.0f, -200.0f), Ogre::Vector3(20.0f, 80.0f, 400.0f),
+        Ogre::Vector3(xEWall, 0.0f, zMid), Ogre::Vector3(wallThickness, wallWidth-20.0f, wallLength),
         "WallTextureInverse", wallMass, wallRestitution, wallFriction, wallKinematic);
     Wall* northWall = new Wall("NorthWall", mSceneMgr, simulator,
-        Ogre::Vector3(0.0f, 0.0f, zNWall), Ogre::Vector3(100.0f, 100.0f, 20.0f),
+        Ogre::Vector3(0.0f, 0.0f, zNWall), Ogre::Vector3(wallWidth, wallWidth, wallThickness),
         "WallTextureInvisible", wallMass, wallRestitution, wallFriction, wallKinematic);
     Wall* southWall = new Wall("SouthWall", mSceneMgr, simulator,
-        Ogre::Vector3(0.0f, 0.0f, zSWall), Ogre::Vector3(100.0f, 100.0f, 20.0f),
+        Ogre::Vector3(0.0f, 0.0f, zSWall), Ogre::Vector3(wallWidth, wallWidth, wallThickness),
         "WallTextureInvisible", wallMass, wallRestitution, wallFriction, wallKinematic);
 
     Player* player1 = new Player("Player1", simulator);
     Player* cpuPlayer = new Player("CPU", simulator);
 
     Ball* ball = new Ball("Ball", mSceneMgr, simulator,
-        Ogre::Vector3(0.0f, 0.0f, -200.0f), 2.0f,
+        Ogre::Vector3(0.0f, 0.0f, zMid), 2.0f,
         "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic);
 
     Paddle* playerPaddle = new Paddle("PlayerPaddle", mSceneMgr, simulator,
@@ -77,7 +79,7 @@ void TutorialApplication::createScene(void)
         "PaddleTexture", paddleMass, paddleRestitution, paddleFriction, paddleKinematic);
 
     Paddle* cpuPaddle = new Paddle("CPUPaddle", mSceneMgr, simulator,
-        Ogre::Vector3(0.0f, 0.0f, -399.0f), Ogre::Vector3(16.0f, 15.0f, 1.0f),//12.0f, 100.0f, 1.0f),
+        Ogre::Vector3(0.0f, 0.0f, -299.0f), Ogre::Vector3(16.0f, 15.0f, 1.0f),//12.0f, 100.0f, 1.0f),
         "PaddleTexture", paddleMass, paddleRestitution, paddleFriction, paddleKinematic);
 
     aimanager->update(mSceneMgr, simulator, cpuPaddle, ball);
@@ -192,14 +194,15 @@ bool TutorialApplication::keyPressed(const OIS::KeyEvent& arg) {
 
             if(p->getNumShots() == 0) {
                 Ball* laser = new Ball("plaser", mSceneMgr, simulator,
-                Ogre::Vector3(location.x, location.y, location.z-20), 0.5f,
+                Ogre::Vector3(location.x, location.y, location.z-20), 2.0f,
                 "greenball", ballMass, ballRestitution, ballFriction, ballKinematic);
-                laser->setVelocity(btVector3(0, 0, -100)); 
+                laser->setVelocity(btVector3(0, 0, -200)); 
             }
             else {
                 Ball* laser = (Ball*) simulator->getObject("plaser");
                 laser->setPosition(btVector3(location.x, location.y, location.z-20));
-                laser->setVelocity(btVector3(0, 0, -100));
+                laser->setVelocity(btVector3(0, 0, -200));
+                printf("Actually setting velocity to 200\n");
             }
             p->shot();
             simulator->soundSystem->playSound("laserSound");

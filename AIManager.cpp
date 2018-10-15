@@ -3,6 +3,7 @@
 AIManager::AIManager(Simulator* sim) {
     movementSpeed = 40.0f;
     simulator = sim;
+    level = 10;
 }
 
 AIManager::AIManager(Ogre::SceneManager* scnMgr, Simulator* sim, Paddle* pad, Ball* nBall) {
@@ -11,6 +12,7 @@ AIManager::AIManager(Ogre::SceneManager* scnMgr, Simulator* sim, Paddle* pad, Ba
     simulator = sim;
     paddle = pad;
     ball = nBall;
+    level = 10;
 }
 
 AIManager::~AIManager() {
@@ -34,7 +36,7 @@ void AIManager::move(const Ogre::FrameEvent& fe) {
     yDir = yDir < 0 ? -1 : 1;
 
     float zPos = pPosition.getZ();
-    float worry = (bPosition.getZ()*2 - zPos)/zPos;
+    float worry = (bPosition.getZ()*2 - zPos - level)/zPos;
     worry = std::max(0.0f, worry);
 
     paddle->move(
@@ -56,14 +58,14 @@ void AIManager::shoot() {
 
         if(cpu->getNumShots() == 0) {
                 Ball* laser = new Ball("cpulaser", sceneMgr, simulator,
-                Ogre::Vector3(location.x, location.y, location.z+20), 0.5f,
+                Ogre::Vector3(location.x, location.y, location.z+20), 2.0f,
                 "greenball", ballMass, ballRestitution, ballFriction, ballKinematic);
-                laser->setVelocity(btVector3(0, 0, 100)); 
+                laser->setVelocity(btVector3(0, 0, 200)); 
         }
         else {
             Ball* laser = (Ball*) simulator->getObject("cpulaser");
                 laser->setPosition(btVector3(location.x, location.y, location.z+20));
-                laser->setVelocity(btVector3(0, 0, 100));
+                laser->setVelocity(btVector3(0, 0, 200));
         }
         cpu->shot();
         simulator->soundSystem->playSound("laserSound");
