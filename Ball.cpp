@@ -104,7 +104,8 @@ void Ball::update(float elapsedTime) {
         //Handle the hit
         Ogre::String sw = "SouthWall";
         Ogre::String nw = "NorthWall";
-        Ogre::String contactName = context->theObject->getName();
+        GameObject* contact = context->theObject;
+        Ogre::String contactName = contact->getName();
 
         Ogre::String objName = this->getName();
 
@@ -136,10 +137,19 @@ void Ball::update(float elapsedTime) {
         }
         /* End of projectiles */
 
-        if(contactName.compare("PlayerPaddle") == 0 
+        if(contactName.compare("PlayerPaddle") == 0
             || contactName.compare("CPUPaddle") == 0)
+        {
             simulator->soundSystem->playSound("paddleSound");
-        else 
+            btVector3 vel = this->getVelocity();
+            btVector3 cPosition = contact->getPosition();
+            btVector3 bPosition = this->getPosition();
+            float xDiff = vel.getX() + (bPosition.getX() - cPosition.getX());
+            float yDiff = vel.getY() + (bPosition.getY() - cPosition.getY());
+            float zDiff = vel.getZ();
+            this->setVelocity(btVector3(xDiff, yDiff, zDiff));
+        }
+        else
             simulator->soundSystem->playSound("wallSound");
 
         if(sw.compare(contactName) == 0) {

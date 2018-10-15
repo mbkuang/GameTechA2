@@ -194,17 +194,17 @@ bool TutorialApplication::keyPressed(const OIS::KeyEvent& arg) {
                 Ball* laser = new Ball("plaser", mSceneMgr, simulator,
                 Ogre::Vector3(location.x, location.y, location.z-20), 0.5f,
                 "greenball", ballMass, ballRestitution, ballFriction, ballKinematic);
-                laser->setVelocity(btVector3(0, 0, -100)); 
+                laser->setVelocity(btVector3(0, 0, -200));
             }
             else {
                 Ball* laser = (Ball*) simulator->getObject("plaser");
                 laser->setPosition(btVector3(location.x, location.y, location.z-20));
-                laser->setVelocity(btVector3(0, 0, -100));
+                laser->setVelocity(btVector3(0, 0, -200));
             }
             p->shot();
             simulator->soundSystem->playSound("laserSound");
         }
-        
+
     }
     else if(arg.key == OIS::KC_UP) {
         simulator->soundSystem->volumeUp();
