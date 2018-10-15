@@ -35,26 +35,15 @@ bool Simulator::removeObject(GameObject*  o) {
 
 void Simulator::stepSimulation(const Ogre::Real elapsedTime, int maxSubSteps, const Ogre::Real fixedTimestep) {
     dynamicsWorld->stepSimulation(elapsedTime, maxSubSteps, fixedTimestep);
-	//for (int i = 0; i != objList.size(); i++) idList[i] = 0;
-	//dynamicsWorld->stepSimulation(elapsedTime, maxSubSteps, fixedTimestep);
 	for (unsigned int i = 0; i < objList.size(); i++) {
-		//if (objList[i]->doUpdates()) {
-			objList[i]->update(elapsedTime);
-		//}
+		objList[i]->update(elapsedTime);
+
 	}
 }
 
 btDiscreteDynamicsWorld* Simulator::getDynamicsWorld() {
     return dynamicsWorld;
 }
-
-// std::vector<btCollisionShape*> Simulator::getCollisionShapes() {
-//     return collisionShapes;
-// }
-
-// int Simulator::getCollisionObjectCount() {
-//     return objMap.size();
-// }
 
 GameObject* Simulator::getObject(Ogre::String oName) {
     return objMap[oName];

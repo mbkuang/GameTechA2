@@ -18,13 +18,14 @@ protected:
     Paddle* paddle;
     Ball* ball;
     float movementSpeed;
-
+    int level;
 public:
     AIManager(Simulator* sim);
     AIManager(Ogre::SceneManager* scnMgr, Simulator* sim, Paddle* pad, Ball* nBall);
     ~AIManager();
     void update(Ogre::SceneManager* scnMgr, Simulator* sim, Paddle* pad, Ball* nBall);
     void move(const Ogre::FrameEvent& fe);
+    void shoot();
 };
 
 #endif

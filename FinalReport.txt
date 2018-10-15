@@ -1,0 +1,23 @@
+Final Report
+
+Sons of Liberty reporting in! We made a game engine to run a 3D Battle Pong demo. 
+Down below are our personal thoughts to what we succeeded and failed in while 
+developing this project.
+
+Mitchell’s Thought
+Modularity is what makes our game engine very adaptable to our team work and way of forming 
+a game. Early on, the three of us, decided to go this route like many others because modular
+programming allows for smaller scripts that can be divided up among team members. By having 
+these smaller scripts, merging and debugging is easier. We needed this style of programming 
+since the three often couldn’t meet up at the same time. As for the game itself, it just makes 
+sense to have GUI, Sound, and mechanical scripts separated since each thing is an idea.
+
+Although having a menu is an ambitious goal of ours, I would have loved to see it flourish. 
+I think this would have solidified the demo as a true game. So, hopefully on the next project, 
+we’ll have this done.
+
+I think time got into our way to do more on this project. I spent several hours on just 
+understanding how Bullet Physics and Ogre worked together. Then, spent several more hours 
+integrating the two. For many days, our Ogre Object and Bullet Object’s position didn’t sync. 
+On the other hand, I spent quite a bit of time on refactoring our code and making sure we 
+imported as little as possible. 

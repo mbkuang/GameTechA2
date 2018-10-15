@@ -56,9 +56,9 @@ Ball::Ball(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
 
 Ball::~Ball() {
  // TODO:
-    simulator->removeObject(this);
-    sm->destroyEntity(this->getName());
-    this->rootNode = NULL;
+    // simulator->removeObject(this);
+    // sm->destroyEntity(this->getName());
+    // this->rootNode = NULL;
     // this->geom = NULL;
     // this->motionState = NULL;
     // this->shape = NULL;
@@ -106,23 +106,35 @@ void Ball::update(float elapsedTime) {
         Ogre::String nw = "NorthWall";
         Ogre::String contactName = context->theObject->getName();
 
-        if(this->getName().compare("Ball") != 0) {
-            this->~Ball();
+        Ogre::String objName = this->getName();
+
+        /* Handle the projectiles */
+        if(objName.compare("Ball") != 0) {
             Player* p = simulator->getPlayer("Player1");
             Player* cpu = simulator->getPlayer("CPU");
-            p->shot();
+            if(objName.compare("plaser") == 0)
+                p->shot();      //Update the firing status
+            else if(objName.compare("cpulaser") == 0)
+                cpu->shot();    //Update the firing status
+
+            this->setPosition(0, 2000, 0);  //Hide the ball off screen
+            this->setVelocity(btVector3(0, 0, 0));
+            this->inertia = btVector3(0.0f, 0.0f, 0.0f);
             simulator->soundSystem->playSound("deathSound");
-            if(sw.compare(contactName) == 0) {
+            this->context->reset(); //Reset the callback
+            if(contactName.compare("PlayerPaddle") == 0) {
                 p->setHP(p->getHP()-1);
                 simulator->overlay->updateScore();
                 return;
             }
-            else if(nw.compare(contactName) == 0) {
+            else if(contactName.compare("CPUPaddle") == 0) {
                 cpu->setHP(cpu->getHP()-1);
                 simulator->overlay->updateScore();
                 return;
             }
+            return;
         }
+        /* End of projectiles */
 
         if(contactName.compare("PlayerPaddle") == 0 
             || contactName.compare("CPUPaddle") == 0)
