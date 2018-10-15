@@ -10,7 +10,7 @@ const float wallWidth = 100.0f, wallThickness = 20.0f, wallLength = 300.0f;
 const float wallMass = 0.0f, wallRestitution = 1.0f, wallFriction = 0.0f;
 const bool wallKinematic = false;
 
-const float ballMass = 1.0f, ballRestitution = 1.0f, ballFriction = 0.0f;
+const float ballMass = 1.0f, ballRestitution = .95f, ballFriction = 0.0f;
 const bool ballKinematic = false;
 
 const float paddleMass = 0.0f, paddleRestitution = 1.0f, paddleFriction = 0.0f;

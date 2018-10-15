@@ -82,7 +82,7 @@ void TutorialApplication::createScene(void)
         Ogre::Vector3(0.0f, 0.0f, -299.0f), Ogre::Vector3(16.0f, 15.0f, 1.0f),//12.0f, 100.0f, 1.0f),
         "PaddleTexture", paddleMass, paddleRestitution, paddleFriction, paddleKinematic);
 
-    aimanager->update(mSceneMgr, simulator, cpuPaddle, ball);
+    aimanager->update(mSceneMgr, simulator, cpuPaddle, playerPaddle, ball);
 
     simulator->overlay->createScoreboard();
 }
