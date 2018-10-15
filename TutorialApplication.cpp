@@ -193,8 +193,10 @@ bool TutorialApplication::keyPressed(const OIS::KeyEvent& arg) {
         if(!p->hasFired()) {
             p->shot();
             GameObject* paddle = simulator->getObject("PlayerPaddle");
-            Ogre::Vector3 location = (Ogre::Vector3) paddle->getPosition(); 
-            Ball* laser = new Ball("Laser", mSceneMgr, simulator,
+            Ogre::Vector3 location = (Ogre::Vector3) paddle->getPosition();
+            Ogre::stringstream ss;
+            ss << p->getNumShots(); 
+            Ball* laser = new Ball(ss.str(), mSceneMgr, simulator,
                 location, 0.5f,
                 "greenball", ballMass, ballRestitution, ballFriction, ballKinematic);
             laser->setVelocity(btVector3(0, 0, -100));        

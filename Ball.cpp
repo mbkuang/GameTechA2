@@ -104,17 +104,23 @@ void Ball::update(float elapsedTime) {
         //Handle the hit
         Ogre::String sw = "SouthWall";
         Ogre::String nw = "NorthWall";
+        Ogre::String contactName = context->theObject->getName();
 
-        if(this->getName().compare("Laser") == 0) {
+        if(this->getName().compare("Ball") != 0) {
             this->~Ball();
             Player* p = simulator->getPlayer("Player1");
+            Player* cpu = simulator->getPlayer("CPU");
             p->shot();
-            Ogre::stringstream ss;
-            ss << p->getNumShots();
-            this->setName(ss.str());
+            if(sw.compare(contactName) == 0) {
+                p->setHP(p->getHP()-1);
+                simulator->overlay->updateScore();
+            }
+            else if(nw.compare(contactName) == 0) {
+                cpu->setHP(cpu->getHP()-1);
+                simulator->overlay->updateScore();
+            }
         }
 
-        Ogre::String contactName = context->theObject->getName();
         if(contactName.compare("PlayerPaddle") == 0 
             || contactName.compare("CPUPaddle") == 0)
             simulator->soundSystem->playSound("paddleSound");
