@@ -49,7 +49,7 @@ void TutorialApplication::createScene(void)
     float zMid = -150.0f;
 
     Wall* flooring = new Wall("Flooring", mSceneMgr, simulator,
-        Ogre::Vector3(0.0f, yFWall, zMid), Ogre::Vector3(wallWidth, wallThickness, wallLength),
+        Ogre::Vector3(0.0f, yFWall, 0.0f), Ogre::Vector3(wallWidth, wallThickness, wallLength),
         "WallTexture2Inverse", wallMass, wallRestitution, wallFriction, wallKinematic);
     Wall* ceiling = new Wall("Ceiling", mSceneMgr, simulator,
         Ogre::Vector3(0.0f, yCWall, zMid), Ogre::Vector3(wallWidth, wallThickness, wallLength),
@@ -70,19 +70,19 @@ void TutorialApplication::createScene(void)
     Player* player1 = new Player("Player1", simulator);
     Player* cpuPlayer = new Player("CPU", simulator);
 
-    Ball* ball = new Ball("Ball", mSceneMgr, simulator,
-        Ogre::Vector3(0.0f, 0.0f, zMid), 2.0f,
-        "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic);
+    // Ball* ball = new Ball("Ball", mSceneMgr, simulator,
+    //     Ogre::Vector3(0.0f, 0.0f, zMid), 2.0f,
+    //     "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic);
 
-    Paddle* playerPaddle = new Paddle("PlayerPaddle", mSceneMgr, simulator,
+    Shooter* playerShooter = new Shooter("PlayerShooter", mSceneMgr, simulator,
         Ogre::Vector3(0.0f, 0.0f, -1.0f), Ogre::Vector3(16.0f, 15.0f, 1.0f),
         "PaddleTexture", paddleMass, paddleRestitution, paddleFriction, paddleKinematic);
 
-    Paddle* cpuPaddle = new Paddle("CPUPaddle", mSceneMgr, simulator,
+    EnemyShooter* cpuShooter = new EnemyShooter("CPUPaddle", mSceneMgr, simulator,
         Ogre::Vector3(0.0f, 0.0f, -299.0f), Ogre::Vector3(16.0f, 15.0f, 1.0f),//12.0f, 100.0f, 1.0f),
         "PaddleTexture", paddleMass, paddleRestitution, paddleFriction, paddleKinematic);
 
-    aimanager->update(mSceneMgr, simulator, cpuPaddle, playerPaddle, ball);
+    // aimanager->update(mSceneMgr, simulator, cpuPaddle, playerPaddle, ball);
 
     simulator->overlay->createScoreboard();
 }
@@ -169,16 +169,6 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
         simulator->stepSimulation(fe.timeSinceLastFrame, 60.0f, 1.0f/60.0f);
 	}
 
-    Ball* ball = (Ball*) simulator->getObject("Ball");
-    ball->getMarkerNode()->setPosition(0, 0, ball->getPosition().getZ());
-
-    if (simulator->overlay->countdown()) {
-        aimanager->advance();
-        ball->init();
-        Paddle* cpuPaddle = (Paddle*) simulator->getObject("CPUPaddle");
-        cpuPaddle->setPosition(btVector3(0.0f, 0.0f, -299.0f));
-    }
-
     return ret;
 }
 //---------------------------------------------------------------------------
@@ -190,30 +180,30 @@ bool TutorialApplication::keyPressed(const OIS::KeyEvent& arg) {
         mShutDown = true;
     } else if (arg.key == OIS::KC_R) {
         //Reset the ball's position
-        Ball* ball = (Ball*) simulator->getObject("Ball");
-        ball->init();
+        // Ball* ball = (Ball*) simulator->getObject("Ball");
+        // ball->init();
     }
     else if(arg.key == OIS::KC_SPACE) {
-        Player* p = simulator->getPlayer("Player1");
-        if(!p->hasFired()) {
-            GameObject* paddle = simulator->getObject("PlayerPaddle");
-            Ogre::Vector3 location = (Ogre::Vector3) paddle->getPosition();
-
-            if(p->getNumShots() == 0) {
-                Ball* laser = new Ball("plaser", mSceneMgr, simulator,
-                Ogre::Vector3(location.x, location.y, location.z-20), 2.0f,
-                "greenball", ballMass, ballRestitution, ballFriction, ballKinematic);
-
-                laser->setVelocity(btVector3(0, 0, -200));
-            }
-            else {
-                Ball* laser = (Ball*) simulator->getObject("plaser");
-                laser->setPosition(btVector3(location.x, location.y, location.z-20));
-                laser->setVelocity(btVector3(0, 0, -200));
-            }
-            p->shot();
-            simulator->soundSystem->playSound("laserSound");
-        }
+        // Player* p = simulator->getPlayer("Player1");
+        // if(!p->hasFired()) {
+        //     GameObject* paddle = simulator->getObject("PlayerPaddle");
+        //     Ogre::Vector3 location = (Ogre::Vector3) paddle->getPosition();
+        //
+        //     if(p->getNumShots() == 0) {
+        //         Ball* laser = new Ball("plaser", mSceneMgr, simulator,
+        //         Ogre::Vector3(location.x, location.y, location.z-20), 2.0f,
+        //         "greenball", ballMass, ballRestitution, ballFriction, ballKinematic);
+        //
+        //         laser->setVelocity(btVector3(0, 0, -200));
+        //     }
+        //     else {
+        //         Ball* laser = (Ball*) simulator->getObject("plaser");
+        //         laser->setPosition(btVector3(location.x, location.y, location.z-20));
+        //         laser->setVelocity(btVector3(0, 0, -200));
+        //     }
+        //     p->shot();
+        //     simulator->soundSystem->playSound("laserSound");
+        // }
 
     }
     else if(arg.key == OIS::KC_UP) {
@@ -255,49 +245,49 @@ bool TutorialApplication::mouseReleased(const OIS::MouseEvent& arg, OIS::MouseBu
 //---------------------------------------------------------------------------
 bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& fe)
 {
-    float movementSpeed = 120.0f;
-    Paddle* playerPaddle = (Paddle*) simulator->getObject("PlayerPaddle");
-
-    if (mKeyboard->isKeyDown(OIS::KC_W)) {
-        playerPaddle->move(0.0f, movementSpeed * fe.timeSinceLastFrame, 0.0f);
-    }
-
-    if (mKeyboard->isKeyDown(OIS::KC_S)) {
-        playerPaddle->move(0.0f, -movementSpeed * fe.timeSinceLastFrame, 0.0f);
-    }
-
-
-    if (mKeyboard->isKeyDown(OIS::KC_A)) {
-        playerPaddle->move(-movementSpeed * fe.timeSinceLastFrame, 0.0f, 0.0f);
-    }
-
-    if (mKeyboard->isKeyDown(OIS::KC_D)) {
-        playerPaddle->move(movementSpeed * fe.timeSinceLastFrame, 0.0f, 0.0f);
-    }
-
-    if (mKeyboard->isKeyDown(OIS::KC_Q)) {
-        mCamera->yaw(Ogre::Degree(.05));
-    }
-
-    if (mKeyboard->isKeyDown(OIS::KC_E)) {
-        mCamera->yaw(Ogre::Degree(-.05));
-    }
-
-    if (mKeyboard->isKeyDown(OIS::KC_Z)) {
-        mCamera->pitch(Ogre::Degree(.05));
-    }
-
-    if (mKeyboard->isKeyDown(OIS::KC_C)) {
-        mCamera->pitch(Ogre::Degree(-.05));
-    }
-
-    // playerPaddle->updateTransform();
-
-    btVector3 pPosition = playerPaddle->getPosition();
-    Ogre::Vector3 cPosition = mCamera->getPosition();
-    cPosition.x = (0 + pPosition.getX())/2;
-    cPosition.y = (0 + pPosition.getY())/2;
-    mCamera->setPosition(cPosition);
+    // float movementSpeed = 120.0f;
+    // Paddle* playerPaddle = (Paddle*) simulator->getObject("PlayerPaddle");
+    //
+    // if (mKeyboard->isKeyDown(OIS::KC_W)) {
+    //     playerPaddle->move(0.0f, movementSpeed * fe.timeSinceLastFrame, 0.0f);
+    // }
+    //
+    // if (mKeyboard->isKeyDown(OIS::KC_S)) {
+    //     playerPaddle->move(0.0f, -movementSpeed * fe.timeSinceLastFrame, 0.0f);
+    // }
+    //
+    //
+    // if (mKeyboard->isKeyDown(OIS::KC_A)) {
+    //     playerPaddle->move(-movementSpeed * fe.timeSinceLastFrame, 0.0f, 0.0f);
+    // }
+    //
+    // if (mKeyboard->isKeyDown(OIS::KC_D)) {
+    //     playerPaddle->move(movementSpeed * fe.timeSinceLastFrame, 0.0f, 0.0f);
+    // }
+    //
+    // if (mKeyboard->isKeyDown(OIS::KC_Q)) {
+    //     mCamera->yaw(Ogre::Degree(.05));
+    // }
+    //
+    // if (mKeyboard->isKeyDown(OIS::KC_E)) {
+    //     mCamera->yaw(Ogre::Degree(-.05));
+    // }
+    //
+    // if (mKeyboard->isKeyDown(OIS::KC_Z)) {
+    //     mCamera->pitch(Ogre::Degree(.05));
+    // }
+    //
+    // if (mKeyboard->isKeyDown(OIS::KC_C)) {
+    //     mCamera->pitch(Ogre::Degree(-.05));
+    // }
+    //
+    // // playerPaddle->updateTransform();
+    //
+    // btVector3 pPosition = playerPaddle->getPosition();
+    // Ogre::Vector3 cPosition = mCamera->getPosition();
+    // cPosition.x = (0 + pPosition.getX())/2;
+    // cPosition.y = (0 + pPosition.getY())/2;
+    // mCamera->setPosition(cPosition);
 
     return true;
 }

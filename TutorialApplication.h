@@ -27,6 +27,8 @@ http://www.ogre3d.org/wiki/
 #include "GameSettings.h"
 #include "AIManager.h"
 #include "Overlay.h"
+#include "Shooter.h"
+#include "EnemyShooter.h"
 
 //---------------------------------------------------------------------------
 
