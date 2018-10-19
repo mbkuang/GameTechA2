@@ -73,18 +73,20 @@ void TutorialApplication::createScene(void)
     // Ball* ball = new Ball("Ball", mSceneMgr, simulator,
     //     Ogre::Vector3(0.0f, 0.0f, zMid), 2.0f,
     //     "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic);
-
+    printf("Makin the player\n");
     Shooter* playerShooter = new Shooter("PlayerShooter", mSceneMgr, simulator,
         Ogre::Vector3(0.0f, 0.0f, -1.0f), Ogre::Vector3(16.0f, 15.0f, 1.0f),
         "PaddleTexture", paddleMass, paddleRestitution, paddleFriction, paddleKinematic);
 
-    EnemyShooter* cpuShooter = new EnemyShooter("CPUPaddle", mSceneMgr, simulator,
+    printf("Makin the Enemy\n");
+    EnemyShooter* cpuShooter = new EnemyShooter("CPUShooter", mSceneMgr, simulator,
         Ogre::Vector3(0.0f, 0.0f, -299.0f), Ogre::Vector3(16.0f, 15.0f, 1.0f),//12.0f, 100.0f, 1.0f),
         "PaddleTexture", paddleMass, paddleRestitution, paddleFriction, paddleKinematic);
 
     // aimanager->update(mSceneMgr, simulator, cpuPaddle, playerPaddle, ball);
 
     simulator->overlay->createScoreboard();
+        printf("Creatin the ScoreBoard\n");
 }
 //---------------------------------------------------------------------------
 bool TutorialApplication::quit() {
@@ -160,8 +162,8 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
     if (!processUnbufferedInput(fe))
         return false;
 
-    aimanager->move(fe);
-    aimanager->shoot();
+    // aimanager->move(fe);
+    // aimanager->shoot();
 
     // Update Ogre with Bullet's State
 	if (this->simulator != NULL){

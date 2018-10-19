@@ -13,6 +13,7 @@ Shooter::Shooter(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* si
     this->friction = friction;
     this->kinematic = kinematic;
     lastTime = 0.0f;
+    printf("Initialized the player\n");
 
     // Set the entity.
     // geom = sceneMgr->createEntity(name, "cube.mesh");
@@ -22,17 +23,21 @@ Shooter::Shooter(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* si
     // }
 
     // Set the rootNode.
+    printf("Makin the root player\n");
     rootNode = sceneMgr->getRootSceneNode()->
         createChildSceneNode(name, Ogre::Vector3(position.x, position.y, position.z));
-    rootNode->attachObject(geom);
+    //rootNode->attachObject(geom);
     rootNode->scale(scale.x * 0.01f, scale.y * 0.01f, scale.z * 0.01f);
     rootNode->setPosition(position.x, position.y, position.z);
+    printf("Made the root player\n");
 
     // Set the rigid body.
     transform.setOrigin(btVector3(position.x, position.y, position.z));
     shape = new btBoxShape(btVector3(scale.x * 0.5f, scale.y * 0.5f, scale.z * 0.5f));
     motionState = new OgreMotionState(transform, rootNode);
+    printf("Made the rigid body player\n");
 
+    printf("Makin the Gun\n");
     gun = new Gun(nameGun("_Gun"), this->sceneMgr, simulator,
         this->position, Ogre::Vector3(1,1,5), this->material,
         1, 0, 0, false);
@@ -45,7 +50,8 @@ Shooter::~Shooter() {
 }
 
 Ogre::String Shooter::nameGun(Ogre::String gunName) {
-    return name.append(gunName);
+    Ogre::String result = name;
+    return result.append(gunName);
 }
 
 void Shooter::move(Ogre::Real x, Ogre::Real y, Ogre::Real z) {
