@@ -41,6 +41,8 @@ public:
     Ogre::SceneNode* getNode() {return rootNode;}
     btVector3 getPosition();
     btVector3 getVelocity();
+    Ogre::Vector3 getOgrePosition();
+    Ogre::Vector3 getOgreVelocity();
     void setVelocity(float xVelocity, float yVelocity, float zVelocity);
     void setVelocity(btVector3 newVelocity);
     void setPosition(float xPosition, float yPosition, float zPosition);

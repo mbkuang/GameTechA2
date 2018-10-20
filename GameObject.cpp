@@ -55,6 +55,16 @@ btVector3 GameObject::getVelocity() {
         return body->getLinearVelocity();
 }
 
+Ogre::Vector3 GameObject::getOgrePosition() {
+    btVector3 pos = getPosition();
+    return Ogre::Vector3(pos.getX(), pos.getY(), pos.getZ());
+}
+
+Ogre::Vector3 GameObject::getOgreVelocity() {
+    btVector3 velocity = getVelocity();
+    return Ogre::Vector3(velocity.getX(), velocity.getY(), velocity.getZ());
+}
+
 void GameObject::setVelocity(float xVelocity, float yVelocity, float zVelocity) {
     if (body != NULL) {
         body->setLinearVelocity(btVector3(xVelocity, yVelocity, zVelocity));

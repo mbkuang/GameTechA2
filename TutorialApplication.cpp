@@ -73,12 +73,10 @@ void TutorialApplication::createScene(void)
     // Ball* ball = new Ball("Ball", mSceneMgr, simulator,
     //     Ogre::Vector3(0.0f, 0.0f, zMid), 2.0f,
     //     "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic);
-    printf("Makin the player\n");
     Shooter* playerShooter = new Shooter("PlayerShooter", mSceneMgr, simulator,
         Ogre::Vector3(0.0f, 0.0f, -1.0f), Ogre::Vector3(16.0f, 15.0f, 1.0f),
         "PaddleTexture", paddleMass, paddleRestitution, paddleFriction, paddleKinematic);
 
-    printf("Makin the Enemy\n");
     EnemyShooter* cpuShooter = new EnemyShooter("CPUShooter", mSceneMgr, simulator,
         Ogre::Vector3(0.0f, 0.0f, -299.0f), Ogre::Vector3(16.0f, 15.0f, 1.0f),//12.0f, 100.0f, 1.0f),
         "PaddleTexture", paddleMass, paddleRestitution, paddleFriction, paddleKinematic);
@@ -86,7 +84,6 @@ void TutorialApplication::createScene(void)
     // aimanager->update(mSceneMgr, simulator, cpuPaddle, playerPaddle, ball);
 
     simulator->overlay->createScoreboard();
-        printf("Creatin the ScoreBoard\n");
 }
 //---------------------------------------------------------------------------
 bool TutorialApplication::quit() {
@@ -170,6 +167,10 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
 		//suppose you have 60 frames per second
         simulator->stepSimulation(fe.timeSinceLastFrame, 60.0f, 1.0f/60.0f);
 	}
+
+    // Update the mCamera
+    Shooter* pShooter = (Shooter*) simulator->getObject("PlayerShooter");
+    mCamera->setPosition(pShooter->getOgrePosition());
 
     return ret;
 }
@@ -267,21 +268,21 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& fe)
     //     playerPaddle->move(movementSpeed * fe.timeSinceLastFrame, 0.0f, 0.0f);
     // }
     //
-    // if (mKeyboard->isKeyDown(OIS::KC_Q)) {
-    //     mCamera->yaw(Ogre::Degree(.05));
-    // }
-    //
-    // if (mKeyboard->isKeyDown(OIS::KC_E)) {
-    //     mCamera->yaw(Ogre::Degree(-.05));
-    // }
-    //
-    // if (mKeyboard->isKeyDown(OIS::KC_Z)) {
-    //     mCamera->pitch(Ogre::Degree(.05));
-    // }
-    //
-    // if (mKeyboard->isKeyDown(OIS::KC_C)) {
-    //     mCamera->pitch(Ogre::Degree(-.05));
-    // }
+    if (mKeyboard->isKeyDown(OIS::KC_Q)) {
+        mCamera->yaw(Ogre::Degree(.05));
+    }
+
+    if (mKeyboard->isKeyDown(OIS::KC_E)) {
+        mCamera->yaw(Ogre::Degree(-.05));
+    }
+
+    if (mKeyboard->isKeyDown(OIS::KC_Z)) {
+        mCamera->pitch(Ogre::Degree(.05));
+    }
+
+    if (mKeyboard->isKeyDown(OIS::KC_C)) {
+        mCamera->pitch(Ogre::Degree(-.05));
+    }
     //
     // // playerPaddle->updateTransform();
     //

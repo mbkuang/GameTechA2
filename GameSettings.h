@@ -13,7 +13,7 @@ const bool wallKinematic = false;
 const float ballMass = 1.0f, ballRestitution = .95f, ballFriction = 0.0f;
 const bool ballKinematic = false;
 
-const float paddleMass = 0.0f, paddleRestitution = 1.0f, paddleFriction = 0.0f;
+const float paddleMass = 1.0f, paddleRestitution = 0.0f, paddleFriction = 0.0f;
 const bool paddleKinematic = false;
 
 #endif
