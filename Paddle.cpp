@@ -13,6 +13,7 @@ Paddle::Paddle(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
     this->friction = friction;
     this->kinematic = kinematic;
     lastTime = 0.0f;
+    movable = true;
 
     // Set the entity.
     geom = sceneMgr->createEntity(name, "cube.mesh");
@@ -34,32 +35,75 @@ Paddle::Paddle(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
     motionState = new OgreMotionState(transform, rootNode);
 
     addToSimulator();
+
+    //body->setSleepingThresholds(0.0f, 0.0f);
+    body->setAngularFactor(0.0f);
+    //body->setLinearFactor(btVector3(1.0f, 1.0f, 0.0f));
+    body->setGravity(btVector3(0.0f, 0.0f, 0.0f));
 }
 
 Paddle::~Paddle() {
 
 }
 
+// void Paddle::move(Ogre::Real x, Ogre::Real y, Ogre::Real z) {
+//     // Update the Bullet object.
+//     motionState->getWorldTransform(transform);
+//     btVector3 position = transform.getOrigin();
+//     btVector3 newPosition = btVector3(std::min(std::max(position.x() + x, xMin), xMax), std::min(std::max(position.y() + y, yMin), yMax), position.z() + z);
+//     transform.setOrigin(newPosition);
+//     body->setWorldTransform(transform);
+
+//     // Update the Ogre object.
+//     motionState->setWorldTransform(transform);
+//     motionState->updateTransform(transform);
+// }
+
 void Paddle::move(Ogre::Real x, Ogre::Real y, Ogre::Real z) {
-    Ogre::Vector3 pPosition = rootNode->getPosition();
-    float xNew = std::min(std::max(pPosition.x + x, xMin), xMax);
-    float yNew = std::min(std::max(pPosition.y + y, yMin), yMax);
-    float zNew = pPosition.z + z;
-    this->setPosition(xNew, yNew, zNew);
-    // float xt = std::min(std::max(x, xMin - pPosition.x), xMax - pPosition.x);
-    // float yt = std::min(std::max(y, yMin - pPosition.y), yMax - pPosition.y);
-    // rootNode->translate(rootNode->getLocalAxes(), xt, yt, z);
-    // this->updateTransform();
+    if (!movable) {
+        return;
+    }
+
+    // Update the Bullet object.
+    motionState->getWorldTransform(transform);
+    btVector3 oldPosition = transform.getOrigin();
+    btVector3 newPosition = btVector3(
+        oldPosition.x() + x, 
+        oldPosition.y() + y, 
+        oldPosition.z() + z);
+    transform.setOrigin(newPosition);
+    body->setWorldTransform(transform);
+
+    // Update the Ogre object.
+    motionState->setWorldTransform(transform);
+    motionState->updateTransform(transform);
+
+    //printf("Movable: %d\n", movable);
+}
+
+void Paddle::set(btVector3 vel) {
+    body->setLinearVelocity(vel);
+}
+
+void Paddle::translate(btVector3 tr) {
+    body->translate(tr);
 }
 
 // Specific game object update routine.
 void Paddle::update(float elapsedTime) {
-    // lastTime += elapsedTime;
-    // simulator->getDynamicsWorld()->contactTest(body, *cCallBack);
-    // if (context->hit && (context->velNorm > 2.0 || context->velNorm < -2.0)
-    //     && (lastTime > 0.5 || (context->lastBody != context->body && lastTime > 0.1))) {
-    //     //Handle the hit
-    //     lastTime = 0.0f;
-    // }
-    // context->hit = false;
+    lastTime += elapsedTime;
+    simulator->getDynamicsWorld()->contactTest(body, *cCallBack);
+    if (context->hit && (context->velNorm > 2.0 || context->velNorm < -2.0)
+        && (lastTime > 0.5 || (context->lastBody != context->body && lastTime > 0.1))) {
+        //Handle the hit
+        movable = false;
+        //body->setGravity(btVector3(0.0f, 0.0f, 0.0f));
+        //body->clearForces();
+        //body->setLinearVelocity(btVector3(0.0f, 0.0f, 0.0f));
+        //body->clearForces();
+        //body->translate(btVector3(0.0f, 0.0f, 0.0f));
+        lastTime = 0.0f;
+    }
+    context->hit = false;
+    //movable = true;
 }

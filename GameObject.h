@@ -46,6 +46,7 @@ public:
     void setPosition(float xPosition, float yPosition, float zPosition);
     void setPosition(btVector3 newPosition);
     void move(Ogre::Real x, Ogre::Real y, Ogre::Real z);
+    void move(Ogre::Vector3 position);
     void updateTransform();
     void addToSimulator();
     virtual void update(float elapsedTime) {}

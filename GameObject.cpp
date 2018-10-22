@@ -89,8 +89,35 @@ void GameObject::setPosition(btVector3 newPosition) {
 }
 
 void GameObject::move(Ogre::Real x, Ogre::Real y, Ogre::Real z) {
-    rootNode->translate(rootNode->getLocalAxes(), x, y, z);
-    this->updateTransform();
+    // Update the Bullet object.
+    motionState->getWorldTransform(transform);
+    btVector3 oldPosition = transform.getOrigin();
+    btVector3 newPosition = btVector3(
+        oldPosition.x() + x, 
+        oldPosition.y() + y, 
+        oldPosition.z() + z);
+    transform.setOrigin(newPosition);
+    body->setWorldTransform(transform);
+
+    // Update the Ogre object.
+    motionState->setWorldTransform(transform);
+    motionState->updateTransform(transform);
+}
+
+void GameObject::move(Ogre::Vector3 position) {
+    // Update the Bullet object.
+    motionState->getWorldTransform(transform);
+    btVector3 oldPosition = transform.getOrigin();
+    btVector3 newPosition = btVector3(
+        oldPosition.x() + position.x, 
+        oldPosition.y() + position.y, 
+        oldPosition.z() + position.z);
+    transform.setOrigin(newPosition);
+    body->setWorldTransform(transform);
+
+    // Update the Ogre object.
+    motionState->setWorldTransform(transform);
+    motionState->updateTransform(transform);
 }
 
 void GameObject::updateTransform() {
