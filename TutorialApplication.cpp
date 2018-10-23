@@ -23,6 +23,14 @@ TutorialApplication::TutorialApplication(void)
 {
     simulator = new Simulator();
     aimanager = new AIManager(simulator);
+
+    port_number = 0; // ????????????????????????????**********jfak;sdjf;lkasjvkjbj;se
+    /*
+    ?????????????fdkjaksld;fj
+    dfkjasd;fkljasdkl;fj
+    dsklafjads;klfjasd
+    klsdjf;sadlkfj;
+    */
 }
 //---------------------------------------------------------------------------
 TutorialApplication::~TutorialApplication(void)
@@ -93,6 +101,25 @@ bool TutorialApplication::quit() {
 //---------------------------------------------------------------------------
 bool Overlay::quit() {
     return quit();
+}
+//---------------------------------------------------------------------------
+void TutorialApplication::setupNetwork(bool isHost) {
+    this->isHost = isHost;
+    network.initNetManager();
+    if(isHost) {
+        network.addNetworkInfo(PROTOCOL_UDP, NULL, port_number);
+        network.startServer();
+        hostName = network.getHostname().c_str();
+        network.acceptConnections();
+    }
+    else {
+        network.addNetworkInfo(PROTOCOL_UDP, hostName, port_number);
+        network.startClient();
+    }
+}
+//---------------------------------------------------------------------------
+void TutorialApplication::closeNetwork() {
+    network.close();
 }
 //---------------------------------------------------------------------------
 CEGUI::MouseButton convertButton(OIS::MouseButtonID buttonID) {

@@ -18,9 +18,11 @@ public:
 	void createScoreboard();
 	bool quit();
     bool countdown();
+    void createMainMenu();
 protected:
 	CEGUI::OgreRenderer* mRenderer;
 	CEGUI::Window *sheet;
+	CEGUI::Window *mainMenu;
 	CEGUI::Window *playerScore;
 	CEGUI::Window *cpuScore;
     CEGUI::Window *p1wins;

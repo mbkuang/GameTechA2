@@ -29,6 +29,7 @@ http://www.ogre3d.org/wiki/
 #include "Overlay.h"
 #include "Shooter.h"
 #include "EnemyShooter.h"
+#include "NetManager.h"
 
 //---------------------------------------------------------------------------
 
@@ -52,6 +53,16 @@ protected:
     Simulator* simulator;
     AIManager* aimanager;
     Overlay* overlay;
+
+
+    /* Network Stuff */
+    NetManager network;
+    bool isHost;
+    const char* hostName;
+    int port_number;
+
+    void setupNetwork(bool);
+    void closeNetwork();
 
     float xMin, xMax, yMin, yMax, zMin, zMax;
 private:

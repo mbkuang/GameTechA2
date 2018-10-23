@@ -20,6 +20,10 @@ void Overlay::initCEGUI() {
     CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("TaharezLook/MouseArrow");
 }
 
+void Overlay::createMainMenu() {
+    
+}
+
 void Overlay::createScoreboard() {
 	CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
 	sheet = wmgr.createWindow("DefaultWindow", "CEGUIDemo/Sheet");
