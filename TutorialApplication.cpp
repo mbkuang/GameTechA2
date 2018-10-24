@@ -24,13 +24,7 @@ TutorialApplication::TutorialApplication(void)
     simulator = new Simulator();
     aimanager = new AIManager(simulator);
 
-    port_number = 0; // ????????????????????????????**********jfak;sdjf;lkasjvkjbj;se
-    /*
-    ?????????????fdkjaksld;fj
-    dfkjasd;fkljasdkl;fj
-    dsklafjads;klfjasd
-    klsdjf;sadlkfj;
-    */
+    port_number = 51215;    // Default port
 }
 //---------------------------------------------------------------------------
 TutorialApplication::~TutorialApplication(void)
@@ -43,6 +37,7 @@ void TutorialApplication::createScene(void)
     // Create your scene here :)
 
     simulator->overlay->initCEGUI();
+
     mCamera->setPosition(Ogre::Vector3(0,0,100));
 
     Ogre::Light* light = mSceneMgr->createLight("MainLight");
@@ -54,6 +49,11 @@ void TutorialApplication::createScene(void)
 
     mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
 
+    simulator->overlay->createMainMenu();
+    createObjects();
+}
+//---------------------------------------------------------------------------
+void TutorialApplication::createObjects() {
     float zMid = -150.0f;
 
     Wall* flooring = new Wall("Flooring", mSceneMgr, simulator,
@@ -97,10 +97,6 @@ void TutorialApplication::createScene(void)
 bool TutorialApplication::quit() {
     mShutDown = true;
     return true;
-}
-//---------------------------------------------------------------------------
-bool Overlay::quit() {
-    return quit();
 }
 //---------------------------------------------------------------------------
 void TutorialApplication::setupNetwork(bool isHost) {
@@ -188,6 +184,10 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
 
     // aimanager->move(fe);
     // aimanager->shoot();
+
+    while(simulator->overlay->onMainMenu()) {
+        
+    }
 
     // Update Ogre with Bullet's State
 	if (this->simulator != NULL){

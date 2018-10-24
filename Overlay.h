@@ -7,7 +7,6 @@
 #include "Simulator.h"
 
 class Simulator;
-class TutorialApplication;
 
 class Overlay {
 public:
@@ -19,15 +18,20 @@ public:
 	bool quit();
     bool countdown();
     void createMainMenu();
-protected:
-	CEGUI::OgreRenderer* mRenderer;
-	CEGUI::Window *sheet;
+    bool onMainMenu();
+    CEGUI::Window *sheet;
 	CEGUI::Window *mainMenu;
 	CEGUI::Window *playerScore;
 	CEGUI::Window *cpuScore;
+
+protected:
+	CEGUI::OgreRenderer* mRenderer;
     CEGUI::Window *p1wins;
     int alarm;
 	Simulator *simulator;
+	bool onMMenu;
+
+	bool startSinglePlayer();
 };
 
 #endif

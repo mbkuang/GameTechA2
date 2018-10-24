@@ -3,6 +3,7 @@
 Overlay::Overlay(Simulator* sim) {
 	simulator = sim;
     alarm = 0;
+    onMMenu = true;
 }
 
 void Overlay::initCEGUI() {
@@ -18,15 +19,21 @@ void Overlay::initCEGUI() {
     CEGUI::SchemeManager::getSingleton().createFromFile("TaharezLook.scheme");
 
     CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("TaharezLook/MouseArrow");
+
+    sheet = CEGUI::WindowManager::getSingleton().createWindow("DefaultWindow", "CEGUIDemo/Sheet");
 }
 
 void Overlay::createMainMenu() {
-    
+    CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
+    mainMenu = wmgr.loadLayoutFromFile("mainMenu.layout");
+    sheet->addChild(mainMenu);
+
+    CEGUI::Window *singleButton = mainMenu->getChildRecursive("singleButton");
+    singleButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::startSinglePlayer, this));
 }
 
 void Overlay::createScoreboard() {
 	CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
-	sheet = wmgr.createWindow("DefaultWindow", "CEGUIDemo/Sheet");
 	playerScore = wmgr.createWindow("TaharezLook/StaticText", "CEGUIDemo/StaticText");
     playerScore->setSize(CEGUI::USize(CEGUI::UDim(0.1, 0), CEGUI::UDim(0.1, 0)));
 
@@ -101,4 +108,14 @@ bool Overlay::countdown() {
         }
     }
     return false;
+}
+
+bool Overlay::startSinglePlayer() {
+    printf("Hey\n");
+    onMMenu = false;
+    return true;
+}
+
+bool Overlay::onMainMenu() {
+    return onMMenu;
 }

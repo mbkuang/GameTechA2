@@ -64,6 +64,8 @@ protected:
     void setupNetwork(bool);
     void closeNetwork();
 
+    void createObjects();
+
     float xMin, xMax, yMin, yMax, zMin, zMax;
 private:
     bool processUnbufferedInput(const Ogre::FrameEvent& fe);
