@@ -17,10 +17,12 @@ public:
 	void createScoreboard();
     bool countdown();
     void createMainMenu();
+    void pauseGame();
 
     CEGUI::Window *sheet;
 	CEGUI::Window *mainMenu;
 	CEGUI::Window *settingsMenu;
+	CEGUI::Window *pauseMenu;
 	CEGUI::Window *playerScore;
 	CEGUI::Window *cpuScore;
 	bool done;
@@ -36,6 +38,9 @@ protected:
 	bool settings();
 	bool quit();
 	bool back();
+	bool toMainMenu();
+
+	bool lastMenu;	//Keep track of what the last menu was before settings
 };
 
 #endif

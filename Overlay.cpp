@@ -4,6 +4,7 @@ Overlay::Overlay(Simulator* sim) {
 	simulator = sim;
     alarm = 0;
     done = false;
+    lastMenu = true;
 }
 
 void Overlay::initCEGUI() {
@@ -33,6 +34,10 @@ void Overlay::createMainMenu() {
     settingsMenu->hide();
     sheet->addChild(settingsMenu);
 
+    pauseMenu = wmgr.loadLayoutFromFile("pauseMenu.layout");
+    pauseMenu->hide();
+    sheet->addChild(pauseMenu);
+
     /* Main Menu Buttons */
     CEGUI::Window *singlePlayerButton = mainMenu->getChildRecursive("singlePlayerButton");
     singlePlayerButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::singlePlayer, this));
@@ -49,6 +54,19 @@ void Overlay::createMainMenu() {
     /* Settings Buttons */
     CEGUI::Window *backSettings = settingsMenu->getChildRecursive("Setting4");
     backSettings->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::back, this));
+
+    /* Pause Buttons */
+    CEGUI::Window *resumeButton = pauseMenu->getChildRecursive("resumeButton");
+    resumeButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::singlePlayer, this));
+
+    CEGUI::Window *pauseSettings = pauseMenu->getChildRecursive("pauseSettings");
+    pauseSettings->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::settings, this));
+
+    CEGUI::Window *pauseBack = pauseMenu->getChildRecursive("pauseBack");
+    pauseBack->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::back, this));
+
+    CEGUI::Window *pauseQuit = pauseMenu->getChildRecursive("pauseQuit");
+    pauseQuit->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::quit, this));
 }
 
 /* Display the scoreboard */
@@ -132,8 +150,8 @@ bool Overlay::countdown() {
 
 /* Start Single player mode */
 bool Overlay::singlePlayer() {
-    printf("Single Player Clicked!\n");
     mainMenu->hide();
+    pauseMenu->hide();
     simulator->pause();
     return true;
 }
@@ -146,22 +164,40 @@ bool Overlay::multiplayer() {
 
 /* Display the settings menu */
 bool Overlay::settings() {
-    printf("Settings Clicked!\n");
     mainMenu->hide();
+    pauseMenu->hide();
     settingsMenu->show();
     return true;
 }
 
 /* Quit the application */
 bool Overlay::quit() {
-    printf("Quit Clicked!\n");
     done = true;
     return true;
 }
 
-/* Go back to the main menu */
+/* Go back to the previous menu */
 bool Overlay::back() {
     settingsMenu->hide();
-    mainMenu->show();
+    if(lastMenu || pauseMenu->isVisible()) {
+        pauseMenu->hide();
+        mainMenu->show();
+    }
+    else
+        pauseMenu->show();
     return true;
+}
+
+/* Return to main menu */
+bool Overlay::toMainMenu() {
+    settingsMenu->hide();
+    pauseMenu->hide();
+    mainMenu->show();
+}
+
+/* Pause simulation and show the pause menu */
+void Overlay::pauseGame() {
+    lastMenu = false;
+    simulator->pause();
+    pauseMenu->show();
 }

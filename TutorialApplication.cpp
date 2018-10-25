@@ -244,6 +244,9 @@ bool TutorialApplication::keyPressed(const OIS::KeyEvent& arg) {
     else if(arg.key == OIS::KC_P) {
         simulator->soundSystem->playSound("bg_music");
     }
+    else if(arg.key == OIS::KC_M) {
+        simulator->overlay->pauseGame();
+    }
     return true;
 }
 //---------------------------------------------------------------------------
