@@ -21,8 +21,10 @@ public:
     bool onMainMenu();
     CEGUI::Window *sheet;
 	CEGUI::Window *mainMenu;
+	CEGUI::Window *settingsMenu;
 	CEGUI::Window *playerScore;
 	CEGUI::Window *cpuScore;
+	bool done;
 
 protected:
 	CEGUI::OgreRenderer* mRenderer;
@@ -35,6 +37,7 @@ protected:
 	bool multiplayer();
 	bool settings();
 	bool quit();
+	bool back();
 };
 
 #endif

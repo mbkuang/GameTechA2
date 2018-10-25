@@ -18,7 +18,7 @@
         </Window>
         <Window type="TaharezLook/Button" name="quitButton" >
             <Property name="Area" value="{{0.25,0},{0.70,0},{0.75,0},{0.90,0}}" />
-            <Property name="Text" value="Quit Button" />
+            <Property name="Text" value="Quit" />
         </Window>
     </Window>
 </GUILayout>

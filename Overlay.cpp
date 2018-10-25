@@ -4,6 +4,7 @@ Overlay::Overlay(Simulator* sim) {
 	simulator = sim;
     alarm = 0;
     onMMenu = true;
+    done = false;
 }
 
 void Overlay::initCEGUI() {
@@ -28,6 +29,11 @@ void Overlay::createMainMenu() {
     mainMenu = wmgr.loadLayoutFromFile("mainMenu.layout");
     sheet->addChild(mainMenu);
 
+    settingsMenu = wmgr.loadLayoutFromFile("settings.layout");
+    settingsMenu->hide();
+    sheet->addChild(settingsMenu);
+
+    /* Main Menu Buttons */
     CEGUI::Window *singlePlayerButton = mainMenu->getChildRecursive("singlePlayerButton");
     singlePlayerButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::singlePlayer, this));
 
@@ -39,6 +45,10 @@ void Overlay::createMainMenu() {
 
     CEGUI::Window *quitButton = mainMenu->getChildRecursive("quitButton");
     quitButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::quit, this));
+
+    /* Settings Buttons */
+    CEGUI::Window *backSettings = settingsMenu->getChildRecursive("Setting4");
+    backSettings->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::back, this));
 }
 
 void Overlay::createScoreboard() {
@@ -122,6 +132,7 @@ bool Overlay::countdown() {
 bool Overlay::singlePlayer() {
     printf("Single Player Clicked!\n");
     onMMenu = false;
+    mainMenu->hide();
     return true;
 }
 
@@ -133,6 +144,8 @@ bool Overlay::multiplayer() {
 
 bool Overlay::settings() {
     printf("Settings Clicked!\n");
+    mainMenu->hide();
+    settingsMenu->show();
     onMMenu = false;
     return true;
 }
@@ -140,9 +153,17 @@ bool Overlay::settings() {
 bool Overlay::quit() {
     printf("Quit Clicked!\n");
     onMMenu = false;
+    done = true;
     return true;
 }
 
 bool Overlay::onMainMenu() {
     return onMMenu;
+}
+
+bool Overlay::back() {
+    settingsMenu->hide();
+    mainMenu->show();
+    onMMenu = true;
+    return true;
 }

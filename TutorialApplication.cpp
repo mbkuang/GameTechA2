@@ -167,6 +167,9 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
 {
     bool ret = BaseApplication::frameRenderingQueued(fe);
 
+    if(simulator->overlay->done)
+        mShutDown = true;
+
     if(mWindow->isClosed())
         return false;
     if(mShutDown)
