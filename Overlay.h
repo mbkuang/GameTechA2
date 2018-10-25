@@ -15,10 +15,9 @@ public:
 	void initCEGUI();
 	void updateScore();
 	void createScoreboard();
-	//bool quit();
     bool countdown();
     void createMainMenu();
-    bool onMainMenu();
+
     CEGUI::Window *sheet;
 	CEGUI::Window *mainMenu;
 	CEGUI::Window *settingsMenu;
@@ -31,7 +30,6 @@ protected:
     CEGUI::Window *p1wins;
     int alarm;
 	Simulator *simulator;
-	bool onMMenu;
 
 	bool singlePlayer();
 	bool multiplayer();

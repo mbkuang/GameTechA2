@@ -3,7 +3,6 @@
 Overlay::Overlay(Simulator* sim) {
 	simulator = sim;
     alarm = 0;
-    onMMenu = true;
     done = false;
 }
 
@@ -24,6 +23,7 @@ void Overlay::initCEGUI() {
     sheet = CEGUI::WindowManager::getSingleton().createWindow("DefaultWindow", "CEGUIDemo/Sheet");
 }
 
+/* Load windows and buttons from layout files, and show main menu with all its members */
 void Overlay::createMainMenu() {
     CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
     mainMenu = wmgr.loadLayoutFromFile("mainMenu.layout");
@@ -51,6 +51,7 @@ void Overlay::createMainMenu() {
     backSettings->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::back, this));
 }
 
+/* Display the scoreboard */
 void Overlay::createScoreboard() {
 	CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
 	playerScore = wmgr.createWindow("TaharezLook/StaticText", "CEGUIDemo/StaticText");
@@ -64,6 +65,7 @@ void Overlay::createScoreboard() {
     CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(sheet);
 }
 
+/* Update the scoreboard when one of the players scores, and checks for wins */
 void Overlay::updateScore() {
     Ogre::stringstream ss1;
     Ogre::stringstream ss2;
@@ -82,7 +84,6 @@ void Overlay::updateScore() {
         p1wins->setSize(CEGUI::USize(CEGUI::UDim(.4, 0), CEGUI::UDim(.1, 0)));
         p1wins->setPosition(CEGUI::UVector2(CEGUI::UDim(.3, 0), CEGUI::UDim(0, 0)));
         p1wins->setText("[colour='FFFF0000']Player 1 wins!\n\nCPU gets tougher...");
-        //p1wins->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::quit(), this));
         sheet->addChild(p1wins);
         p1->setScore(0);
         p1->setHP(5);
@@ -96,7 +97,6 @@ void Overlay::updateScore() {
         p1wins->setSize(CEGUI::USize(CEGUI::UDim(.4, 0), CEGUI::UDim(.1, 0)));
         p1wins->setPosition(CEGUI::UVector2(CEGUI::UDim(.3, 0), CEGUI::UDim(0, 0)));
         p1wins->setText("[colour='FFFF0000']CPU wins!\n\nYou must prove your worth!");
-        //p1wins->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::quit(), this));
         sheet->addChild(p1wins);
         p1->setScore(0);
         p1->setHP(5);
@@ -116,6 +116,7 @@ void Overlay::updateScore() {
 
 }
 
+/* Display the win/lose message for a certain amout of time  */
 bool Overlay::countdown() {
     if (alarm > 0) {
         alarm --;
@@ -129,41 +130,38 @@ bool Overlay::countdown() {
     return false;
 }
 
+/* Start Single player mode */
 bool Overlay::singlePlayer() {
     printf("Single Player Clicked!\n");
-    onMMenu = false;
     mainMenu->hide();
+    simulator->pause();
     return true;
 }
 
+/* Display the menu for multiplayer mode */
 bool Overlay::multiplayer() {
     printf("Multiplayer Clicked!\n");
-    onMMenu = false;
     return true;
 }
 
+/* Display the settings menu */
 bool Overlay::settings() {
     printf("Settings Clicked!\n");
     mainMenu->hide();
     settingsMenu->show();
-    onMMenu = false;
     return true;
 }
 
+/* Quit the application */
 bool Overlay::quit() {
     printf("Quit Clicked!\n");
-    onMMenu = false;
     done = true;
     return true;
 }
 
-bool Overlay::onMainMenu() {
-    return onMMenu;
-}
-
+/* Go back to the main menu */
 bool Overlay::back() {
     settingsMenu->hide();
     mainMenu->show();
-    onMMenu = true;
     return true;
 }

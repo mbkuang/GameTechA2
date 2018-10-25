@@ -16,6 +16,7 @@ Simulator::Simulator() {
 	soundOn = false;
 
 	overlay = new Overlay(this);
+	isPaused = true;
 }
 
 void Simulator::addObject (GameObject* o) {
@@ -55,4 +56,14 @@ void Simulator::addPlayer(Player* p) {
 
 Player* Simulator::getPlayer(Ogre::String pName) {
     return players[pName];
+}
+
+/* Pauses or un-pauses the game */
+void Simulator::pause() {
+	isPaused = !isPaused;
+}
+
+/* Checks if the game is paused or not */
+bool Simulator::paused() {
+	return isPaused;
 }

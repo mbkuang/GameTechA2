@@ -189,7 +189,7 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
     // aimanager->shoot();
 
     // Update Ogre with Bullet's State
-	if (this->simulator != NULL){
+	if (this->simulator != NULL && !simulator->paused()){
 		//suppose you have 60 frames per second
         simulator->stepSimulation(fe.timeSinceLastFrame, 60.0f, 1.0f/60.0f);
 	}

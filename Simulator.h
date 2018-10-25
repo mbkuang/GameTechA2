@@ -24,6 +24,7 @@ protected:
 	std::map<Ogre::String, GameObject*> objMap;
 	std::deque<GameObject*> objList;
 	std::map<Ogre::String, Player*> players;
+	bool isPaused;
 
 public:
 	Simulator();
@@ -40,6 +41,9 @@ public:
 
     Sound *soundSystem;
     bool soundOn;
+    
+    void pause();
+    bool paused();
 
     Overlay* overlay;
 };
