@@ -185,10 +185,6 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
     // aimanager->move(fe);
     // aimanager->shoot();
 
-    while(simulator->overlay->onMainMenu()) {
-        
-    }
-
     // Update Ogre with Bullet's State
 	if (this->simulator != NULL){
 		//suppose you have 60 frames per second

@@ -28,8 +28,17 @@ void Overlay::createMainMenu() {
     mainMenu = wmgr.loadLayoutFromFile("mainMenu.layout");
     sheet->addChild(mainMenu);
 
-    CEGUI::Window *singleButton = mainMenu->getChildRecursive("singleButton");
-    singleButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::startSinglePlayer, this));
+    CEGUI::Window *singlePlayerButton = mainMenu->getChildRecursive("singlePlayerButton");
+    singlePlayerButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::singlePlayer, this));
+
+    CEGUI::Window *multiplayerButton = mainMenu->getChildRecursive("multiplayerButton");
+    multiplayerButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::multiplayer, this));
+
+    CEGUI::Window *settingsButton = mainMenu->getChildRecursive("settingsButton");
+    settingsButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::settings, this));
+
+    CEGUI::Window *quitButton = mainMenu->getChildRecursive("quitButton");
+    quitButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::quit, this));
 }
 
 void Overlay::createScoreboard() {
@@ -110,8 +119,26 @@ bool Overlay::countdown() {
     return false;
 }
 
-bool Overlay::startSinglePlayer() {
-    printf("Hey\n");
+bool Overlay::singlePlayer() {
+    printf("Single Player Clicked!\n");
+    onMMenu = false;
+    return true;
+}
+
+bool Overlay::multiplayer() {
+    printf("Multiplayer Clicked!\n");
+    onMMenu = false;
+    return true;
+}
+
+bool Overlay::settings() {
+    printf("Settings Clicked!\n");
+    onMMenu = false;
+    return true;
+}
+
+bool Overlay::quit() {
+    printf("Quit Clicked!\n");
     onMMenu = false;
     return true;
 }

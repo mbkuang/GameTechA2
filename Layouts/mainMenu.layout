@@ -2,22 +2,22 @@
 
 <GUILayout version="4" >
     <Window type="TaharezLook/FrameWindow" name="MainMenu" >
-        <Property name="Area" value="{{0.25,0},{0.25,0},{0.8,0},{0.8,0}}" />
+        <Property name="Area" value="{{0.25,0},{0.25,0},{0.75,0},{0.75,0}}" />
         <Property name="Text" value="Main Menu" />
-        <Window type="TaharezLook/Button" name="singleButton" >
-            <Property name="Area" value="{{0,40},{0,15},{0,136},{0,47}}" />
+        <Window type="TaharezLook/Button" name="singlePlayerButton" >
+            <Property name="Area" value="{{0.25,0},{0.10,0},{0.75,0},{0.30,0}}" />
             <Property name="Text" value="Single Player" />
         </Window>
-        <Window type="TaharezLook/Button" name="multiButton" >
-            <Property name="Area" value="{{0,40},{0,60},{0,136},{0,92}}" />
+        <Window type="TaharezLook/Button" name="multiplayerButton" >
+            <Property name="Area" value="{{0.25,0},{0.30,0},{0.75,0},{0.50,0}}" />
             <Property name="Text" value="Multiplayer" />
         </Window>
         <Window type="TaharezLook/Button" name="settingsButton" >
-            <Property name="Area" value="{{0,40},{0,105},{0,136},{0,137}}" />
+            <Property name="Area" value="{{0.25,0},{0.50,0},{0.75,0},{0.70,0}}" />
             <Property name="Text" value="Settings" />
         </Window>
         <Window type="TaharezLook/Button" name="quitButton" >
-            <Property name="Area" value="{{0,40},{0,150},{0,136},{0,182}}" />
+            <Property name="Area" value="{{0.25,0},{0.70,0},{0.75,0},{0.90,0}}" />
             <Property name="Text" value="Quit Button" />
         </Window>
     </Window>
