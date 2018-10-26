@@ -33,11 +33,11 @@
             <Property name="Text" value="Player 2" />
         </Window>
         <Window type="TaharezLook/Button" name="StartButton" >
-            <Property name="Area" value="{{0.2,0},{0.7,0},{0.4,0},{0.85,0}}" />
+            <Property name="Area" value="{{0.05,0},{0.7,0},{0.45,0},{0.85,0}}" />
             <Property name="Text" value="Start Game" />
         </Window>
         <Window type="TaharezLook/Button" name="BackButton" >
-            <Property name="Area" value="{{0.6,0},{0.7,0},{0.8,0},{0.85,0}}" />
+            <Property name="Area" value="{{0.55,0},{0.7,0},{0.95,0},{0.85,0}}" />
             <Property name="Text" value="Back" />
         </Window>
     </Window>

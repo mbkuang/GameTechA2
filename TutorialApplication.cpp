@@ -145,17 +145,24 @@ void TutorialApplication::joinGame() {
     hostName = joinBox->getText().c_str();
     bool success;
     success = setupNetwork(false);
-    CEGUI::Window *joinButton = simulator->overlay->multiMenu->getChildRecursive("JoinButton");
-    CEGUI::Window *p1joined = simulator->overlay->multiMenu->getChildRecursive("p1joined");
-    CEGUI::Window *p2joined = simulator->overlay->multiMenu->getChildRecursive("p2joined");
     if(success) {
+        CEGUI::Window *joinButton = simulator->overlay->multiMenu->getChildRecursive("JoinButton");
+        CEGUI::Window *p1joined = simulator->overlay->multiMenu->getChildRecursive("p1joined");
+        CEGUI::Window *p2joined = simulator->overlay->multiMenu->getChildRecursive("p2joined");
+        CEGUI::Window *startButton = simulator->overlay->multiMenu->getChildRecursive("StartButton");
         joinButton->setDisabled(true);
         p1joined->show();
         p2joined->show();
+        startButton->setText("Waiting for host");
         network.messageServer(PROTOCOL_TCP, "p2joined", 8);
     }
     else
         closeNetwork();
+}
+//---------------------------------------------------------------------------
+void TutorialApplication::startMulti() {
+    network.messageClients(PROTOCOL_TCP, "Start", 5);
+    multiPlayerStarted = true;
 }
 //---------------------------------------------------------------------------
 CEGUI::MouseButton convertButton(OIS::MouseButtonID buttonID) {
@@ -234,20 +241,36 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
         simulator->stepSimulation(fe.timeSinceLastFrame, 60.0f, 1.0f/60.0f);
 	}
 
-    if(netStarted && !multiStarted) {
+    if(netStarted && !multiPlayerStarted) {
         if(network.pollForActivity(1)) {
             if(isHost) {
-                std::istringstream ss(network.tcpClientData[0]->output);
-                std::string s;
-                ss >> s;
-                if(s.compare("p2joined") == 0) {
-                    CEGUI::Window *p2joined = simulator->overlay->multiMenu->getChildRecursive("p2joined");
-                    p2joined->show();
-                    CEGUI::Window *startButton = simulator->overlay->multiMenu->getChildRecursive("StartButton");
-                    startButton->setDisabled(false);
+                if(!connectionMade) {
+                    std::istringstream ss(network.tcpClientData[0]->output);
+                    std::string s;
+                    ss >> s;
+                    if(s.compare("p2joined") == 0) {
+                        CEGUI::Window *p2joined = simulator->overlay->multiMenu->getChildRecursive("p2joined");
+                        p2joined->show();
+                        CEGUI::Window *startButton = simulator->overlay->multiMenu->getChildRecursive("StartButton");
+                        startButton->setDisabled(false);
+                        startButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&TutorialApplication::startMulti, this));
+                        connectionMade = true;
+                    }
                 }
             }
+            else {
+                std::istringstream ss(network.tcpServerData.output);
+                std::string s;
+                ss >> s;
+                if(s.compare("Start") == 0)
+                    multiPlayerStarted = true;
+            }
         }
+    }
+
+    if(multiPlayerStarted) {
+        simulator->overlay->multiMenu->hide();
+        simulator->pause(); // Unpause simulation
     }
 
     // Update the mCamera

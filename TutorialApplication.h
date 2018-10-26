@@ -64,7 +64,9 @@ protected:
     void hostGame();
     void joinGame();
     bool netStarted;
-    bool multiStarted;
+    bool connectionMade;
+    void startMulti();
+    bool multiPlayerStarted;
 
     void createObjects();
 
