@@ -6,7 +6,7 @@
         <Property name="Text" value="Settings" />
         <Window type="TaharezLook/Button" name="Setting1" >
             <Property name="Area" value="{{0.25,0},{0.10,0},{0.75,0},{0.30,0}}" />
-            <Property name="Text" value="Setting1" />
+            <Property name="Text" value="Music" />
         </Window>
         <Window type="TaharezLook/Button" name="Setting2" >
             <Property name="Area" value="{{0.25,0},{0.30,0},{0.75,0},{0.50,0}}" />

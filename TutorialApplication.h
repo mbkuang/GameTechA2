@@ -52,8 +52,6 @@ protected:
 
     Simulator* simulator;
     AIManager* aimanager;
-    Overlay* overlay;
-
 
     /* Network Stuff */
     NetManager network;
@@ -63,6 +61,8 @@ protected:
 
     void setupNetwork(bool);
     void closeNetwork();
+    void hostGame();
+    void joinGame();
 
     void createObjects();
 

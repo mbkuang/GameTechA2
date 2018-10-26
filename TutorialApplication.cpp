@@ -50,6 +50,9 @@ void TutorialApplication::createScene(void)
     mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
 
     simulator->overlay->createMainMenu();
+
+    //CEGUI::Window *hostButton = simulator->overlay->
+
     createObjects();
 }
 //---------------------------------------------------------------------------

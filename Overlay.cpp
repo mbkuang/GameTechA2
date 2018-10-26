@@ -38,6 +38,14 @@ void Overlay::createMainMenu() {
     pauseMenu->hide();
     sheet->addChild(pauseMenu);
 
+    musicMenu = wmgr.loadLayoutFromFile("musicMenu.layout");
+    musicMenu->hide();
+    sheet->addChild(musicMenu);
+
+    multiMenu = wmgr.loadLayoutFromFile("multiplayer.layout");
+    multiMenu->hide();
+    sheet->addChild(multiMenu);
+
     /* Main Menu Buttons */
     CEGUI::Window *singlePlayerButton = mainMenu->getChildRecursive("singlePlayerButton");
     singlePlayerButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::singlePlayer, this));
@@ -51,7 +59,18 @@ void Overlay::createMainMenu() {
     CEGUI::Window *quitButton = mainMenu->getChildRecursive("quitButton");
     quitButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::quit, this));
 
+    /* MultiPlayer Stuff */
+
+    CEGUI::Window *startMulti = multiMenu->getChildRecursive("StartButton");
+    startMulti->setDisabled(true);
+
+    CEGUI::Window *multiBack = multiMenu->getChildRecursive("BackButton");
+    multiBack->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::toMainMenu, this));
+
     /* Settings Buttons */
+    CEGUI::Window *musicSettings = settingsMenu->getChildRecursive("Setting1");
+    musicSettings->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::showMusicMenu, this));
+
     CEGUI::Window *backSettings = settingsMenu->getChildRecursive("Setting4");
     backSettings->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::back, this));
 
@@ -159,6 +178,8 @@ bool Overlay::singlePlayer() {
 /* Display the menu for multiplayer mode */
 bool Overlay::multiplayer() {
     printf("Multiplayer Clicked!\n");
+    mainMenu->hide();
+    multiMenu->show();
     return true;
 }
 
@@ -192,7 +213,9 @@ bool Overlay::back() {
 bool Overlay::toMainMenu() {
     settingsMenu->hide();
     pauseMenu->hide();
+    multiMenu->hide();
     mainMenu->show();
+    return true;
 }
 
 /* Pause simulation and show the pause menu */
@@ -200,4 +223,12 @@ void Overlay::pauseGame() {
     lastMenu = false;
     simulator->pause();
     pauseMenu->show();
+}
+
+bool Overlay::showMusicMenu() {
+    pauseMenu->hide();
+    settingsMenu->hide();
+    mainMenu->hide();
+    musicMenu->show();
+    return true;
 }

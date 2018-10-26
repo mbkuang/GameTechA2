@@ -23,6 +23,8 @@ public:
 	CEGUI::Window *mainMenu;
 	CEGUI::Window *settingsMenu;
 	CEGUI::Window *pauseMenu;
+	CEGUI::Window *musicMenu;
+	CEGUI::Window *multiMenu;
 	CEGUI::Window *playerScore;
 	CEGUI::Window *cpuScore;
 	bool done;
@@ -39,6 +41,7 @@ protected:
 	bool quit();
 	bool back();
 	bool toMainMenu();
+	bool showMusicMenu();
 
 	bool lastMenu;	//Keep track of what the last menu was before settings
 };
