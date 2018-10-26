@@ -63,6 +63,8 @@ protected:
     void closeNetwork();
     void hostGame();
     void joinGame();
+    bool netStarted;
+    bool multiStarted;
 
     void createObjects();
 

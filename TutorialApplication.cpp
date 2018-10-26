@@ -110,6 +110,7 @@ bool TutorialApplication::setupNetwork(bool isHost) {
     this->isHost = isHost;
     bool success;
     success = network.initNetManager();
+    netStarted = true;
     if(isHost) {
         network.addNetworkInfo(PROTOCOL_TCP, NULL, port_number);
         network.acceptConnections();
@@ -145,15 +146,16 @@ void TutorialApplication::joinGame() {
     bool success;
     success = setupNetwork(false);
     CEGUI::Window *joinButton = simulator->overlay->multiMenu->getChildRecursive("JoinButton");
-    if(success)
+    CEGUI::Window *p1joined = simulator->overlay->multiMenu->getChildRecursive("p1joined");
+    CEGUI::Window *p2joined = simulator->overlay->multiMenu->getChildRecursive("p2joined");
+    if(success) {
         joinButton->setDisabled(true);
+        p1joined->show();
+        p2joined->show();
+        network.messageServer(PROTOCOL_TCP, "p2joined", 8);
+    }
     else
         closeNetwork();
-    CEGUI::Window *p2joined = simulator->overlay->multiMenu->getChildRecursive("p2joined");
-    p2joined->show();
-
-    CEGUI::Window *startButton = simulator->overlay->multiMenu->getChildRecursive("StartButton");
-    startButton->setDisabled(false);
 }
 //---------------------------------------------------------------------------
 CEGUI::MouseButton convertButton(OIS::MouseButtonID buttonID) {
@@ -231,6 +233,22 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
 		//suppose you have 60 frames per second
         simulator->stepSimulation(fe.timeSinceLastFrame, 60.0f, 1.0f/60.0f);
 	}
+
+    if(netStarted && !multiStarted) {
+        if(network.pollForActivity(1)) {
+            if(isHost) {
+                std::istringstream ss(network.tcpClientData[0]->output);
+                std::string s;
+                ss >> s;
+                if(s.compare("p2joined") == 0) {
+                    CEGUI::Window *p2joined = simulator->overlay->multiMenu->getChildRecursive("p2joined");
+                    p2joined->show();
+                    CEGUI::Window *startButton = simulator->overlay->multiMenu->getChildRecursive("StartButton");
+                    startButton->setDisabled(false);
+                }
+            }
+        }
+    }
 
     // Update the mCamera
     Shooter* pShooter = (Shooter*) simulator->getObject("PlayerShooter");
