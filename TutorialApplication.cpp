@@ -89,11 +89,11 @@ void TutorialApplication::createObjects() {
     //     Ogre::Vector3(0.0f, 0.0f, zMid), 2.0f,
     //     "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic);
     Shooter* playerShooter = new Shooter("PlayerShooter", mSceneMgr, simulator,
-        Ogre::Vector3(0.0f, 0.0f, -1.0f), Ogre::Vector3(16.0f, 15.0f, 1.0f),
+        Ogre::Vector3(0.0f, 0.0f, -1.0f), Ogre::Vector3(2.0f, 4.0f, 2.0f),
         "PaddleTexture", paddleMass, paddleRestitution, paddleFriction, paddleKinematic);
 
     EnemyShooter* cpuShooter = new EnemyShooter("CPUShooter", mSceneMgr, simulator,
-        Ogre::Vector3(0.0f, 0.0f, -299.0f), Ogre::Vector3(16.0f, 15.0f, 1.0f),//12.0f, 100.0f, 1.0f),
+        Ogre::Vector3(0.0f, 0.0f, -50.0f), Ogre::Vector3(2.0f, 4.0f, 2.0f),//12.0f, 100.0f, 1.0f),
         "PaddleTexture", paddleMass, paddleRestitution, paddleFriction, paddleKinematic);
 
     // aimanager->update(mSceneMgr, simulator, cpuPaddle, playerPaddle, ball);
@@ -312,7 +312,8 @@ bool TutorialApplication::keyPressed(const OIS::KeyEvent& arg) {
         //     p->shot();
         //     simulator->soundSystem->playSound("laserSound");
         // }
-
+        Shooter* player = (Shooter*) simulator->getObject("PlayerShooter");
+        player->setVelocity(0,50,0);
     }
     else if(arg.key == OIS::KC_UP) {
         simulator->soundSystem->volumeUp();
@@ -380,7 +381,7 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& fe)
 
     if(simulator->paused())
         return true;
-        
+
     if (mKeyboard->isKeyDown(OIS::KC_Z)) {
         // mCamera->pitch(Ogre::Degree(.05));
         mCamera->pitch(-rotationSpeed);
@@ -408,14 +409,6 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& fe)
     mCamera->setDirection(cDir);
 
     player->rotate(btQuaternion(cDir.x, cDir.y, 0));
-    //
-    // // playerPaddle->updateTransform();
-    //
-    // btVector3 pPosition = playerPaddle->getPosition();
-    // Ogre::Vector3 cPosition = mCamera->getPosition();
-    // cPosition.x = (0 + pPosition.getX())/2;
-    // cPosition.y = (0 + pPosition.getY())/2;
-    // mCamera->setPosition(cPosition);
 
     return true;
 }

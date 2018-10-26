@@ -29,6 +29,10 @@ Gun::~Gun() {
 
 }
 
+Ogre::SceneNode* Gun::getRootNode() {
+    return this->rootNode;
+}
+
 void Gun::move(Ogre::Real x, Ogre::Real y, Ogre::Real z) {
     Ogre::Vector3 pPosition = rootNode->getPosition();
     float xNew = pPosition.x + x;
@@ -43,6 +47,11 @@ void Gun::setPosition(float newX, float newY, float newZ) {
 
 void Gun::setPosition(btVector3 newPosition) {
     rootNode->setPosition(newPosition.getX(), newPosition.getY(), newPosition.getZ());
+}
+
+btVector3 Gun::getPosition() {
+    Ogre::Vector3 pos = this->rootNode->getPosition();
+    return btVector3(pos.x, pos.y, pos.z);
 }
 
 void Gun::rotate(float wDir, float xDir, float yDir, float zDir) {

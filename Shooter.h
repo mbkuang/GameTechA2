@@ -1,6 +1,7 @@
 #ifndef __Shooter_h_
 #define __Shooter_h_
 
+#include <OgreNode.h>
 #include "GameObject.h"
 #include "GameSettings.h"
 #include "Gun.h"
@@ -13,7 +14,7 @@ private:
     btQuaternion orientation;
     float lastTime;
 
-    Gun* gun;
+    //Gun* gun;
 
 public:
     Shooter(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,

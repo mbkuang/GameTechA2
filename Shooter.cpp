@@ -34,8 +34,8 @@ Shooter::Shooter(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* si
     shape = new btBoxShape(btVector3(scale.x * 0.5f, scale.y * 0.5f, scale.z * 0.5f));
     motionState = new OgreMotionState(transform, rootNode);
 
-    gun = new Gun(nameGun("_Gun"), this->sceneMgr,
-        this->position, Ogre::Vector3(1,1,5), this->material);
+    // gun = new Gun(nameGun("_Gun"), this->sceneMgr,
+    //     this->position, Ogre::Vector3(1,1,5), this->material);
 
     addToSimulator();
 }
@@ -61,13 +61,6 @@ void Shooter::rotate(btQuaternion quat) {
     this->orientation = quat;
 }
 
-// void Shooter::rotate(btQuaternion quat) {
-//     // btQuaternion rotation = this->orientation;
-//     //rotation.slerp(quat*rotation,);
-//     this->orientation += quat;
-//     this->orientation.normalize();
-// }
-//
 void Shooter::rotate(btVector3 axis, float angle) {
     this->orientation.setRotation(axis, angle);
 }
@@ -78,18 +71,21 @@ btQuaternion Shooter::getOrientation() {
 
 Ogre::Quaternion Shooter::getOgreOrientation() {
     btQuaternion quat = this->getOrientation();
-    float w = quat.getW(), x = quat.getX(), y = quat.getY(), z = quat.getZ();
+    float w = quat.getW(), x = quat.getX(), y = -quat.getY(), z = quat.getZ();
     return Ogre::Quaternion(w, x, y, z);
 }
 
 // Specific game object update routine.
 void Shooter::update(float elapsedTime) {
-    btVector3 pos = this->getPosition();
-    pos.setX(pos.getX() + 3);
-    pos.setY(pos.getY() - 2);
-    pos.setZ(pos.getZ() - 5);
-    gun->setPosition(pos);
-    gun->rotate(this->getOgreOrientation());
+    // btVector3 pos = this->getPosition();
+
+    // gun->rotate(1,0,0,0);
+    // gun->setPosition(3,-2,-5);
+    // gun->getRootNode()->rotate(this->getOgreOrientation(),
+    //     Ogre::Node::TS_WORLD);
+    //
+    // pos += gun->getPosition();
+    // gun->setPosition(pos);
     // lastTime += elapsedTime;
     // simulator->getDynamicsWorld()->contactTest(body, *cCallBack);
     // if (context->hit && (context->velNorm > 2.0 || context->velNorm < -2.0)
