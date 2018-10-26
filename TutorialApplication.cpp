@@ -106,19 +106,20 @@ bool TutorialApplication::quit() {
     return true;
 }
 //---------------------------------------------------------------------------
-void TutorialApplication::setupNetwork(bool isHost) {
+bool TutorialApplication::setupNetwork(bool isHost) {
     this->isHost = isHost;
-    network.initNetManager();
+    bool success;
+    success = network.initNetManager();
     if(isHost) {
-        network.addNetworkInfo(PROTOCOL_UDP, NULL, port_number);
-        network.startServer();
-        hostName = network.getHostname().c_str();
+        network.addNetworkInfo(PROTOCOL_TCP, NULL, port_number);
         network.acceptConnections();
+        success = network.startServer();
     }
     else {
-        network.addNetworkInfo(PROTOCOL_UDP, hostName, port_number);
-        network.startClient();
+        network.addNetworkInfo(PROTOCOL_TCP, hostName, port_number);
+        success = network.startClient();
     }
+    return success;
 }
 //---------------------------------------------------------------------------
 void TutorialApplication::closeNetwork() {
@@ -126,11 +127,14 @@ void TutorialApplication::closeNetwork() {
 }
 //---------------------------------------------------------------------------
 void TutorialApplication::hostGame() {
-    setupNetwork(true);
+    bool success = setupNetwork(true);
     CEGUI::Window *hostLabel = simulator->overlay->multiMenu->getChildRecursive("hostLabel");
-    hostLabel->setText("Host Name: " + network.getHostname());
+    hostLabel->setText("Host Name: " + network.getIPstring());
     CEGUI::Window *hostButton = simulator->overlay->multiMenu->getChildRecursive("HostButton");
-    hostButton->setDisabled(true);
+    if(success)
+        hostButton->setDisabled(true);
+    else
+        closeNetwork();
     CEGUI::Window *p1joined = simulator->overlay->multiMenu->getChildRecursive("p1joined");
     p1joined->show();
 }
@@ -138,9 +142,13 @@ void TutorialApplication::hostGame() {
 void TutorialApplication::joinGame() {
     CEGUI::Window *joinBox = simulator->overlay->multiMenu->getChildRecursive("joinBox");
     hostName = joinBox->getText().c_str();
-    setupNetwork(false);
+    bool success;
+    success = setupNetwork(false);
     CEGUI::Window *joinButton = simulator->overlay->multiMenu->getChildRecursive("JoinButton");
-    joinButton->setDisabled(true);
+    if(success)
+        joinButton->setDisabled(true);
+    else
+        closeNetwork();
     CEGUI::Window *p2joined = simulator->overlay->multiMenu->getChildRecursive("p2joined");
     p2joined->show();
 
@@ -327,6 +335,9 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& fe)
     //     playerPaddle->move(movementSpeed * fe.timeSinceLastFrame, 0.0f, 0.0f);
     // }
     //
+    if(simulator->paused())
+        return true;
+
     if (mKeyboard->isKeyDown(OIS::KC_Q)) {
         mCamera->yaw(Ogre::Degree(.05));
     }

@@ -59,7 +59,7 @@ protected:
     const char* hostName;
     int port_number;
 
-    void setupNetwork(bool);
+    bool setupNetwork(bool);
     void closeNetwork();
     void hostGame();
     void joinGame();
