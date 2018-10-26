@@ -25,6 +25,9 @@ TutorialApplication::TutorialApplication(void)
     aimanager = new AIManager(simulator);
 
     port_number = 51215;    // Default port
+    bool netStarted = false;
+    bool connectionMade = false;
+    bool multiPlayerStarted = false;
 }
 //---------------------------------------------------------------------------
 TutorialApplication::~TutorialApplication(void)
