@@ -51,7 +51,11 @@ void TutorialApplication::createScene(void)
 
     simulator->overlay->createMainMenu();
 
-    //CEGUI::Window *hostButton = simulator->overlay->
+    CEGUI::Window *hostButton = simulator->overlay->multiMenu->getChildRecursive("HostButton");
+    hostButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&TutorialApplication::hostGame, this));
+
+    CEGUI::Window *joinButton = simulator->overlay->multiMenu->getChildRecursive("JoinButton");
+    joinButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&TutorialApplication::joinGame, this));
 
     createObjects();
 }
@@ -119,6 +123,29 @@ void TutorialApplication::setupNetwork(bool isHost) {
 //---------------------------------------------------------------------------
 void TutorialApplication::closeNetwork() {
     network.close();
+}
+//---------------------------------------------------------------------------
+void TutorialApplication::hostGame() {
+    setupNetwork(true);
+    CEGUI::Window *hostLabel = simulator->overlay->multiMenu->getChildRecursive("hostLabel");
+    hostLabel->setText("Host Name: " + network.getHostname());
+    CEGUI::Window *hostButton = simulator->overlay->multiMenu->getChildRecursive("HostButton");
+    hostButton->setDisabled(true);
+    CEGUI::Window *p1joined = simulator->overlay->multiMenu->getChildRecursive("p1joined");
+    p1joined->show();
+}
+//---------------------------------------------------------------------------
+void TutorialApplication::joinGame() {
+    CEGUI::Window *joinBox = simulator->overlay->multiMenu->getChildRecursive("joinBox");
+    hostName = joinBox->getText().c_str();
+    setupNetwork(false);
+    CEGUI::Window *joinButton = simulator->overlay->multiMenu->getChildRecursive("JoinButton");
+    joinButton->setDisabled(true);
+    CEGUI::Window *p2joined = simulator->overlay->multiMenu->getChildRecursive("p2joined");
+    p2joined->show();
+
+    CEGUI::Window *startButton = simulator->overlay->multiMenu->getChildRecursive("StartButton");
+    startButton->setDisabled(false);
 }
 //---------------------------------------------------------------------------
 CEGUI::MouseButton convertButton(OIS::MouseButtonID buttonID) {

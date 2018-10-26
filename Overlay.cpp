@@ -67,6 +67,12 @@ void Overlay::createMainMenu() {
     CEGUI::Window *multiBack = multiMenu->getChildRecursive("BackButton");
     multiBack->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::toMainMenu, this));
 
+    CEGUI::Window *p1joined = multiMenu->getChildRecursive("p1joined");
+    p1joined->hide();
+
+    CEGUI::Window *p2joined = multiMenu->getChildRecursive("p2joined");
+    p2joined->hide();
+
     /* Settings Buttons */
     CEGUI::Window *musicSettings = settingsMenu->getChildRecursive("Setting1");
     musicSettings->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::showMusicMenu, this));
