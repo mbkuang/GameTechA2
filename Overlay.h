@@ -15,23 +15,35 @@ public:
 	void initCEGUI();
 	void updateScore();
 	void createScoreboard();
-	bool quit();
     bool countdown();
     void createMainMenu();
-    bool onMainMenu();
+    void pauseGame();
+
     CEGUI::Window *sheet;
 	CEGUI::Window *mainMenu;
+	CEGUI::Window *settingsMenu;
+	CEGUI::Window *pauseMenu;
+	CEGUI::Window *musicMenu;
+	CEGUI::Window *multiMenu;
 	CEGUI::Window *playerScore;
 	CEGUI::Window *cpuScore;
+	bool done;
 
 protected:
 	CEGUI::OgreRenderer* mRenderer;
     CEGUI::Window *p1wins;
     int alarm;
 	Simulator *simulator;
-	bool onMMenu;
 
-	bool startSinglePlayer();
+	bool singlePlayer();
+	bool multiplayer();
+	bool settings();
+	bool quit();
+	bool back();
+	bool toMainMenu();
+	bool showMusicMenu();
+
+	bool lastMenu;	//Keep track of what the last menu was before settings
 };
 
 #endif

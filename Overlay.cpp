@@ -3,7 +3,8 @@
 Overlay::Overlay(Simulator* sim) {
 	simulator = sim;
     alarm = 0;
-    onMMenu = true;
+    done = false;
+    lastMenu = true;
 }
 
 void Overlay::initCEGUI() {
@@ -23,15 +24,77 @@ void Overlay::initCEGUI() {
     sheet = CEGUI::WindowManager::getSingleton().createWindow("DefaultWindow", "CEGUIDemo/Sheet");
 }
 
+/* Load windows and buttons from layout files, and show main menu with all its members */
 void Overlay::createMainMenu() {
     CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
     mainMenu = wmgr.loadLayoutFromFile("mainMenu.layout");
     sheet->addChild(mainMenu);
 
-    CEGUI::Window *singleButton = mainMenu->getChildRecursive("singleButton");
-    singleButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::startSinglePlayer, this));
+    settingsMenu = wmgr.loadLayoutFromFile("settings.layout");
+    settingsMenu->hide();
+    sheet->addChild(settingsMenu);
+
+    pauseMenu = wmgr.loadLayoutFromFile("pauseMenu.layout");
+    pauseMenu->hide();
+    sheet->addChild(pauseMenu);
+
+    musicMenu = wmgr.loadLayoutFromFile("musicMenu.layout");
+    musicMenu->hide();
+    sheet->addChild(musicMenu);
+
+    multiMenu = wmgr.loadLayoutFromFile("multiplayer.layout");
+    multiMenu->hide();
+    sheet->addChild(multiMenu);
+
+    /* Main Menu Buttons */
+    CEGUI::Window *singlePlayerButton = mainMenu->getChildRecursive("singlePlayerButton");
+    singlePlayerButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::singlePlayer, this));
+
+    CEGUI::Window *multiplayerButton = mainMenu->getChildRecursive("multiplayerButton");
+    multiplayerButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::multiplayer, this));
+
+    CEGUI::Window *settingsButton = mainMenu->getChildRecursive("settingsButton");
+    settingsButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::settings, this));
+
+    CEGUI::Window *quitButton = mainMenu->getChildRecursive("quitButton");
+    quitButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::quit, this));
+
+    /* MultiPlayer Stuff */
+
+    CEGUI::Window *startMulti = multiMenu->getChildRecursive("StartButton");
+    startMulti->setDisabled(true);
+
+    CEGUI::Window *multiBack = multiMenu->getChildRecursive("BackButton");
+    multiBack->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::toMainMenu, this));
+
+    CEGUI::Window *p1joined = multiMenu->getChildRecursive("p1joined");
+    p1joined->hide();
+
+    CEGUI::Window *p2joined = multiMenu->getChildRecursive("p2joined");
+    p2joined->hide();
+
+    /* Settings Buttons */
+    CEGUI::Window *musicSettings = settingsMenu->getChildRecursive("Setting1");
+    musicSettings->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::showMusicMenu, this));
+
+    CEGUI::Window *backSettings = settingsMenu->getChildRecursive("Setting4");
+    backSettings->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::back, this));
+
+    /* Pause Buttons */
+    CEGUI::Window *resumeButton = pauseMenu->getChildRecursive("resumeButton");
+    resumeButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::singlePlayer, this));
+
+    CEGUI::Window *pauseSettings = pauseMenu->getChildRecursive("pauseSettings");
+    pauseSettings->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::settings, this));
+
+    CEGUI::Window *pauseBack = pauseMenu->getChildRecursive("pauseBack");
+    pauseBack->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::back, this));
+
+    CEGUI::Window *pauseQuit = pauseMenu->getChildRecursive("pauseQuit");
+    pauseQuit->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::quit, this));
 }
 
+/* Display the scoreboard */
 void Overlay::createScoreboard() {
 	CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
 	playerScore = wmgr.createWindow("TaharezLook/StaticText", "CEGUIDemo/StaticText");
@@ -45,6 +108,7 @@ void Overlay::createScoreboard() {
     CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(sheet);
 }
 
+/* Update the scoreboard when one of the players scores, and checks for wins */
 void Overlay::updateScore() {
     Ogre::stringstream ss1;
     Ogre::stringstream ss2;
@@ -63,7 +127,6 @@ void Overlay::updateScore() {
         p1wins->setSize(CEGUI::USize(CEGUI::UDim(.4, 0), CEGUI::UDim(.1, 0)));
         p1wins->setPosition(CEGUI::UVector2(CEGUI::UDim(.3, 0), CEGUI::UDim(0, 0)));
         p1wins->setText("[colour='FFFF0000']Player 1 wins!\n\nCPU gets tougher...");
-        //p1wins->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::quit(), this));
         sheet->addChild(p1wins);
         p1->setScore(0);
         p1->setHP(5);
@@ -77,7 +140,6 @@ void Overlay::updateScore() {
         p1wins->setSize(CEGUI::USize(CEGUI::UDim(.4, 0), CEGUI::UDim(.1, 0)));
         p1wins->setPosition(CEGUI::UVector2(CEGUI::UDim(.3, 0), CEGUI::UDim(0, 0)));
         p1wins->setText("[colour='FFFF0000']CPU wins!\n\nYou must prove your worth!");
-        //p1wins->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::quit(), this));
         sheet->addChild(p1wins);
         p1->setScore(0);
         p1->setHP(5);
@@ -97,6 +159,7 @@ void Overlay::updateScore() {
 
 }
 
+/* Display the win/lose message for a certain amout of time  */
 bool Overlay::countdown() {
     if (alarm > 0) {
         alarm --;
@@ -110,12 +173,68 @@ bool Overlay::countdown() {
     return false;
 }
 
-bool Overlay::startSinglePlayer() {
-    printf("Hey\n");
-    onMMenu = false;
+/* Start Single player mode */
+bool Overlay::singlePlayer() {
+    mainMenu->hide();
+    pauseMenu->hide();
+    simulator->pause();
     return true;
 }
 
-bool Overlay::onMainMenu() {
-    return onMMenu;
+/* Display the menu for multiplayer mode */
+bool Overlay::multiplayer() {
+    printf("Multiplayer Clicked!\n");
+    mainMenu->hide();
+    multiMenu->show();
+    return true;
+}
+
+/* Display the settings menu */
+bool Overlay::settings() {
+    mainMenu->hide();
+    pauseMenu->hide();
+    settingsMenu->show();
+    return true;
+}
+
+/* Quit the application */
+bool Overlay::quit() {
+    done = true;
+    return true;
+}
+
+/* Go back to the previous menu */
+bool Overlay::back() {
+    settingsMenu->hide();
+    if(lastMenu || pauseMenu->isVisible()) {
+        pauseMenu->hide();
+        mainMenu->show();
+    }
+    else
+        pauseMenu->show();
+    return true;
+}
+
+/* Return to main menu */
+bool Overlay::toMainMenu() {
+    settingsMenu->hide();
+    pauseMenu->hide();
+    multiMenu->hide();
+    mainMenu->show();
+    return true;
+}
+
+/* Pause simulation and show the pause menu */
+void Overlay::pauseGame() {
+    lastMenu = false;
+    simulator->pause();
+    pauseMenu->show();
+}
+
+bool Overlay::showMusicMenu() {
+    pauseMenu->hide();
+    settingsMenu->hide();
+    mainMenu->hide();
+    musicMenu->show();
+    return true;
 }

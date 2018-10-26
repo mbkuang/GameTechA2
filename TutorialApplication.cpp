@@ -50,6 +50,13 @@ void TutorialApplication::createScene(void)
     mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
 
     simulator->overlay->createMainMenu();
+
+    CEGUI::Window *hostButton = simulator->overlay->multiMenu->getChildRecursive("HostButton");
+    hostButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&TutorialApplication::hostGame, this));
+
+    CEGUI::Window *joinButton = simulator->overlay->multiMenu->getChildRecursive("JoinButton");
+    joinButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&TutorialApplication::joinGame, this));
+
     createObjects();
 }
 //---------------------------------------------------------------------------
@@ -99,23 +106,63 @@ bool TutorialApplication::quit() {
     return true;
 }
 //---------------------------------------------------------------------------
-void TutorialApplication::setupNetwork(bool isHost) {
+bool TutorialApplication::setupNetwork(bool isHost) {
     this->isHost = isHost;
-    network.initNetManager();
+    bool success;
+    success = network.initNetManager();
+    netStarted = true;
     if(isHost) {
-        network.addNetworkInfo(PROTOCOL_UDP, NULL, port_number);
-        network.startServer();
-        hostName = network.getHostname().c_str();
+        network.addNetworkInfo(PROTOCOL_TCP, NULL, port_number);
         network.acceptConnections();
+        success = network.startServer();
     }
     else {
-        network.addNetworkInfo(PROTOCOL_UDP, hostName, port_number);
-        network.startClient();
+        network.addNetworkInfo(PROTOCOL_TCP, hostName, port_number);
+        success = network.startClient();
     }
+    return success;
 }
 //---------------------------------------------------------------------------
 void TutorialApplication::closeNetwork() {
     network.close();
+}
+//---------------------------------------------------------------------------
+void TutorialApplication::hostGame() {
+    bool success = setupNetwork(true);
+    CEGUI::Window *hostLabel = simulator->overlay->multiMenu->getChildRecursive("hostLabel");
+    hostLabel->setText("Host Name: " + network.getIPstring());
+    CEGUI::Window *hostButton = simulator->overlay->multiMenu->getChildRecursive("HostButton");
+    if(success)
+        hostButton->setDisabled(true);
+    else
+        closeNetwork();
+    CEGUI::Window *p1joined = simulator->overlay->multiMenu->getChildRecursive("p1joined");
+    p1joined->show();
+}
+//---------------------------------------------------------------------------
+void TutorialApplication::joinGame() {
+    CEGUI::Window *joinBox = simulator->overlay->multiMenu->getChildRecursive("joinBox");
+    hostName = joinBox->getText().c_str();
+    bool success;
+    success = setupNetwork(false);
+    if(success) {
+        CEGUI::Window *joinButton = simulator->overlay->multiMenu->getChildRecursive("JoinButton");
+        CEGUI::Window *p1joined = simulator->overlay->multiMenu->getChildRecursive("p1joined");
+        CEGUI::Window *p2joined = simulator->overlay->multiMenu->getChildRecursive("p2joined");
+        CEGUI::Window *startButton = simulator->overlay->multiMenu->getChildRecursive("StartButton");
+        joinButton->setDisabled(true);
+        p1joined->show();
+        p2joined->show();
+        startButton->setText("Waiting for host");
+        network.messageServer(PROTOCOL_TCP, "p2joined", 8);
+    }
+    else
+        closeNetwork();
+}
+//---------------------------------------------------------------------------
+void TutorialApplication::startMulti() {
+    network.messageClients(PROTOCOL_TCP, "Start", 5);
+    multiPlayerStarted = true;
 }
 //---------------------------------------------------------------------------
 CEGUI::MouseButton convertButton(OIS::MouseButtonID buttonID) {
@@ -167,6 +214,9 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
 {
     bool ret = BaseApplication::frameRenderingQueued(fe);
 
+    if(simulator->overlay->done)
+        mShutDown = true;
+
     if(mWindow->isClosed())
         return false;
     if(mShutDown)
@@ -185,15 +235,43 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
     // aimanager->move(fe);
     // aimanager->shoot();
 
-    // while(simulator->overlay->onMainMenu()) {
-    //
-    // }
-
     // Update Ogre with Bullet's State
-	if (this->simulator != NULL){
+	if (this->simulator != NULL && !simulator->paused()){
 		//suppose you have 60 frames per second
         simulator->stepSimulation(fe.timeSinceLastFrame, 60.0f, 1.0f/60.0f);
 	}
+
+    if(netStarted && !multiPlayerStarted) {
+        if(network.pollForActivity(1)) {
+            if(isHost) {
+                if(!connectionMade) {
+                    std::istringstream ss(network.tcpClientData[0]->output);
+                    std::string s;
+                    ss >> s;
+                    if(s.compare("p2joined") == 0) {
+                        CEGUI::Window *p2joined = simulator->overlay->multiMenu->getChildRecursive("p2joined");
+                        p2joined->show();
+                        CEGUI::Window *startButton = simulator->overlay->multiMenu->getChildRecursive("StartButton");
+                        startButton->setDisabled(false);
+                        startButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&TutorialApplication::startMulti, this));
+                        connectionMade = true;
+                    }
+                }
+            }
+            else {
+                std::istringstream ss(network.tcpServerData.output);
+                std::string s;
+                ss >> s;
+                if(s.compare("Start") == 0)
+                    multiPlayerStarted = true;
+            }
+        }
+    }
+
+    if(multiPlayerStarted) {
+        simulator->overlay->multiMenu->hide();
+        simulator->pause(); // Unpause simulation
+    }
 
     // Update the mCamera
     Shooter* pShooter = (Shooter*) simulator->getObject("PlayerShooter");
@@ -244,6 +322,9 @@ bool TutorialApplication::keyPressed(const OIS::KeyEvent& arg) {
     }
     else if(arg.key == OIS::KC_P) {
         simulator->soundSystem->playSound("bg_music");
+    }
+    else if(arg.key == OIS::KC_M) {
+        simulator->overlay->pauseGame();
     }
     return true;
 }
@@ -296,9 +377,10 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& fe)
     //     playerPaddle->move(movementSpeed * fe.timeSinceLastFrame, 0.0f, 0.0f);
     // }
     //
-    // mCamera->yaw(Ogre::Degree(mMouse->getMouseState().X.rel)*-0.2f);//, Ogre::Node::TS_WORLD);
-	// mCamera->pitch(Ogre::Degree(mMouse->getMouseState().Y.rel)*-0.2f);//, Ogre::Node::TS_LOCAL);
 
+    if(simulator->paused())
+        return true;
+        
     if (mKeyboard->isKeyDown(OIS::KC_Z)) {
         // mCamera->pitch(Ogre::Degree(.05));
         mCamera->pitch(-rotationSpeed);
