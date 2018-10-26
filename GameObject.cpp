@@ -55,6 +55,11 @@ btVector3 GameObject::getVelocity() {
         return body->getLinearVelocity();
 }
 
+btQuaternion GameObject::getDirection() {
+    if (body != NULL)
+        return body->getOrientation();
+}
+
 Ogre::Vector3 GameObject::getOgrePosition() {
     btVector3 pos = getPosition();
     return Ogre::Vector3(pos.getX(), pos.getY(), pos.getZ());
@@ -95,6 +100,26 @@ void GameObject::setPosition(btVector3 newPosition) {
         body->setWorldTransform(transformation);
         motionState->setWorldTransform(transformation);
         //motionState->updateTransform(transformation);
+    }
+}
+
+void GameObject::rotate(float wDir, float xDir, float yDir, float zDir) {
+    if (body != NULL) {
+        btTransform transformation;
+        transformation.setOrigin(body->getCenterOfMassPosition());
+        transformation.setRotation(btQuaternion(wDir, xDir, yDir, zDir));
+        body->setWorldTransform(transformation);
+        motionState->setWorldTransform(transformation);
+    }
+}
+
+void GameObject::rotate(btQuaternion newDir) {
+    if (body != NULL) {
+        btTransform transformation;
+        transformation.setOrigin(body->getCenterOfMassPosition());
+        transformation.setRotation(newDir);
+        body->setWorldTransform(transformation);
+        motionState->setWorldTransform(transformation);
     }
 }
 

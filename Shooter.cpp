@@ -12,6 +12,7 @@ Shooter::Shooter(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* si
     this->restitution = restitution;
     this->friction = friction;
     this->kinematic = kinematic;
+    this->orientation = btQuaternion(1,0,0,0);
     lastTime = 0.0f;
 
     // Set the entity.
@@ -56,6 +57,31 @@ void Shooter::move(Ogre::Real x, Ogre::Real y, Ogre::Real z) {
     this->setPosition(xNew, yNew, zNew);
 }
 
+void Shooter::rotate(btQuaternion quat) {
+    this->orientation = quat;
+}
+
+// void Shooter::rotate(btQuaternion quat) {
+//     // btQuaternion rotation = this->orientation;
+//     //rotation.slerp(quat*rotation,);
+//     this->orientation += quat;
+//     this->orientation.normalize();
+// }
+//
+void Shooter::rotate(btVector3 axis, float angle) {
+    this->orientation.setRotation(axis, angle);
+}
+
+btQuaternion Shooter::getOrientation() {
+    return this->orientation;
+}
+
+Ogre::Quaternion Shooter::getOgreOrientation() {
+    btQuaternion quat = this->getOrientation();
+    float w = quat.getW(), x = quat.getX(), y = quat.getY(), z = quat.getZ();
+    return Ogre::Quaternion(w, x, y, z);
+}
+
 // Specific game object update routine.
 void Shooter::update(float elapsedTime) {
     btVector3 pos = this->getPosition();
@@ -63,6 +89,7 @@ void Shooter::update(float elapsedTime) {
     pos.setY(pos.getY() - 2);
     pos.setZ(pos.getZ() - 5);
     gun->setPosition(pos);
+    gun->rotate(this->getOgreOrientation());
     // lastTime += elapsedTime;
     // simulator->getDynamicsWorld()->contactTest(body, *cCallBack);
     // if (context->hit && (context->velNorm > 2.0 || context->velNorm < -2.0)

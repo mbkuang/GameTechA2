@@ -45,6 +45,14 @@ void Gun::setPosition(btVector3 newPosition) {
     rootNode->setPosition(newPosition.getX(), newPosition.getY(), newPosition.getZ());
 }
 
+void Gun::rotate(float wDir, float xDir, float yDir, float zDir) {
+    rootNode->setOrientation(wDir, xDir, yDir, zDir);
+}
+
+void Gun::rotate(Ogre::Quaternion quat) {
+    rootNode->setOrientation(quat);
+}
+
 // Specific game object update routine.
 void Gun::update(float elapsedTime) {
     // lastTime += elapsedTime;

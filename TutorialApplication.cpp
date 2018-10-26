@@ -185,9 +185,9 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
     // aimanager->move(fe);
     // aimanager->shoot();
 
-    while(simulator->overlay->onMainMenu()) {
-        
-    }
+    // while(simulator->overlay->onMainMenu()) {
+    //
+    // }
 
     // Update Ogre with Bullet's State
 	if (this->simulator != NULL){
@@ -275,9 +275,10 @@ bool TutorialApplication::mouseReleased(const OIS::MouseEvent& arg, OIS::MouseBu
 //---------------------------------------------------------------------------
 bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& fe)
 {
-    // float movementSpeed = 120.0f;
-    // Paddle* playerPaddle = (Paddle*) simulator->getObject("PlayerPaddle");
-    //
+    float movementSpeed = 120.0f;
+    Ogre::Degree rotationSpeed = Ogre::Degree(.05);
+    Shooter* player = (Shooter*) simulator->getObject("PlayerShooter");
+
     // if (mKeyboard->isKeyDown(OIS::KC_W)) {
     //     playerPaddle->move(0.0f, movementSpeed * fe.timeSinceLastFrame, 0.0f);
     // }
@@ -295,21 +296,36 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& fe)
     //     playerPaddle->move(movementSpeed * fe.timeSinceLastFrame, 0.0f, 0.0f);
     // }
     //
-    if (mKeyboard->isKeyDown(OIS::KC_Q)) {
-        mCamera->yaw(Ogre::Degree(.05));
-    }
-
-    if (mKeyboard->isKeyDown(OIS::KC_E)) {
-        mCamera->yaw(Ogre::Degree(-.05));
-    }
+    // mCamera->yaw(Ogre::Degree(mMouse->getMouseState().X.rel)*-0.2f);//, Ogre::Node::TS_WORLD);
+	// mCamera->pitch(Ogre::Degree(mMouse->getMouseState().Y.rel)*-0.2f);//, Ogre::Node::TS_LOCAL);
 
     if (mKeyboard->isKeyDown(OIS::KC_Z)) {
-        mCamera->pitch(Ogre::Degree(.05));
+        // mCamera->pitch(Ogre::Degree(.05));
+        mCamera->pitch(-rotationSpeed);
     }
 
     if (mKeyboard->isKeyDown(OIS::KC_C)) {
-        mCamera->pitch(Ogre::Degree(-.05));
+        // mCamera->pitch(Ogre::Degree(-.05));
+        mCamera->pitch(rotationSpeed);
     }
+
+    if (mKeyboard->isKeyDown(OIS::KC_Q)) {
+        // mCamera->yaw(Ogre::Degree(.05));
+        mCamera->yaw(rotationSpeed);
+
+    }
+
+    if (mKeyboard->isKeyDown(OIS::KC_E)) {
+        // mCamera->yaw(Ogre::Degree(-.05));
+        mCamera->yaw(-rotationSpeed);
+    }
+
+    Ogre::Vector3 cDir = mCamera->getDirection();
+    if (cDir.y >= .9) {cDir.y = .9;}
+    if (cDir.y <= -.9) {cDir.y = -.9;}
+    mCamera->setDirection(cDir);
+
+    player->rotate(btQuaternion(cDir.x, cDir.y, 0));
     //
     // // playerPaddle->updateTransform();
     //
