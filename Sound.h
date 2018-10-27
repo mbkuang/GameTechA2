@@ -6,6 +6,8 @@
 #include <SDL/SDL_audio.h>
 #include <iostream>
 #include <Ogre.h>
+#include <CEGUI/CEGUI.h>
+#include <CEGUI/RendererModules/Ogre/Renderer.h>
 
 const int MAX_VOLUME = 128;
 

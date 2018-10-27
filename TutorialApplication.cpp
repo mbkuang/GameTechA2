@@ -25,6 +25,9 @@ TutorialApplication::TutorialApplication(void)
     aimanager = new AIManager(simulator);
 
     port_number = 51215;    // Default port
+    bool netStarted = false;
+    bool connectionMade = false;
+    bool multiPlayerStarted = false;
 }
 //---------------------------------------------------------------------------
 TutorialApplication::~TutorialApplication(void)
@@ -131,9 +134,14 @@ void TutorialApplication::hostGame() {
     bool success = setupNetwork(true);
     CEGUI::Window *hostLabel = simulator->overlay->multiMenu->getChildRecursive("hostLabel");
     hostLabel->setText("Host Name: " + network.getIPstring());
-    CEGUI::Window *hostButton = simulator->overlay->multiMenu->getChildRecursive("HostButton");
-    if(success)
+    if(success) {
+        CEGUI::Window *hostButton = simulator->overlay->multiMenu->getChildRecursive("HostButton");
+        CEGUI::Window *joinButton = simulator->overlay->multiMenu->getChildRecursive("JoinButton");
+        CEGUI::Window *joinBox = simulator->overlay->multiMenu->getChildRecursive("joinBox");
+        joinBox->setDisabled(true);
+        joinButton->setDisabled(true);
         hostButton->setDisabled(true);
+    }
     else
         closeNetwork();
     CEGUI::Window *p1joined = simulator->overlay->multiMenu->getChildRecursive("p1joined");
@@ -146,11 +154,13 @@ void TutorialApplication::joinGame() {
     bool success;
     success = setupNetwork(false);
     if(success) {
+        CEGUI::Window *hostButton = simulator->overlay->multiMenu->getChildRecursive("HostButton");
         CEGUI::Window *joinButton = simulator->overlay->multiMenu->getChildRecursive("JoinButton");
         CEGUI::Window *p1joined = simulator->overlay->multiMenu->getChildRecursive("p1joined");
         CEGUI::Window *p2joined = simulator->overlay->multiMenu->getChildRecursive("p2joined");
         CEGUI::Window *startButton = simulator->overlay->multiMenu->getChildRecursive("StartButton");
         joinButton->setDisabled(true);
+        hostButton->setDisabled(true);
         p1joined->show();
         p2joined->show();
         startButton->setText("Waiting for host");

@@ -77,6 +77,12 @@ void Overlay::createMainMenu() {
     CEGUI::Window *musicSettings = settingsMenu->getChildRecursive("Setting1");
     musicSettings->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::showMusicMenu, this));
 
+    CEGUI::Window *ms2 = settingsMenu->getChildRecursive("Setting2");
+    ms2->setDisabled(true);
+
+    CEGUI::Window *ms3 = settingsMenu->getChildRecursive("Setting3");
+    ms3->setDisabled(true);
+
     CEGUI::Window *backSettings = settingsMenu->getChildRecursive("Setting4");
     backSettings->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::back, this));
 
@@ -92,6 +98,24 @@ void Overlay::createMainMenu() {
 
     CEGUI::Window *pauseQuit = pauseMenu->getChildRecursive("pauseQuit");
     pauseQuit->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::quit, this));
+
+    /* Music Menu Stuff */
+    CEGUI::Window *volumeLabel = musicMenu->getChildRecursive("volumeLabel");
+    Ogre::stringstream ss;
+    ss << simulator->soundSystem->currentVolume;
+    volumeLabel->setText("Current Volume: " + ss.str());
+
+    CEGUI::Window *volDown = musicMenu->getChildRecursive("Setting1");
+    volDown->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::volumeDown, this));
+
+    CEGUI::Window *volUp = musicMenu->getChildRecursive("Setting2");
+    volUp->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::volumeUp, this));
+
+    CEGUI::Window *muteButton = musicMenu->getChildRecursive("Setting3");
+    muteButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::mute, this));
+
+    CEGUI::Window *backMusic = musicMenu->getChildRecursive("Setting4");
+    backMusic->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::settings, this));
 }
 
 /* Display the scoreboard */
@@ -183,7 +207,6 @@ bool Overlay::singlePlayer() {
 
 /* Display the menu for multiplayer mode */
 bool Overlay::multiplayer() {
-    printf("Multiplayer Clicked!\n");
     mainMenu->hide();
     multiMenu->show();
     return true;
@@ -193,6 +216,7 @@ bool Overlay::multiplayer() {
 bool Overlay::settings() {
     mainMenu->hide();
     pauseMenu->hide();
+    musicMenu->hide();
     settingsMenu->show();
     return true;
 }
@@ -237,4 +261,28 @@ bool Overlay::showMusicMenu() {
     mainMenu->hide();
     musicMenu->show();
     return true;
+}
+
+void Overlay::volumeDown() {
+    simulator->soundSystem->volumeDown();
+    CEGUI::Window *volumeLabel = musicMenu->getChildRecursive("volumeLabel");
+    Ogre::stringstream ss;
+    ss << simulator->soundSystem->currentVolume;
+    volumeLabel->setText("Current Volume: " + ss.str());
+}
+
+void Overlay::volumeUp() {
+    simulator->soundSystem->volumeUp();
+    CEGUI::Window *volumeLabel = musicMenu->getChildRecursive("volumeLabel");
+    Ogre::stringstream ss;
+    ss << simulator->soundSystem->currentVolume;
+    volumeLabel->setText("Current Volume: " + ss.str());
+}
+
+void Overlay::mute() {
+    simulator->soundSystem->shutOffSound();
+    CEGUI::Window *volumeLabel = musicMenu->getChildRecursive("volumeLabel");
+    Ogre::stringstream ss;
+    ss << simulator->soundSystem->currentVolume;
+    volumeLabel->setText("Current Volume: " + ss.str());
 }

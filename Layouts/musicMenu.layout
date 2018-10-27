@@ -4,17 +4,21 @@
     <Window type="TaharezLook/FrameWindow" name="MusicMenu" >
         <Property name="Area" value="{{0.25,0},{0.25,0},{0.75,0},{0.75,0}}" />
         <Property name="Text" value="Music Menu" />
-        <Window type="TaharezLook/SliderThumb" name="volumeSetting" >
+        <Window type="TaharezLook/Label" name="volumeLabel" >
             <Property name="Area" value="{{0.25,0},{0.10,0},{0.75,0},{0.30,0}}" />
-            <Property name="Text" value="Volume Level" />
+            <Property name="Text" value="Volume Level: " />
+        </Window>
+        <Window type="TaharezLook/Button" name="Setting1" >
+            <Property name="Area" value="{{0.25,0},{0.30,0},{0.5,0},{0.50,0}}" />
+            <Property name="Text" value="Volume Down" />
         </Window>
         <Window type="TaharezLook/Button" name="Setting2" >
-            <Property name="Area" value="{{0.25,0},{0.30,0},{0.75,0},{0.50,0}}" />
-            <Property name="Text" value="Setting2" />
+            <Property name="Area" value="{{0.5,0},{0.30,0},{0.75,0},{0.50,0}}" />
+            <Property name="Text" value="Volume Up" />
         </Window>
         <Window type="TaharezLook/Button" name="Setting3" >
             <Property name="Area" value="{{0.25,0},{0.50,0},{0.75,0},{0.70,0}}" />
-            <Property name="Text" value="Setting3" />
+            <Property name="Text" value="Mute" />
         </Window>
         <Window type="TaharezLook/Button" name="Setting4" >
             <Property name="Area" value="{{0.25,0},{0.70,0},{0.75,0},{0.90,0}}" />

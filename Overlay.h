@@ -42,6 +42,9 @@ protected:
 	bool back();
 	bool toMainMenu();
 	bool showMusicMenu();
+	void volumeDown();
+	void volumeUp();
+	void mute();
 
 	bool lastMenu;	//Keep track of what the last menu was before settings
 };

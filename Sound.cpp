@@ -47,12 +47,14 @@ void Sound::playSound(Ogre::String soundType) {
 }
 
 void Sound::volumeDown() {
-	currentVolume -= 2;
+	if(currentVolume != 0)
+		currentVolume -= 1;
 	Mix_VolumeMusic(currentVolume);
 }
 
 void Sound::volumeUp() {
-	currentVolume += 2;
+	if(currentVolume != MAX_VOLUME)
+		currentVolume += 1;
 	Mix_VolumeMusic(currentVolume);
 }
 
