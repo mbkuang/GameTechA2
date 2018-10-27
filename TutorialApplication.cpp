@@ -92,11 +92,11 @@ void TutorialApplication::createObjects() {
     //     Ogre::Vector3(0.0f, 0.0f, zMid), 2.0f,
     //     "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic);
     Shooter* playerShooter = new Shooter("PlayerShooter", mSceneMgr, simulator,
-        Ogre::Vector3(0.0f, 0.0f, -1.0f), Ogre::Vector3(2.0f, 4.0f, 2.0f),
+        Ogre::Vector3(0.0f, 0.0f, -1.0f), Ogre::Vector3(0.5f, 1.0f, 0.5f),
         "PaddleTexture", paddleMass, paddleRestitution, paddleFriction, paddleKinematic);
 
     EnemyShooter* cpuShooter = new EnemyShooter("CPUShooter", mSceneMgr, simulator,
-        Ogre::Vector3(0.0f, 0.0f, -50.0f), Ogre::Vector3(2.0f, 4.0f, 2.0f),//12.0f, 100.0f, 1.0f),
+        Ogre::Vector3(0.0f, 0.0f, -50.0f), Ogre::Vector3(0.5f, 1.0f, 0.5f),//12.0f, 100.0f, 1.0f),
         "PaddleTexture", paddleMass, paddleRestitution, paddleFriction, paddleKinematic);
 
     // aimanager->update(mSceneMgr, simulator, cpuPaddle, playerPaddle, ball);
@@ -323,7 +323,7 @@ bool TutorialApplication::keyPressed(const OIS::KeyEvent& arg) {
         //     simulator->soundSystem->playSound("laserSound");
         // }
         Shooter* player = (Shooter*) simulator->getObject("PlayerShooter");
-        player->setVelocity(0,50,0);
+        player->setVelocity(0,10,0);
     }
     else if(arg.key == OIS::KC_UP) {
         simulator->soundSystem->volumeUp();
@@ -352,6 +352,12 @@ bool TutorialApplication::mouseMoved(const OIS::MouseEvent& arg) {
     if (arg.state.Z.rel)
         sys.injectMouseWheelChange(arg.state.Z.rel / 120.0f);
 
+    if (simulator->paused()) {return true;}
+    // Use mouse to control camera
+    float cRotSpd = 0.5f;
+    mCamera->yaw(Ogre::Degree(-arg.state.X.rel * cRotSpd));
+    mCamera->pitch(Ogre::Degree(-arg.state.Y.rel * cRotSpd));
+
     return true;
 }
 //---------------------------------------------------------------------------
@@ -364,6 +370,12 @@ bool TutorialApplication::mouseReleased(const OIS::MouseEvent& arg, OIS::MouseBu
     CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonUp(convertButton(id));
     return true;
 }
+
+// Ogre::Vector2 getMouseScreenPosition() {
+//     CEGUI::Vector2f mousePos = CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().getPosition();
+//
+//     return Ogre::Vector2(mousePos.d_x, mousePos.d_y);
+// }
 //---------------------------------------------------------------------------
 bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& fe)
 {
@@ -371,47 +383,8 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& fe)
     Ogre::Degree rotationSpeed = Ogre::Degree(.05);
     Shooter* player = (Shooter*) simulator->getObject("PlayerShooter");
 
-    // if (mKeyboard->isKeyDown(OIS::KC_W)) {
-    //     playerPaddle->move(0.0f, movementSpeed * fe.timeSinceLastFrame, 0.0f);
-    // }
-    //
-    // if (mKeyboard->isKeyDown(OIS::KC_S)) {
-    //     playerPaddle->move(0.0f, -movementSpeed * fe.timeSinceLastFrame, 0.0f);
-    // }
-    //
-    //
-    // if (mKeyboard->isKeyDown(OIS::KC_A)) {
-    //     playerPaddle->move(-movementSpeed * fe.timeSinceLastFrame, 0.0f, 0.0f);
-    // }
-    //
-    // if (mKeyboard->isKeyDown(OIS::KC_D)) {
-    //     playerPaddle->move(movementSpeed * fe.timeSinceLastFrame, 0.0f, 0.0f);
-    // }
-    //
-
     if(simulator->paused())
         return true;
-
-    if (mKeyboard->isKeyDown(OIS::KC_Z)) {
-        // mCamera->pitch(Ogre::Degree(.05));
-        mCamera->pitch(-rotationSpeed);
-    }
-
-    if (mKeyboard->isKeyDown(OIS::KC_C)) {
-        // mCamera->pitch(Ogre::Degree(-.05));
-        mCamera->pitch(rotationSpeed);
-    }
-
-    if (mKeyboard->isKeyDown(OIS::KC_Q)) {
-        // mCamera->yaw(Ogre::Degree(.05));
-        mCamera->yaw(rotationSpeed);
-
-    }
-
-    if (mKeyboard->isKeyDown(OIS::KC_E)) {
-        // mCamera->yaw(Ogre::Degree(-.05));
-        mCamera->yaw(-rotationSpeed);
-    }
 
     Ogre::Vector3 cDir = mCamera->getDirection();
     if (cDir.y >= .9) {cDir.y = .9;}
@@ -419,6 +392,40 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& fe)
     mCamera->setDirection(cDir);
 
     player->rotate(btQuaternion(cDir.x, cDir.y, 0));
+
+    if (mKeyboard->isKeyDown(OIS::KC_W)) {
+        player->move(
+            movementSpeed * fe.timeSinceLastFrame * cDir.x,
+            0.0f,
+            movementSpeed * fe.timeSinceLastFrame * cDir.z
+        );
+    }
+
+    if (mKeyboard->isKeyDown(OIS::KC_S)) {
+        player->move(
+            -movementSpeed * fe.timeSinceLastFrame * cDir.x,
+            0.0f,
+            -movementSpeed * fe.timeSinceLastFrame * cDir.z
+        );
+    }
+
+    Ogre::Vector3 cDirPerp = Ogre::Quaternion(Ogre::Degree(-90), Ogre::Vector3::UNIT_Y) * cDir;
+
+    if (mKeyboard->isKeyDown(OIS::KC_A)) {
+        player->move(
+            -movementSpeed * fe.timeSinceLastFrame * cDirPerp.x,
+            0.0f,
+            -movementSpeed * fe.timeSinceLastFrame * cDirPerp.z
+        );
+    }
+
+    if (mKeyboard->isKeyDown(OIS::KC_D)) {
+        player->move(
+            movementSpeed * fe.timeSinceLastFrame * cDirPerp.x,
+            0.0f,
+            movementSpeed * fe.timeSinceLastFrame * cDirPerp.z
+        );
+    }
 
     return true;
 }
