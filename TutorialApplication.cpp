@@ -285,7 +285,7 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
 
     // Update the mCamera
     Shooter* pShooter = (Shooter*) simulator->getObject("PlayerShooter");
-    mCamera->setPosition(pShooter->getOgrePosition());
+    mCamera->setPosition(pShooter->getOgrePosition() + Ogre::Vector3(0, 5, 5));
 
     return ret;
 }
@@ -379,7 +379,7 @@ bool TutorialApplication::mouseReleased(const OIS::MouseEvent& arg, OIS::MouseBu
 //---------------------------------------------------------------------------
 bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& fe)
 {
-    float movementSpeed = 120.0f;
+    float movementSpeed = 10.0f;
     Ogre::Degree rotationSpeed = Ogre::Degree(.05);
     Shooter* player = (Shooter*) simulator->getObject("PlayerShooter");
 
@@ -393,39 +393,59 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& fe)
 
     player->rotate(btQuaternion(cDir.x, cDir.y, 0));
 
-    if (mKeyboard->isKeyDown(OIS::KC_W)) {
-        player->move(
-            movementSpeed * fe.timeSinceLastFrame * cDir.x,
-            0.0f,
-            movementSpeed * fe.timeSinceLastFrame * cDir.z
-        );
-    }
+    Ogre::Vector3 moveDir = Ogre::Vector3(0,0,0);//cDir;
+    //moveDir->normalize();
 
-    if (mKeyboard->isKeyDown(OIS::KC_S)) {
-        player->move(
-            -movementSpeed * fe.timeSinceLastFrame * cDir.x,
-            0.0f,
-            -movementSpeed * fe.timeSinceLastFrame * cDir.z
-        );
-    }
+    float forwardSpd = (mKeyboard->isKeyDown(OIS::KC_W) - mKeyboard->isKeyDown(OIS::KC_S)) * movementSpeed;
+    float sideSpd = (mKeyboard->isKeyDown(OIS::KC_A) - mKeyboard->isKeyDown(OIS::KC_D)) * movementSpeed;
 
-    Ogre::Vector3 cDirPerp = Ogre::Quaternion(Ogre::Degree(-90), Ogre::Vector3::UNIT_Y) * cDir;
+    moveDir.z = forwardSpd;
+    moveDir.x = sideSpd;
 
-    if (mKeyboard->isKeyDown(OIS::KC_A)) {
-        player->move(
-            -movementSpeed * fe.timeSinceLastFrame * cDirPerp.x,
-            0.0f,
-            -movementSpeed * fe.timeSinceLastFrame * cDirPerp.z
-        );
-    }
+    Ogre::Degree degreeChange = Ogre::Degree((Ogre::Real) moveDir.dotProduct(cDir));
+    moveDir = Ogre::Quaternion(degreeChange, Ogre::Vector3::UNIT_Y) * moveDir;
+    moveDir.normalise();
+    // if (mKeyboard->isKeyDown(OIS::KC_W)) {
+    //     //player->
+    //     // player->move(
+    //     //     movementSpeed * fe.timeSinceLastFrame * cDir.x,
+    //     //     0.0f,
+    //     //     movementSpeed * fe.timeSinceLastFrame * cDir.z
+    //     // );
+    // }
+    //
+    // if (mKeyboard->isKeyDown(OIS::KC_S)) {
+    //     player->move(
+    //         -movementSpeed * fe.timeSinceLastFrame * cDir.x,
+    //         0.0f,
+    //         -movementSpeed * fe.timeSinceLastFrame * cDir.z
+    //     );
+    // }
+    //
 
-    if (mKeyboard->isKeyDown(OIS::KC_D)) {
-        player->move(
-            movementSpeed * fe.timeSinceLastFrame * cDirPerp.x,
-            0.0f,
-            movementSpeed * fe.timeSinceLastFrame * cDirPerp.z
-        );
-    }
+    //Ogre::Vector3 cDirPerp = Ogre::Quaternion(Ogre::Degree(-90), Ogre::Vector3::UNIT_Y) * cDir;
+
+    //
+    // if (mKeyboard->isKeyDown(OIS::KC_A)) {
+    //     player->move(
+    //         -movementSpeed * fe.timeSinceLastFrame * cDirPerp.x,
+    //         0.0f,
+    //         -movementSpeed * fe.timeSinceLastFrame * cDirPerp.z
+    //     );
+    // }
+    //
+    // if (mKeyboard->isKeyDown(OIS::KC_D)) {
+    //     player->move(
+    //         movementSpeed * fe.timeSinceLastFrame * cDirPerp.x,
+    //         0.0f,
+    //         movementSpeed * fe.timeSinceLastFrame * cDirPerp.z
+    //     );
+    // }
+
+    moveDir *= movementSpeed;
+
+    // Normalize the player's velocity
+    player->setVelocity(moveDir.x, moveDir.y, moveDir.z);
 
     return true;
 }

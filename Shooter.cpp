@@ -16,16 +16,16 @@ Shooter::Shooter(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* si
     lastTime = 0.0f;
 
     // Set the entity.
-    // geom = sceneMgr->createEntity(name, "cube.mesh");
-    // geom->setCastShadows(true);
-    // if (material != "") {
-    //     geom->setMaterialName(material);
-    // }
+    geom = sceneMgr->createEntity(name, "cube.mesh");
+    geom->setCastShadows(true);
+    if (material != "") {
+        geom->setMaterialName(material);
+    }
 
     // Set the rootNode.
     rootNode = sceneMgr->getRootSceneNode()->
         createChildSceneNode(name, Ogre::Vector3(position.x, position.y, position.z));
-    //rootNode->attachObject(geom);
+    rootNode->attachObject(geom);
     rootNode->scale(scale.x * 0.01f, scale.y * 0.01f, scale.z * 0.01f);
     rootNode->setPosition(position.x, position.y, position.z);
 
@@ -86,12 +86,16 @@ void Shooter::update(float elapsedTime) {
     //
     // pos += gun->getPosition();
     // gun->setPosition(pos);
-    // lastTime += elapsedTime;
-    // simulator->getDynamicsWorld()->contactTest(body, *cCallBack);
-    // if (context->hit && (context->velNorm > 2.0 || context->velNorm < -2.0)
-    //     && (lastTime > 0.5 || (context->lastBody != context->body && lastTime > 0.1))) {
-    //     //Handle the hit
-    //     lastTime = 0.0f;
-    // }
-    // context->hit = false;
+
+    lastTime += elapsedTime;
+    simulator->getDynamicsWorld()->contactTest(body, *cCallBack);
+    if (context->hit && (context->velNorm > 2.0 || context->velNorm < -2.0)
+        && (lastTime > 0.5 || (context->lastBody != context->body && lastTime > 0.1))) {
+        //Handle the hit
+        GameObject* contact = context->theObject;
+        Ogre::String contactName = contact->getName();
+
+        lastTime = 0.0f;
+    }
+    context->hit = false;
 }

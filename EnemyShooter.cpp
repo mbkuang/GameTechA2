@@ -6,13 +6,13 @@ EnemyShooter::EnemyShooter(Ogre::String newName, Ogre::SceneManager* scnMgr, Sim
         : Shooter(newName, scnMgr, sim, position, scale, material, mass,
         restitution, friction, kinematic) {
     // Set the entity.
-    geom = sceneMgr->createEntity(name, "cube.mesh");
-    geom->setCastShadows(true);
-    if (material != "") {
-        geom->setMaterialName(material);
-    }
+    // geom = sceneMgr->createEntity(name, "cube.mesh");
+    // geom->setCastShadows(true);
+    // if (material != "") {
+    //     geom->setMaterialName(material);
+    // }
 
-    rootNode->attachObject(geom);
+    // rootNode->attachObject(geom);
 }
 
 EnemyShooter::~EnemyShooter() {
