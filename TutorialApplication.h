@@ -73,7 +73,18 @@ protected:
 
     void createObjects();
 
-    float xMin, xMax, yMin, yMax, zMin, zMax;
+    struct Positions {
+        // Player positional/orientation/bullet pos coords
+        float xPPos, yPPos, zPPos;
+        float xPDir, yPDir, zPDir;
+        float xPBPos, yPBPos, zPBPos;
+        // Enemy positional/orientation/ bullet pos coords;
+        float xEPos, yEPos, zEPos;
+        float xEDir, yEDir, zEDir;
+        float xEBPos, yEBPos, zEBPos;
+    };
+
+    Positions positions;
 private:
     bool processUnbufferedInput(const Ogre::FrameEvent& fe);
     bool quit();
