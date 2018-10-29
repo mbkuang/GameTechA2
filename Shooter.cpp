@@ -58,7 +58,11 @@ void Shooter::move(Ogre::Real x, Ogre::Real y, Ogre::Real z) {
 }
 
 void Shooter::rotate(btQuaternion quat) {
+    motionState->getWorldTransform(transform);
     this->orientation = quat;
+    transform.setRotation(quat);
+    motionState->setWorldTransform(transform);
+    motionState->updateTransform(transform);
 }
 
 void Shooter::rotate(btVector3 axis, float angle) {
@@ -94,6 +98,17 @@ void Shooter::update(float elapsedTime) {
         //Handle the hit
         GameObject* contact = context->theObject;
         Ogre::String contactName = contact->getName();
+
+        printf("COLLIDE\n");
+        if (contactName.compare("Flooring") == 0) {
+            motionState->getWorldTransform(transform);
+            btVector3 position = transform.getOrigin();
+            position.setY(0.0f);
+            transform.setOrigin(position);
+            motionState->setWorldTransform(transform);
+            motionState->updateTransform(transform);
+            printf("RESET\n");
+        }
 
         lastTime = 0.0f;
     }
