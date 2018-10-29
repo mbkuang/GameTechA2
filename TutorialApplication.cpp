@@ -141,11 +141,15 @@ bool TutorialApplication::setupNetwork(bool isHost) {
     netStarted = true;
     if(isHost) {
         network.addNetworkInfo(PROTOCOL_TCP, NULL, port_number);
+        //TODO
+        network.addNetworkInfo(PROTOCOL_UDP, NULL, port_number);
         network.acceptConnections();
         success = network.startServer();
     }
     else {
         network.addNetworkInfo(PROTOCOL_TCP, hostName, port_number);
+        //TODO
+        network.addNetworkInfo(PROTOCOL_UDP, hostName, port_number);
         success = network.startClient();
     }
     return success;
@@ -166,12 +170,14 @@ void TutorialApplication::hostGame() {
         joinBox->setDisabled(true);
         joinButton->setDisabled(true);
         hostButton->setDisabled(true);
+
+        CEGUI::Window *p1joined = simulator->overlay->multiMenu->getChildRecursive("p1joined");
+        p1joined->show();
+        isMultiplayer = true;
     }
     else
         closeNetwork();
-    CEGUI::Window *p1joined = simulator->overlay->multiMenu->getChildRecursive("p1joined");
-    p1joined->show();
-    isMultiplayer = true;
+
 }
 //---------------------------------------------------------------------------
 void TutorialApplication::joinGame() {
@@ -191,10 +197,11 @@ void TutorialApplication::joinGame() {
         p2joined->show();
         startButton->setText("Waiting for host");
         network.messageServer(PROTOCOL_TCP, "p2joined", 8);
+
+        isMultiplayer = true;
     }
     else
         closeNetwork();
-    isMultiplayer = true;
 }
 //---------------------------------------------------------------------------
 void TutorialApplication::startMulti() {
@@ -278,7 +285,8 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
         simulator->stepSimulation(fe.timeSinceLastFrame, 60.0f, 1.0f/60.0f);
 	}
 
-    if(netStarted && !multiPlayerStarted) {
+    if (isMultiplayer)
+    if (netStarted && !multiPlayerStarted) {
         if(network.pollForActivity(1)) {
             if(isHost) {
                 std::istringstream ss(network.tcpClientData[0]->output);
@@ -311,8 +319,9 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
     }
 
     if(gameStarted) {
+        if (isMultiplayer) {
         if (multiPlayerStarted)
-            network.messageClients(PROTOCOL_TCP, (char*) &positions, sizeof(Positions));
+            //network.messageClients(PROTOCOL_TCP, (char*) &positions, sizeof(Positions));
 
         if(network.pollForActivity(1)) {
             if(isHost) {
@@ -362,6 +371,7 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
 
                 //TODO
             }
+        }
         }
     }
 
