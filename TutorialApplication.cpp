@@ -312,7 +312,7 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
 
     if(gameStarted) {
         if (multiPlayerStarted)
-            network.messageClients(PROTOCOL_UDP, (char*) &positions, sizeof(Positions));
+            network.messageClients(PROTOCOL_TCP, (char*) &positions, sizeof(Positions));
 
         if(network.pollForActivity(1)) {
             if(isHost) {
@@ -337,7 +337,7 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
                 btVector3 eDir = btVector3(positions.xEDir, positions.yEDir, positions.zEDir);
                 btVector3 eBulletPos = btVector3(positions.xEBPos, positions.yEBPos, positions.zEBPos);
 
-                //Update our local positions
+                //TODO Update our local positions
             } else {
                 std::istringstream ss(network.tcpServerData.output);
                 std::string s = "";
@@ -360,6 +360,7 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
                 btVector3 eDir = btVector3(positions.xPDir, positions.yPDir, positions.zPDir);
                 btVector3 eBulletPos = btVector3(positions.xPBPos, positions.yPBPos, positions.zPBPos);
 
+                //TODO
             }
         }
     }
