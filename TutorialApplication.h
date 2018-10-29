@@ -56,8 +56,11 @@ protected:
     /* Network Stuff */
     NetManager network;
     bool isHost;
+    bool isMultiplayer;
     const char* hostName;
     int port_number;
+
+    bool gameStarted;
 
     bool setupNetwork(bool);
     void closeNetwork();

@@ -28,6 +28,7 @@ TutorialApplication::TutorialApplication(void)
     bool netStarted = false;
     bool connectionMade = false;
     bool multiPlayerStarted = false;
+    isMultiplayer = false;
 }
 //---------------------------------------------------------------------------
 TutorialApplication::~TutorialApplication(void)
@@ -91,13 +92,26 @@ void TutorialApplication::createObjects() {
     // Ball* ball = new Ball("Ball", mSceneMgr, simulator,
     //     Ogre::Vector3(0.0f, 0.0f, zMid), 2.0f,
     //     "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic);
+    Ogre::Vector3 shooterPosition;
+    Ogre::Vector3 enemyPosition;
+    if(isHost || !isMultiplayer) {
+        shooterPosition = Ogre::Vector3(0.0f, 0.0f, -1.0f);
+        enemyPosition = Ogre::Vector3(0.0f, 0.0f, -50.0f);
+    }
+    else {
+        shooterPosition = Ogre::Vector3(0.0f, 0.0f, -50.0f);
+        enemyPosition = Ogre::Vector3(0.0f, 0.0f, -1.0f);
+    }
+
     Shooter* playerShooter = new Shooter("PlayerShooter", mSceneMgr, simulator,
-        Ogre::Vector3(0.0f, 0.0f, -1.0f), Ogre::Vector3(0.5f, 1.0f, 0.5f),
+        shooterPosition, Ogre::Vector3(0.5f, 1.0f, 0.5f),
         "PaddleTexture", paddleMass, paddleRestitution, paddleFriction, paddleKinematic);
 
     EnemyShooter* cpuShooter = new EnemyShooter("CPUShooter", mSceneMgr, simulator,
         Ogre::Vector3(0.0f, 0.0f, -50.0f), Ogre::Vector3(0.5f, 1.0f, 0.5f),//12.0f, 100.0f, 1.0f),
         "PaddleTexture", paddleMass, paddleRestitution, paddleFriction, paddleKinematic);
+
+    
 
     // aimanager->update(mSceneMgr, simulator, cpuPaddle, playerPaddle, ball);
 
@@ -146,6 +160,7 @@ void TutorialApplication::hostGame() {
         closeNetwork();
     CEGUI::Window *p1joined = simulator->overlay->multiMenu->getChildRecursive("p1joined");
     p1joined->show();
+    isMultiplayer = true;
 }
 //---------------------------------------------------------------------------
 void TutorialApplication::joinGame() {
@@ -168,6 +183,7 @@ void TutorialApplication::joinGame() {
     }
     else
         closeNetwork();
+    isMultiplayer = true;
 }
 //---------------------------------------------------------------------------
 void TutorialApplication::startMulti() {
@@ -254,10 +270,10 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
     if(netStarted && !multiPlayerStarted) {
         if(network.pollForActivity(1)) {
             if(isHost) {
+                std::istringstream ss(network.tcpClientData[0]->output);
+                std::string s;
+                ss >> s;
                 if(!connectionMade) {
-                    std::istringstream ss(network.tcpClientData[0]->output);
-                    std::string s;
-                    ss >> s;
                     if(s.compare("p2joined") == 0) {
                         CEGUI::Window *p2joined = simulator->overlay->multiMenu->getChildRecursive("p2joined");
                         p2joined->show();
@@ -278,9 +294,29 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
         }
     }
 
-    if(multiPlayerStarted) {
+    if(multiPlayerStarted && !gameStarted) {
         simulator->overlay->multiMenu->hide();
         simulator->pause(); // Unpause simulation
+        gameStarted = true;
+    }
+
+    if(gameStarted) {
+        if(network.pollForActivity(1)) {
+            if(isHost) {
+                std::istringstream ss(network.tcpClientData[0]->output);
+                std::string s;
+                ss >> s;
+                if(s.compare("pause") == 0)
+                    simulator->overlay->pauseGame();
+            }
+            else {
+                std::istringstream ss(network.tcpServerData.output);
+                std::string s;
+                ss >> s;
+                if(s.compare("pause") == 0)
+                    simulator->overlay->pauseGame();
+            }
+        }
     }
 
     // Update the mCamera
@@ -336,6 +372,10 @@ bool TutorialApplication::keyPressed(const OIS::KeyEvent& arg) {
     }
     else if(arg.key == OIS::KC_M) {
         simulator->overlay->pauseGame();
+        if(gameStarted && !isHost)
+            network.messageServer(PROTOCOL_TCP, "pause", 7);
+        else if(gameStarted && isHost)
+            network.messageClients(PROTOCOL_TCP, "pause", 7);
     }
     return true;
 }
@@ -406,14 +446,13 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& fe)
     moveDir = Ogre::Quaternion(degreeChange, Ogre::Vector3::UNIT_Y) * moveDir;
     moveDir.normalise();
     // if (mKeyboard->isKeyDown(OIS::KC_W)) {
-    //     //player->
-    //     // player->move(
-    //     //     movementSpeed * fe.timeSinceLastFrame * cDir.x,
-    //     //     0.0f,
-    //     //     movementSpeed * fe.timeSinceLastFrame * cDir.z
-    //     // );
+    //     player->move(
+    //         movementSpeed * fe.timeSinceLastFrame * cDir.x,
+    //         0.0f,
+    //         movementSpeed * fe.timeSinceLastFrame * cDir.z
+    //     );
     // }
-    //
+    
     // if (mKeyboard->isKeyDown(OIS::KC_S)) {
     //     player->move(
     //         -movementSpeed * fe.timeSinceLastFrame * cDir.x,
@@ -421,11 +460,11 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& fe)
     //         -movementSpeed * fe.timeSinceLastFrame * cDir.z
     //     );
     // }
-    //
+    
 
-    //Ogre::Vector3 cDirPerp = Ogre::Quaternion(Ogre::Degree(-90), Ogre::Vector3::UNIT_Y) * cDir;
+    // Ogre::Vector3 cDirPerp = Ogre::Quaternion(Ogre::Degree(-90), Ogre::Vector3::UNIT_Y) * cDir;
 
-    //
+    
     // if (mKeyboard->isKeyDown(OIS::KC_A)) {
     //     player->move(
     //         -movementSpeed * fe.timeSinceLastFrame * cDirPerp.x,
@@ -433,7 +472,7 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& fe)
     //         -movementSpeed * fe.timeSinceLastFrame * cDirPerp.z
     //     );
     // }
-    //
+    
     // if (mKeyboard->isKeyDown(OIS::KC_D)) {
     //     player->move(
     //         movementSpeed * fe.timeSinceLastFrame * cDirPerp.x,
