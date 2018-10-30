@@ -87,6 +87,8 @@ protected:
     Positions positions;
 private:
     bool processUnbufferedInput(const Ogre::FrameEvent& fe);
+    std::string getPositionString();
+    void decodePositionString(std::string);
     bool quit();
 };
 

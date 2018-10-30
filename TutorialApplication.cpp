@@ -29,6 +29,7 @@ TutorialApplication::TutorialApplication(void)
     bool connectionMade = false;
     bool multiPlayerStarted = false;
     isMultiplayer = false;
+    gameStarted = false;
 
 }
 //---------------------------------------------------------------------------
@@ -98,10 +99,15 @@ void TutorialApplication::createObjects() {
     positions.xPPos = 0.0f; positions.yPPos = 0.0f; positions.zPPos = -1.0f;
     positions.xPDir = 0.0f; positions.yPDir = 0.0f; positions.zPDir = -1.0f;
     positions.xPBPos = 100.0f; positions.yPBPos = -50.0f; positions.zPBPos = 0.0f;
-    // Enemy positional/orientation/ bullet pos coords;
+    // // Enemy positional/orientation/ bullet pos coords;
     positions.xEPos = 0.0f; positions.yEPos = 0.0f; positions.zEPos = -50.0f;
     positions.xEDir = 0.0f; positions.yEDir = 0.0f; positions.zEDir = 1.0f;
     positions.xEBPos = -100.0f; positions.yEBPos = -50.0f; positions.zEBPos = 0.0f;
+
+    std::string s = getPositionString();
+    printf("Pos string: %s\n", s.c_str());
+    decodePositionString(s);
+    printf("Decoded string: %s\n", getPositionString().c_str());
 
     Ogre::Vector3 shooterPosition;
     Ogre::Vector3 enemyPosition;
@@ -130,6 +136,7 @@ void TutorialApplication::createObjects() {
 }
 //---------------------------------------------------------------------------
 bool TutorialApplication::quit() {
+    closeNetwork();
     mShutDown = true;
     return true;
 }
@@ -142,14 +149,14 @@ bool TutorialApplication::setupNetwork(bool isHost) {
     if(isHost) {
         network.addNetworkInfo(PROTOCOL_TCP, NULL, port_number);
         //TODO
-        network.addNetworkInfo(PROTOCOL_UDP, NULL, port_number);
+        //network.addNetworkInfo(PROTOCOL_UDP, NULL, port_number);
         network.acceptConnections();
         success = network.startServer();
     }
     else {
         network.addNetworkInfo(PROTOCOL_TCP, hostName, port_number);
         //TODO
-        network.addNetworkInfo(PROTOCOL_UDP, hostName, port_number);
+        //network.addNetworkInfo(PROTOCOL_UDP, hostName, port_number);
         success = network.startClient();
     }
     return success;
@@ -198,6 +205,24 @@ void TutorialApplication::joinGame() {
         startButton->setText("Waiting for host");
         network.messageServer(PROTOCOL_TCP, "p2joined", 8);
 
+        // Player positional/orientation/bullet pos coords
+        positions.xPPos = 0.0f; positions.yPPos = 0.0f; positions.zPPos = -50.0f;
+        positions.xPDir = 0.0f; positions.yPDir = 0.0f; positions.zPDir = 1.0f;
+        positions.xPBPos = -100.0f; positions.yPBPos = -50.0f; positions.zPBPos = 0.0f;
+        // // Enemy positional/orientation/ bullet pos coords;
+        positions.xEPos = 0.0f; positions.yEPos = 0.0f; positions.zEPos = -10.0f;
+        positions.xEDir = 0.0f; positions.yEDir = 0.0f; positions.zEDir = -1.0f;
+        positions.xEBPos = 100.0f; positions.yEBPos = -50.0f; positions.zEBPos = 0.0f;
+
+        Shooter* playerShooter = (Shooter*) simulator->getObject("PlayerShooter");
+        playerShooter->setPosition(0.0f, 10.0f, -50.0f);
+
+        mCamera->setPosition(playerShooter->getOgrePosition());
+        mCamera->lookAt(0.0f, 10.0f, 0.0f);
+
+        Shooter* enemyShooter = (Shooter*) simulator->getObject("CPUShooter");
+        enemyShooter->setPosition(0.0f, 10.0f, 0.0f);
+
         isMultiplayer = true;
     }
     else
@@ -207,6 +232,8 @@ void TutorialApplication::joinGame() {
 void TutorialApplication::startMulti() {
     network.messageClients(PROTOCOL_TCP, "Start", 5);
     multiPlayerStarted = true;
+
+    //createObjects();
 }
 //---------------------------------------------------------------------------
 CEGUI::MouseButton convertButton(OIS::MouseButtonID buttonID) {
@@ -254,6 +281,40 @@ void TutorialApplication::createFrameListener(void)
     mRoot->addFrameListener(this);
 }
 //---------------------------------------------------------------------------
+std::string TutorialApplication::getPositionString() {
+    //std::string s = "";
+    Ogre::stringstream ss;
+
+    ss<<positions.xPPos<<" "<<positions.yPPos<<" "<<positions.zPPos<<" "<<
+        positions.xPDir<<" "<<positions.yPDir<<" "<<positions.zPDir<<" "<<
+        positions.xPBPos<<" "<<positions.yPBPos<<" "<<positions.zPBPos;
+
+    ss << " z";
+    //ss >> s;
+
+    return ss.str();
+}
+//---------------------------------------------------------------------------
+void TutorialApplication::decodePositionString(std::string positionString) {
+    /*
+    float xEPos, yEPos, zEPos;
+    float xEDir, yEDir, zEDir;
+    float xEBPos, yEBPos, zEBPos;
+    */
+    char* ps = (char*) malloc(positionString.length()+1);
+    strcpy(ps, positionString.c_str()); // strcpy(destination, source)
+    positions.xEPos = std::strtof(strtok(ps, " "), NULL);
+    positions.yEPos = std::strtof(strtok(NULL, " "), NULL);
+    positions.zEPos = std::strtof(strtok(NULL, " "), NULL);
+    positions.xEDir = std::strtof(strtok(NULL, " "), NULL);
+    positions.yEDir = std::strtof(strtok(NULL, " "), NULL);
+    positions.zEDir = std::strtof(strtok(NULL, " "), NULL);
+    positions.xEBPos = std::strtof(strtok(NULL, " "), NULL);
+    positions.yEBPos = std::strtof(strtok(NULL, " "), NULL);
+    positions.zEBPos = std::strtof(strtok(NULL, " "), NULL);
+    free(ps);
+}
+//---------------------------------------------------------------------------
 bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
 {
     bool ret = BaseApplication::frameRenderingQueued(fe);
@@ -283,7 +344,12 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
 	if (this->simulator != NULL && !simulator->paused()) {
 		//suppose you have 60 frames per second
         simulator->stepSimulation(fe.timeSinceLastFrame, 60.0f, 1.0f/60.0f);
-	}
+
+    }
+
+    // Update the mCamera
+    Shooter* pShooter = (Shooter*) simulator->getObject("PlayerShooter");
+    mCamera->setPosition(pShooter->getOgrePosition() - mCamera->getDirection());//+ Ogre::Vector3(0, 5, 5));
 
     if (isMultiplayer)
     if (netStarted && !multiPlayerStarted) {
@@ -306,8 +372,10 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
                 std::istringstream ss(network.tcpServerData.output);
                 std::string s;
                 ss >> s;
-                if(s.compare("Start") == 0)
+                if(s.compare("Start") == 0) {
                     multiPlayerStarted = true;
+                    //createObjects();
+                }
             }
         }
     }
@@ -318,34 +386,58 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
         gameStarted = true;
     }
 
-    if(gameStarted) {
-        if (isMultiplayer) {
-        if (multiPlayerStarted)
-            //network.messageClients(PROTOCOL_TCP, (char*) &positions, sizeof(Positions));
+    if (gameStarted) {
+        //if (isMultiplayer) {
+        // printf("Creating the positions string\n");
+        // char* positionString = (char*) malloc(sizeof(Positions) + 1);
+        // printf("Copying the positions struct\n");
+        // strcpy(reinterpret_cast<char*>(&positions), positionString);
+        // printf("{%s}\n", positionString);
+        // if (multiPlayerStarted) {
+        //     if (isHost) {
+        //         printf("Sending from host the positions\n");
+        //         network.messageClients(PROTOCOL_TCP, positionString, sizeof(Positions));
+        //     } else {
+        //         printf("Sending to server the postions\n");
+        //         network.messageServer(PROTOCOL_TCP, positionString, sizeof(Positions));
+        //
+        //         printf("Mission failed, we'll get wle;tjselkfm\n");
+        //     }
+        // }
+        // printf("freeing the position string\n");
+        // free(positionString);
+        std::string positionString = getPositionString();
+        if (multiPlayerStarted) {
+            if (isHost) {
+                network.messageClients(PROTOCOL_TCP, positionString.c_str(), positionString.length());
+            } else {
+                network.messageServer(PROTOCOL_TCP, positionString.c_str(), positionString.length());
+            }
+        }
 
-        if(network.pollForActivity(1)) {
-            if(isHost) {
+        if (network.pollForActivity(1)) {
+            if (isHost) {
                 std::istringstream ss(network.tcpClientData[0]->output);
                 std::string s = "";
                 ss >> s;
-                if(s.compare("pause") == 0)
+                if(s.compare("pause") == 0) {
                     simulator->overlay->pauseGame();
+                }
 
-                std::istringstream ssudp(network.udpClientData[0]->output);
-                s = "";
-                ssudp >> s;
+                // std::istringstream ssudp(network.udpClientData[0]->output);
+                // s.clear();
+                // ssudp >> s;
+                else if (s.at(s.length()-1) == 'z') {
+                    //Positions ePoses = *const_cast<Positions*>(reinterpret_cast<const Positions*>(s.c_str()));
+                    // Update player position
+                    decodePositionString(s);
+                    btVector3 ePos = btVector3(positions.xEPos, positions.yEPos, positions.zEPos);
+                    btVector3 eDir = btVector3(positions.xEDir, positions.yEDir, positions.zEDir);
+                    btVector3 eBulletPos = btVector3(positions.xEBPos, positions.yEBPos, positions.zEBPos);
 
-                positions = *const_cast<Positions*>(reinterpret_cast<const Positions*>(s.c_str()));
-                // Update player position
-                btVector3 myPos = btVector3(positions.xPPos, positions.yPPos, positions.zPPos);
-                btVector3 myDir = btVector3(positions.xPDir, positions.yPDir, positions.zPDir);
-                btVector3 myBulletPos = btVector3(positions.xPBPos, positions.yPBPos, positions.zPBPos);
-
-                // Enemy positional/orientation/ bullet pos coords;
-                btVector3 ePos = btVector3(positions.xEPos, positions.yEPos, positions.zEPos);
-                btVector3 eDir = btVector3(positions.xEDir, positions.yEDir, positions.zEDir);
-                btVector3 eBulletPos = btVector3(positions.xEBPos, positions.yEBPos, positions.zEBPos);
-
+                    Shooter* enemyShooter = (Shooter*) simulator->getObject("CPUShooter");
+                    enemyShooter->setPosition(ePos);
+                }
                 //TODO Update our local positions
             } else {
                 std::istringstream ss(network.tcpServerData.output);
@@ -353,31 +445,37 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
                 ss >> s;
                 if(s.compare("pause") == 0)
                     simulator->overlay->pauseGame();
+                else if (s.at(s.length()-1) == 'z') {
+                    //Positions ePoses = *const_cast<Positions*>(reinterpret_cast<const Positions*>(s.c_str()));
+                    // Update player position
+                    decodePositionString(s);
+                    btVector3 ePos = btVector3(positions.xEPos, positions.yEPos, positions.zEPos);
+                    btVector3 eDir = btVector3(positions.xEDir, positions.yEDir, positions.zEDir);
+                    btVector3 eBulletPos = btVector3(positions.xEBPos, positions.yEBPos, positions.zEBPos);
 
-                std::istringstream ssudp(network.udpClientData[0]->output);
-                s = "";
-                ssudp >> s;
-
-                positions = *const_cast<Positions*>(reinterpret_cast<const Positions*>(s.c_str()));
-                // Update player position, note: we are the enemy
-                btVector3 myPos = btVector3(positions.xEPos, positions.yEPos, positions.zEPos);
-                btVector3 myDir = btVector3(positions.xEDir, positions.yEDir, positions.zEDir);
-                btVector3 myBulletPos = btVector3(positions.xEBPos, positions.yEBPos, positions.zEBPos);
-
-                // Enemy positional/orientation/ bullet pos coords;
-                btVector3 ePos = btVector3(positions.xPPos, positions.yPPos, positions.zPPos);
-                btVector3 eDir = btVector3(positions.xPDir, positions.yPDir, positions.zPDir);
-                btVector3 eBulletPos = btVector3(positions.xPBPos, positions.yPBPos, positions.zPBPos);
-
-                //TODO
+                    Shooter* enemyShooter = (Shooter*) simulator->getObject("CPUShooter");
+                    enemyShooter->setPosition(ePos);
+                }
+                // std::istringstream ssudp(network.udpClientData[0]->output);
+                // s.clear();
+                // ssudp >> s;
+                // if (s.length() != 0) {
+                //     positions = *const_cast<Positions*>(reinterpret_cast<const Positions*>(s.c_str()));
+                //     // Update player position, note: we are the enemy
+                //     btVector3 myPos = btVector3(positions.xEPos, positions.yEPos, positions.zEPos);
+                //     btVector3 myDir = btVector3(positions.xEDir, positions.yEDir, positions.zEDir);
+                //     btVector3 myBulletPos = btVector3(positions.xEBPos, positions.yEBPos, positions.zEBPos);
+                //
+                //     // Enemy positional/orientation/ bullet pos coords;
+                //     btVector3 ePos = btVector3(positions.xPPos, positions.yPPos, positions.zPPos);
+                //     btVector3 eDir = btVector3(positions.xPDir, positions.yPDir, positions.zPDir);
+                //     btVector3 eBulletPos = btVector3(positions.xPBPos, positions.yPBPos, positions.zPBPos);
+                // }
+                // //TODO
             }
         }
-        }
+        //}
     }
-
-    // Update the mCamera
-    Shooter* pShooter = (Shooter*) simulator->getObject("PlayerShooter");
-    mCamera->setPosition(pShooter->getOgrePosition() + Ogre::Vector3(0, 5, 5));
 
     return ret;
 }
@@ -387,7 +485,7 @@ bool TutorialApplication::keyPressed(const OIS::KeyEvent& arg) {
     context.injectKeyDown((CEGUI::Key::Scan)arg.key);
     context.injectChar((CEGUI::Key::Scan)arg.text);
     if (arg.key == OIS::KC_ESCAPE) {
-        mShutDown = true;
+        quit();
     } else if (arg.key == OIS::KC_R) {
         //Reset the ball's position
         // Ball* ball = (Ball*) simulator->getObject("Ball");
@@ -448,7 +546,10 @@ bool TutorialApplication::mouseMoved(const OIS::MouseEvent& arg) {
     if (arg.state.Z.rel)
         sys.injectMouseWheelChange(arg.state.Z.rel / 120.0f);
 
-    if (simulator->paused()) {return true;}
+    if (simulator->paused()) {
+        return true;
+    }
+
     // Use mouse to control camera
     float cRotSpd = 0.5f;
     mCamera->yaw(Ogre::Degree(-arg.state.X.rel * cRotSpd));
@@ -475,72 +576,41 @@ bool TutorialApplication::mouseReleased(const OIS::MouseEvent& arg, OIS::MouseBu
 //---------------------------------------------------------------------------
 bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& fe)
 {
-    float movementSpeed = 10.0f;
+    float movementSpeed = 60.0f;
     Ogre::Degree rotationSpeed = Ogre::Degree(.05);
     Shooter* player = (Shooter*) simulator->getObject("PlayerShooter");
 
-    if(simulator->paused())
+    if (simulator->paused()) {
         return true;
+    }
 
     Ogre::Vector3 cDir = mCamera->getDirection();
-    if (cDir.y >= .9) {cDir.y = .9;}
-    if (cDir.y <= -.9) {cDir.y = -.9;}
+    if (cDir.y >= .9) {
+        cDir.y = .9;
+    }
+    if (cDir.y <= -.9) {
+        cDir.y = -.9;
+    }
     mCamera->setDirection(cDir);
 
     player->rotate(btQuaternion(cDir.x, cDir.y, 0));
 
-    Ogre::Vector3 moveDir = Ogre::Vector3(0,0,0);//cDir;
-    //moveDir->normalize();
+    Ogre::Vector3 moveDir = Ogre::Vector3(0.0f, 0.0f, 0.0f);
+    Ogre::Vector3 cDirPerp = Ogre::Quaternion(Ogre::Degree(-90), Ogre::Vector3::UNIT_Y) * cDir;
 
-    float forwardSpd = (mKeyboard->isKeyDown(OIS::KC_W) - mKeyboard->isKeyDown(OIS::KC_S)) * movementSpeed;
-    float sideSpd = (mKeyboard->isKeyDown(OIS::KC_A) - mKeyboard->isKeyDown(OIS::KC_D)) * movementSpeed;
+    float walk = (mKeyboard->isKeyDown(OIS::KC_W) - mKeyboard->isKeyDown(OIS::KC_S));
+    float strafe = (mKeyboard->isKeyDown(OIS::KC_D) - mKeyboard->isKeyDown(OIS::KC_A));
 
-    moveDir.z = forwardSpd;
-    moveDir.x = sideSpd;
+    moveDir.x = ((cDir.x * walk) + (cDirPerp.x * strafe)) * movementSpeed;
+    moveDir.z = ((cDir.z * walk) + (cDirPerp.z * strafe)) * movementSpeed;
 
-    Ogre::Degree degreeChange = Ogre::Degree((Ogre::Real) moveDir.dotProduct(cDir));
-    moveDir = Ogre::Quaternion(degreeChange, Ogre::Vector3::UNIT_Y) * moveDir;
-    moveDir.normalise();
-    // if (mKeyboard->isKeyDown(OIS::KC_W)) {
-    //     player->move(
-    //         movementSpeed * fe.timeSinceLastFrame * cDir.x,
-    //         0.0f,
-    //         movementSpeed * fe.timeSinceLastFrame * cDir.z
-    //     );
+    // if (walk != 0.0f || strafe != 0.0f) {
+    //     player->setActive();
     // }
 
-    // if (mKeyboard->isKeyDown(OIS::KC_S)) {
-    //     player->move(
-    //         -movementSpeed * fe.timeSinceLastFrame * cDir.x,
-    //         0.0f,
-    //         -movementSpeed * fe.timeSinceLastFrame * cDir.z
-    //     );
-    // }
+    float yVelocity = player->getVelocity().getY();
 
-
-    // Ogre::Vector3 cDirPerp = Ogre::Quaternion(Ogre::Degree(-90), Ogre::Vector3::UNIT_Y) * cDir;
-
-
-    // if (mKeyboard->isKeyDown(OIS::KC_A)) {
-    //     player->move(
-    //         -movementSpeed * fe.timeSinceLastFrame * cDirPerp.x,
-    //         0.0f,
-    //         -movementSpeed * fe.timeSinceLastFrame * cDirPerp.z
-    //     );
-    // }
-
-    // if (mKeyboard->isKeyDown(OIS::KC_D)) {
-    //     player->move(
-    //         movementSpeed * fe.timeSinceLastFrame * cDirPerp.x,
-    //         0.0f,
-    //         movementSpeed * fe.timeSinceLastFrame * cDirPerp.z
-    //     );
-    // }
-
-    moveDir *= movementSpeed;
-
-    // Normalize the player's velocity
-    player->setVelocity(moveDir.x, moveDir.y, moveDir.z);
+    player->setVelocity(moveDir.x, yVelocity, moveDir.z);
 
     return true;
 }
