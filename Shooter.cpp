@@ -60,11 +60,12 @@ void Shooter::move(Ogre::Real x, Ogre::Real y, Ogre::Real z) {
 }
 
 void Shooter::rotate(btQuaternion quat) {
-    motionState->getWorldTransform(transform);
-    this->orientation = quat;
-    transform.setRotation(quat);
-    motionState->setWorldTransform(transform);
-    motionState->updateTransform(transform);
+    btTransform tr;
+    motionState->getWorldTransform(tr);
+    //this->orientation = quat;
+    tr.setRotation(quat);
+    motionState->setWorldTransform(tr);
+    //motionState->updateTransform(transform);
 }
 
 void Shooter::rotate(btVector3 axis, float angle) {

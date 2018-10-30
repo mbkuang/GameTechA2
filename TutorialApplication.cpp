@@ -349,8 +349,8 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
 
     // Update the mCamera
     Shooter* pShooter = (Shooter*) simulator->getObject("PlayerShooter");
-    mCamera->setPosition(pShooter->getOgrePosition() - mCamera->getDirection());
-    //mCamera->setPosition(pShooter->getOgrePosition() + Ogre::Vector3(0, 5, 5));
+    //mCamera->setPosition(pShooter->getOgrePosition() - mCamera->getDirection());
+    mCamera->setPosition(pShooter->getOgrePosition() + Ogre::Vector3(0, 5, 5));
 
     if (isMultiplayer)
     if (netStarted && !multiPlayerStarted) {
@@ -594,7 +594,7 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& fe)
     }
     mCamera->setDirection(cDir);
 
-    player->rotate(btQuaternion(cDir.x, cDir.y, 0));
+    //player->rotate(btQuaternion(0.0f, cDir.x, cDir.y, cDir.z));
 
     Ogre::Vector3 moveDir = Ogre::Vector3(0.0f, 0.0f, 0.0f);
     Ogre::Vector3 cDirPerp = Ogre::Quaternion(Ogre::Degree(-90), Ogre::Vector3::UNIT_Y) * cDir;
@@ -612,6 +612,16 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& fe)
     float yVelocity = player->getVelocity().getY();
 
     player->setVelocity(moveDir.x, yVelocity, moveDir.z);
+
+    //printf("direction: (%f, %f, %f)\n", moveDir.x, moveDir.y, moveDir.z);
+
+
+    // Ogre::Vector3 v = Ogre::Vector3(cDir.x, 0.0f, cDir.z);
+    // float angle = v.dotProduct(Ogre::Vector3::UNIT_X);
+    // //printf("Angle: %f\n", angle);
+
+    // btQuaternion q = btQuaternion(btVector3(0.0f, 1.0f, 0.0f), angle);
+    // player->rotate(q);
 
     return true;
 }
