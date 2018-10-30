@@ -38,6 +38,8 @@ Shooter::Shooter(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* si
     //     this->position, Ogre::Vector3(1,1,5), this->material);
 
     addToSimulator();
+
+    body->setAngularFactor(0.0f);
 }
 
 Shooter::~Shooter() {
@@ -99,21 +101,21 @@ void Shooter::update(float elapsedTime) {
         GameObject* contact = context->theObject;
         Ogre::String contactName = contact->getName();
 
-        printf("COLLIDE\n");
-        if (contactName.compare("Flooring") == 0) {
-            motionState->getWorldTransform(transform);
-            btVector3 position = transform.getOrigin();
-            position.setY(0.0f);
-            transform.setOrigin(position);
-            motionState->setWorldTransform(transform);
-            motionState->updateTransform(transform);
-            printf("RESET\n");
-        }
+        // printf("COLLIDE\n");
+        // if (contactName.compare("Flooring") == 0) {
+        //     motionState->getWorldTransform(transform);
+        //     btVector3 position = transform.getOrigin();
+        //     position.setY(0.0f);
+        //     transform.setOrigin(position);
+        //     motionState->setWorldTransform(transform);
+        //     motionState->updateTransform(transform);
+        //     printf("RESET\n");
+        // } else {
+        //     this->body->clearForces();
+        // }
 
         lastTime = 0.0f;
     }
-
-    this->body->clearForces();
 
     context->hit = false;
 }

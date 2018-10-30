@@ -349,7 +349,8 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
 
     // Update the mCamera
     Shooter* pShooter = (Shooter*) simulator->getObject("PlayerShooter");
-    mCamera->setPosition(pShooter->getOgrePosition() - mCamera->getDirection());//+ Ogre::Vector3(0, 5, 5));
+    mCamera->setPosition(pShooter->getOgrePosition() - mCamera->getDirection());
+    //mCamera->setPosition(pShooter->getOgrePosition() + Ogre::Vector3(0, 5, 5));
 
     if (isMultiplayer)
     if (netStarted && !multiPlayerStarted) {
@@ -601,12 +602,12 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& fe)
     float walk = (mKeyboard->isKeyDown(OIS::KC_W) - mKeyboard->isKeyDown(OIS::KC_S));
     float strafe = (mKeyboard->isKeyDown(OIS::KC_D) - mKeyboard->isKeyDown(OIS::KC_A));
 
+    if (walk != 0.0f || strafe != 0.0f) {
+       player->getBody()->activate(true);
+    }
+
     moveDir.x = ((cDir.x * walk) + (cDirPerp.x * strafe)) * movementSpeed;
     moveDir.z = ((cDir.z * walk) + (cDirPerp.z * strafe)) * movementSpeed;
-
-    // if (walk != 0.0f || strafe != 0.0f) {
-    //     player->setActive();
-    // }
 
     float yVelocity = player->getVelocity().getY();
 
