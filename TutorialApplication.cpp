@@ -104,11 +104,6 @@ void TutorialApplication::createObjects() {
     positions.xEDir = 0.0f; positions.yEDir = 0.0f; positions.zEDir = 1.0f;
     positions.xEBPos = -100.0f; positions.yEBPos = -50.0f; positions.zEBPos = 0.0f;
 
-    std::string s = getPositionString();
-    printf("Pos string: %s\n", s.c_str());
-    decodePositionString(s);
-    printf("Decoded string: %s\n", getPositionString().c_str());
-
     Ogre::Vector3 shooterPosition;
     Ogre::Vector3 enemyPosition;
     if(isHost || !isMultiplayer) {
@@ -134,7 +129,14 @@ void TutorialApplication::createObjects() {
 }
 //---------------------------------------------------------------------------
 bool TutorialApplication::quit() {
-    closeNetwork();
+    if (isMultiplayer) {
+        if (isHost) {
+            network.stopClient(PROTOCOL_TCP);
+            network.stopServer(PROTOCOL_TCP);
+        } else {
+            network.dropClient(PROTOCOL_TCP, network.getIPnbo());
+        }
+    }
     mShutDown = true;
     return true;
 }
@@ -145,16 +147,12 @@ bool TutorialApplication::setupNetwork(bool isHost) {
     success = network.initNetManager();
     netStarted = true;
     if(isHost) {
-        network.addNetworkInfo(PROTOCOL_TCP, NULL, port_number);
-        //TODO
-        //network.addNetworkInfo(PROTOCOL_UDP, NULL, port_number);
+        network.addNetworkInfo(PROTOCOL_ALL, NULL, port_number);
         network.acceptConnections();
         success = network.startServer();
     }
     else {
-        network.addNetworkInfo(PROTOCOL_TCP, hostName, port_number);
-        //TODO
-        //network.addNetworkInfo(PROTOCOL_UDP, hostName, port_number);
+        network.addNetworkInfo(PROTOCOL_ALL, hostName, port_number);
         success = network.startClient();
     }
     return success;
@@ -406,107 +404,86 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
 
     // Update the mCamera
     Shooter* pShooter = (Shooter*) simulator->getObject("PlayerShooter");
-    // mCamera->setPosition(pShooter->getOgrePosition() - mCamera->getDirection());
+    mCamera->setPosition(pShooter->getOgrePosition() - 6*mCamera->getDirection());
     updatePositions();
-    mCamera->setPosition(pShooter->getOgrePosition() + Ogre::Vector3(0, 5, 5));
+    // mCamera->setPosition(pShooter->getOgrePosition() + Ogre::Vector3(0, 5, 5));
 
     if(isMultiplayer)
         checkMultiStart();
 
     if (gameStarted) {
-        //if (isMultiplayer) {
-        // printf("Creating the positions string\n");
-        // char* positionString = (char*) malloc(sizeof(Positions) + 1);
-        // printf("Copying the positions struct\n");
-        // strcpy(reinterpret_cast<char*>(&positions), positionString);
-        // printf("{%s}\n", positionString);
-        // if (multiPlayerStarted) {
-        //     if (isHost) {
-        //         printf("Sending from host the positions\n");
-        //         network.messageClients(PROTOCOL_TCP, positionString, sizeof(Positions));
-        //     } else {
-        //         printf("Sending to server the postions\n");
-        //         network.messageServer(PROTOCOL_TCP, positionString, sizeof(Positions));
-        //
-        //         printf("Mission failed, we'll get wle;tjselkfm\n");
-        //     }
-        // }
-        // printf("freeing the position string\n");
-        // free(positionString);
         std::string positionString = getPositionString();
         if (multiPlayerStarted) {
             printf("Sending position string length: %d\nString: {%s}\n", positionString.length(), positionString.c_str());
             if (isHost) {
-                network.messageClients(PROTOCOL_TCP, positionString.c_str(), positionString.length());
+                network.messageClients(PROTOCOL_UDP, positionString.c_str(), positionString.length());
             } else {
-                network.messageServer(PROTOCOL_TCP, positionString.c_str(), positionString.length());
+                network.messageServer(PROTOCOL_UDP, positionString.c_str(), positionString.length());
             }
         }
 
         if (network.pollForActivity(1)) {
             if (isHost) {
+                printf("Checkin the tcp client data\n");
                 std::istringstream ss(network.tcpClientData[0]->output);
                 std::string s = "";
                 ss >> s;
-                printf("Received string length [%d] : {%s}\n", s.length(), s.c_str());
                 if(s.compare("pause") == 0) {
                     simulator->overlay->pauseGame();
                 }
 
-                // std::istringstream ssudp(network.udpClientData[0]->output);
-                // s.clear();
-                // ssudp >> s;
-                else if (s.at(s.length()-1) == 'z') {
-                    //Positions ePoses = *const_cast<Positions*>(reinterpret_cast<const Positions*>(s.c_str()));
-                    // Update player position
-                    decodePositionString(s);
-                    btVector3 ePos = btVector3(positions.xEPos, positions.yEPos, positions.zEPos);
-                    btVector3 eDir = btVector3(positions.xEDir, positions.yEDir, positions.zEDir);
-                    btVector3 eBulletPos = btVector3(positions.xEBPos, positions.yEBPos, positions.zEBPos);
+                printf("Checkin the udp client data\n");
+                if (network.udpClientData[0]->output) {
+                    printf("Passed that hurdle\n");
+                    std::istringstream ssudp(network.udpClientData[0]->output);
+                    printf("Clearing the string\n");
+                    s.clear();
+                    printf("Cleared the string\n");
+                    ssudp >> s;
+                    printf("Received string length [%d] : {%s}\n", s.length(), s.c_str());
+                    if (s.length() > 0) {
+                        if (s.at(s.length()-1) == 'z') {
+                            // Update player position
+                            decodePositionString(s);
+                            btVector3 ePos = btVector3(positions.xEPos, positions.yEPos, positions.zEPos);
+                            btVector3 eDir = btVector3(positions.xEDir, positions.yEDir, positions.zEDir);
+                            btVector3 eBulletPos = btVector3(positions.xEBPos, positions.yEBPos, positions.zEBPos);
 
-                    EnemyShooter* enemyShooter = (EnemyShooter*) simulator->getObject("CPUShooter");
-                    enemyShooter->setNewPos(ePos);
-                    enemyShooter->setNewDir(eDir);
+                            EnemyShooter* enemyShooter = (EnemyShooter*) simulator->getObject("CPUShooter");
+                            enemyShooter->setNewPos(ePos);
+                            enemyShooter->setNewDir(eDir);
+                        }
+                    }
                 }
-                //TODO Update our local positions
             } else {
+                printf("Checkin the tcp server data\n");
                 std::istringstream ss(network.tcpServerData.output);
                 std::string s = "";
                 ss >> s;
-                printf("Received string length [%d] : {%s}\n", s.length(), s.c_str());
                 if(s.compare("pause") == 0) {
                     simulator->overlay->pauseGame();
-                } else if (s.at(s.length()-1) == 'z') {
-                    //Positions ePoses = *const_cast<Positions*>(reinterpret_cast<const Positions*>(s.c_str()));
-                    // Update player position
-                    decodePositionString(s);
-                    btVector3 ePos = btVector3(positions.xEPos, positions.yEPos, positions.zEPos);
-                    btVector3 eDir = btVector3(positions.xEDir, positions.yEDir, positions.zEDir);
-                    btVector3 eBulletPos = btVector3(positions.xEBPos, positions.yEBPos, positions.zEBPos);
-
-                    EnemyShooter* enemyShooter = (EnemyShooter*) simulator->getObject("CPUShooter");
-                    enemyShooter->setNewPos(ePos);
-                    enemyShooter->setNewDir(eDir);
                 }
-                // std::istringstream ssudp(network.udpClientData[0]->output);
-                // s.clear();
-                // ssudp >> s;
-                // if (s.length() != 0) {
-                //     positions = *const_cast<Positions*>(reinterpret_cast<const Positions*>(s.c_str()));
-                //     // Update player position, note: we are the enemy
-                //     btVector3 myPos = btVector3(positions.xEPos, positions.yEPos, positions.zEPos);
-                //     btVector3 myDir = btVector3(positions.xEDir, positions.yEDir, positions.zEDir);
-                //     btVector3 myBulletPos = btVector3(positions.xEBPos, positions.yEBPos, positions.zEBPos);
-                //
-                //     // Enemy positional/orientation/ bullet pos coords;
-                //     btVector3 ePos = btVector3(positions.xPPos, positions.yPPos, positions.zPPos);
-                //     btVector3 eDir = btVector3(positions.xPDir, positions.yPDir, positions.zPDir);
-                //     btVector3 eBulletPos = btVector3(positions.xPBPos, positions.yPBPos, positions.zPBPos);
-                // }
-                // //TODO
+
+                printf("Checkin the udp server data\n");
+                std::istringstream ssudp(network.udpServerData[0].output);
+                s.clear();
+                ssudp >> s;
+                printf("Received string length [%d] : {%s}\n", s.length(), s.c_str());
+                if (s.length() > 0) {
+                    if (s.at(s.length()-1) == 'z') {
+                        // Update player position
+                        decodePositionString(s);
+                        btVector3 ePos = btVector3(positions.xEPos, positions.yEPos, positions.zEPos);
+                        btVector3 eDir = btVector3(positions.xEDir, positions.yEDir, positions.zEDir);
+                        btVector3 eBulletPos = btVector3(positions.xEBPos, positions.yEBPos, positions.zEBPos);
+
+                        EnemyShooter* enemyShooter = (EnemyShooter*) simulator->getObject("CPUShooter");
+                        enemyShooter->setNewPos(ePos);
+                        enemyShooter->setNewDir(eDir);
+                    }
+                }
             }
         }
-        //}
     }
 
     return ret;

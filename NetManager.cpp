@@ -1786,7 +1786,3 @@ void NetManager::resetManager() {
   netLocalHost = 0;
   netHostname.clear();
 }
-
-
-
-
