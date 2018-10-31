@@ -16,4 +16,9 @@ const bool ballKinematic = false;
 const float paddleMass = 1.0f, paddleRestitution = 0.0f, paddleFriction = 0.0f;
 const bool paddleKinematic = false;
 
+const float shooterMass = 1.0f, shooterRestitution = 0.0f, shooterFriction = 0.0f;
+const bool shooterKinematic = false;
+const float enemyShooterMass = 0.0f;
+const bool enemyShooterKinematic = true;
+
 #endif

@@ -13,8 +13,27 @@ EnemyShooter::EnemyShooter(Ogre::String newName, Ogre::SceneManager* scnMgr, Sim
     // }
 
     // rootNode->attachObject(geom);
+    this->newPos = btVector3(this->getPosition());
 }
 
 EnemyShooter::~EnemyShooter() {
 
+}
+
+void EnemyShooter::teleport() {
+    this->setPosition(newPos);
+}
+
+void EnemyShooter::setNewPos(btVector3 nPos) {
+    this->teleport();
+    this->newPos = nPos;
+    this->setVelocity(this->newPos - this->getPosition());
+}
+
+void EnemyShooter::setNewDir(btVector3 nDir) {
+    this->rotate(btQuaternion(nDir.getX(), nDir.getY(), nDir.getZ()));
+}
+
+void EnemyShooter::update(float elapsedTime) {
+    this->setVelocity(this->newPos - this->getPosition());
 }

@@ -78,15 +78,18 @@ protected:
         float xPPos, yPPos, zPPos;
         float xPDir, yPDir, zPDir;
         float xPBPos, yPBPos, zPBPos;
+        float xPBVel, yPBVel, zPBVel;
         // Enemy positional/orientation/ bullet pos coords;
         float xEPos, yEPos, zEPos;
         float xEDir, yEDir, zEDir;
         float xEBPos, yEBPos, zEBPos;
+        float xEBVel, yEBVel, zEBVel;
     };
 
     Positions positions;
 private:
     bool processUnbufferedInput(const Ogre::FrameEvent& fe);
+    void updatePositions();
     std::string getPositionString();
     void decodePositionString(std::string);
     void checkMultiStart();

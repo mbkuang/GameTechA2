@@ -122,13 +122,11 @@ void TutorialApplication::createObjects() {
 
     Shooter* playerShooter = new Shooter("PlayerShooter", mSceneMgr, simulator,
         shooterPosition, Ogre::Vector3(0.5f, 1.0f, 0.5f),
-        "PaddleTexture", paddleMass, paddleRestitution, paddleFriction, paddleKinematic);
+        "PaddleTexture", shooterMass, shooterRestitution, shooterFriction, shooterKinematic);
 
     EnemyShooter* cpuShooter = new EnemyShooter("CPUShooter", mSceneMgr, simulator,
         Ogre::Vector3(0.0f, 0.0f, -50.0f), Ogre::Vector3(0.5f, 1.0f, 0.5f),//12.0f, 100.0f, 1.0f),
-        "PaddleTexture", paddleMass, paddleRestitution, paddleFriction, paddleKinematic);
-
-
+        "PaddleTexture", enemyShooterMass, shooterRestitution, shooterFriction, enemyShooterKinematic);
 
     // aimanager->update(mSceneMgr, simulator, cpuPaddle, playerPaddle, ball);
 
@@ -281,15 +279,38 @@ void TutorialApplication::createFrameListener(void)
     mRoot->addFrameListener(this);
 }
 //---------------------------------------------------------------------------
+void TutorialApplication::updatePositions() {
+    // Player positional/orientation/bullet pos coords
+    Shooter* playerShooter = (Shooter*) simulator->getObject("PlayerShooter");
+    if (playerShooter) {
+        Ogre::Vector3 pPos = playerShooter->getOgrePosition();
+        Ogre::Vector3 pDir = playerShooter->getOgreDirection() * Ogre::Vector3(0, 0, -1);
+        positions.xPPos = pPos.x; positions.yPPos = pPos.y; positions.zPPos = pPos.z;
+        positions.xPDir = pDir.x; positions.yPDir = pDir.y; positions.zPDir = pDir.z;
+        positions.xPBPos = 0; positions.yPBPos = 0; positions.zPBPos = 0;
+        positions.xPBVel = 0; positions.yPBVel = 0; positions.zPBVel = 0;
+    }
+    // Enemy positional/orientation/ bullet pos coords;
+    EnemyShooter* enemyShooter = (EnemyShooter*) simulator->getObject("CPUShooter");
+    if (enemyShooter) {
+        Ogre::Vector3 ePos = enemyShooter->getOgrePosition();
+        Ogre::Vector3 eDir = enemyShooter->getOgreDirection() * Ogre::Vector3(0, 0, -1);
+        positions.xEPos = ePos.x; positions.yEPos = ePos.y; positions.zEPos = ePos.z;
+        positions.xEDir = eDir.x; positions.yEDir = eDir.y; positions.zEDir = eDir.z;
+        positions.xEBPos = 0; positions.yEBPos = 0; positions.zEBPos = 0;
+        positions.xEBVel = 0; positions.yEBVel = 0; positions.zEBVel = 0;
+    }
+}
+//---------------------------------------------------------------------------
 std::string TutorialApplication::getPositionString() {
     //std::string s = "";
     Ogre::stringstream ss;
 
-    ss<<positions.xPPos<<" "<<positions.yPPos<<" "<<positions.zPPos<<" "<<
-        positions.xPDir<<" "<<positions.yPDir<<" "<<positions.zPDir<<" "<<
-        positions.xPBPos<<" "<<positions.yPBPos<<" "<<positions.zPBPos;
+    ss<<positions.xPPos<<","<<positions.yPPos<<","<<positions.zPPos<<","<<
+        positions.xPDir<<","<<positions.yPDir<<","<<positions.zPDir<<","<<
+        positions.xPBPos<<","<<positions.yPBPos<<","<<positions.zPBPos;
 
-    ss << " z";
+    ss << ",z";
     //ss >> s;
 
     return ss.str();
@@ -303,15 +324,15 @@ void TutorialApplication::decodePositionString(std::string positionString) {
     */
     char* ps = (char*) malloc(positionString.length()+1);
     strcpy(ps, positionString.c_str()); // strcpy(destination, source)
-    positions.xEPos = std::strtof(strtok(ps, " "), NULL);
-    positions.yEPos = std::strtof(strtok(NULL, " "), NULL);
-    positions.zEPos = std::strtof(strtok(NULL, " "), NULL);
-    positions.xEDir = std::strtof(strtok(NULL, " "), NULL);
-    positions.yEDir = std::strtof(strtok(NULL, " "), NULL);
-    positions.zEDir = std::strtof(strtok(NULL, " "), NULL);
-    positions.xEBPos = std::strtof(strtok(NULL, " "), NULL);
-    positions.yEBPos = std::strtof(strtok(NULL, " "), NULL);
-    positions.zEBPos = std::strtof(strtok(NULL, " "), NULL);
+    positions.xEPos = std::strtof(strtok(ps, ","), NULL);
+    positions.yEPos = std::strtof(strtok(NULL, ","), NULL);
+    positions.zEPos = std::strtof(strtok(NULL, ","), NULL);
+    positions.xEDir = std::strtof(strtok(NULL, ","), NULL);
+    positions.yEDir = std::strtof(strtok(NULL, ","), NULL);
+    positions.zEDir = std::strtof(strtok(NULL, ","), NULL);
+    positions.xEBPos = std::strtof(strtok(NULL, ","), NULL);
+    positions.yEBPos = std::strtof(strtok(NULL, ","), NULL);
+    positions.zEBPos = std::strtof(strtok(NULL, ","), NULL);
     free(ps);
 }
 //---------------------------------------------------------------------------
@@ -385,7 +406,8 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
 
     // Update the mCamera
     Shooter* pShooter = (Shooter*) simulator->getObject("PlayerShooter");
-    //mCamera->setPosition(pShooter->getOgrePosition() - mCamera->getDirection());
+    // mCamera->setPosition(pShooter->getOgrePosition() - mCamera->getDirection());
+    updatePositions();
     mCamera->setPosition(pShooter->getOgrePosition() + Ogre::Vector3(0, 5, 5));
 
     if(isMultiplayer)
@@ -413,6 +435,7 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
         // free(positionString);
         std::string positionString = getPositionString();
         if (multiPlayerStarted) {
+            printf("Sending position string length: %d\nString: {%s}\n", positionString.length(), positionString.c_str());
             if (isHost) {
                 network.messageClients(PROTOCOL_TCP, positionString.c_str(), positionString.length());
             } else {
@@ -425,6 +448,7 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
                 std::istringstream ss(network.tcpClientData[0]->output);
                 std::string s = "";
                 ss >> s;
+                printf("Received string length [%d] : {%s}\n", s.length(), s.c_str());
                 if(s.compare("pause") == 0) {
                     simulator->overlay->pauseGame();
                 }
@@ -440,17 +464,19 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
                     btVector3 eDir = btVector3(positions.xEDir, positions.yEDir, positions.zEDir);
                     btVector3 eBulletPos = btVector3(positions.xEBPos, positions.yEBPos, positions.zEBPos);
 
-                    Shooter* enemyShooter = (Shooter*) simulator->getObject("CPUShooter");
-                    enemyShooter->setPosition(ePos);
+                    EnemyShooter* enemyShooter = (EnemyShooter*) simulator->getObject("CPUShooter");
+                    enemyShooter->setNewPos(ePos);
+                    enemyShooter->setNewDir(eDir);
                 }
                 //TODO Update our local positions
             } else {
                 std::istringstream ss(network.tcpServerData.output);
                 std::string s = "";
                 ss >> s;
-                if(s.compare("pause") == 0)
+                printf("Received string length [%d] : {%s}\n", s.length(), s.c_str());
+                if(s.compare("pause") == 0) {
                     simulator->overlay->pauseGame();
-                else if (s.at(s.length()-1) == 'z') {
+                } else if (s.at(s.length()-1) == 'z') {
                     //Positions ePoses = *const_cast<Positions*>(reinterpret_cast<const Positions*>(s.c_str()));
                     // Update player position
                     decodePositionString(s);
@@ -458,8 +484,9 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
                     btVector3 eDir = btVector3(positions.xEDir, positions.yEDir, positions.zEDir);
                     btVector3 eBulletPos = btVector3(positions.xEBPos, positions.yEBPos, positions.zEBPos);
 
-                    Shooter* enemyShooter = (Shooter*) simulator->getObject("CPUShooter");
-                    enemyShooter->setPosition(ePos);
+                    EnemyShooter* enemyShooter = (EnemyShooter*) simulator->getObject("CPUShooter");
+                    enemyShooter->setNewPos(ePos);
+                    enemyShooter->setNewDir(eDir);
                 }
                 // std::istringstream ssudp(network.udpClientData[0]->output);
                 // s.clear();

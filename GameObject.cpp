@@ -60,6 +60,15 @@ btQuaternion GameObject::getDirection() {
         return body->getOrientation();
 }
 
+Ogre::Quaternion GameObject::getOgreDirection() {
+    Ogre::Quaternion oQuat;
+    btQuaternion bQuat;
+    if (body != NULL)
+        bQuat = body->getOrientation();
+    oQuat = Ogre::Quaternion(bQuat.getW(), bQuat.getX(), bQuat.getY(), bQuat.getZ());
+    return oQuat;
+}
+
 Ogre::Vector3 GameObject::getOgrePosition() {
     btVector3 pos = getPosition();
     return Ogre::Vector3(pos.getX(), pos.getY(), pos.getZ());
