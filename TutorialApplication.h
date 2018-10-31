@@ -89,6 +89,7 @@ private:
     bool processUnbufferedInput(const Ogre::FrameEvent& fe);
     std::string getPositionString();
     void decodePositionString(std::string);
+    void checkMultiStart();
     bool quit();
 };
 

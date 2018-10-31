@@ -315,6 +315,42 @@ void TutorialApplication::decodePositionString(std::string positionString) {
     free(ps);
 }
 //---------------------------------------------------------------------------
+void TutorialApplication::checkMultiStart() {
+    if (netStarted && !multiPlayerStarted) {
+        if(network.pollForActivity(1)) {
+            if(isHost) {
+                std::istringstream ss(network.tcpClientData[0]->output);
+                std::string s;
+                ss >> s;
+                if(!connectionMade) {
+                    if(s.compare("p2joined") == 0) {
+                        CEGUI::Window *p2joined = simulator->overlay->multiMenu->getChildRecursive("p2joined");
+                        p2joined->show();
+                        CEGUI::Window *startButton = simulator->overlay->multiMenu->getChildRecursive("StartButton");
+                        startButton->setDisabled(false);
+                        startButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&TutorialApplication::startMulti, this));
+                        connectionMade = true;
+                    }
+                }
+            } else {
+                std::istringstream ss(network.tcpServerData.output);
+                std::string s;
+                ss >> s;
+                if(s.compare("Start") == 0) {
+                    multiPlayerStarted = true;
+                    //createObjects();
+                }
+            }
+        }
+    }
+
+    if(multiPlayerStarted && !gameStarted) {
+        simulator->overlay->multiMenu->hide();
+        simulator->pause(); // Unpause simulation
+        gameStarted = true;
+    }
+}
+//---------------------------------------------------------------------------
 bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
 {
     bool ret = BaseApplication::frameRenderingQueued(fe);
@@ -352,40 +388,8 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
     //mCamera->setPosition(pShooter->getOgrePosition() - mCamera->getDirection());
     mCamera->setPosition(pShooter->getOgrePosition() + Ogre::Vector3(0, 5, 5));
 
-    if (isMultiplayer)
-    if (netStarted && !multiPlayerStarted) {
-        if(network.pollForActivity(1)) {
-            if(isHost) {
-                std::istringstream ss(network.tcpClientData[0]->output);
-                std::string s;
-                ss >> s;
-                if(!connectionMade) {
-                    if(s.compare("p2joined") == 0) {
-                        CEGUI::Window *p2joined = simulator->overlay->multiMenu->getChildRecursive("p2joined");
-                        p2joined->show();
-                        CEGUI::Window *startButton = simulator->overlay->multiMenu->getChildRecursive("StartButton");
-                        startButton->setDisabled(false);
-                        startButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&TutorialApplication::startMulti, this));
-                        connectionMade = true;
-                    }
-                }
-            } else {
-                std::istringstream ss(network.tcpServerData.output);
-                std::string s;
-                ss >> s;
-                if(s.compare("Start") == 0) {
-                    multiPlayerStarted = true;
-                    //createObjects();
-                }
-            }
-        }
-    }
-
-    if(multiPlayerStarted && !gameStarted) {
-        simulator->overlay->multiMenu->hide();
-        simulator->pause(); // Unpause simulation
-        gameStarted = true;
-    }
+    if(isMultiplayer)
+        checkMultiStart();
 
     if (gameStarted) {
         //if (isMultiplayer) {
