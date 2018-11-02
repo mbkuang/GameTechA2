@@ -405,9 +405,29 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
 
     // Update the mCamera
     Shooter* pShooter = (Shooter*) simulator->getObject("PlayerShooter");
-    mCamera->setPosition(pShooter->getOgrePosition() - 6*mCamera->getDirection());
+    mCamera->setPosition(pShooter->getOgrePosition() - 6 * mCamera->getDirection());
     updatePositions();
-    // mCamera->setPosition(pShooter->getOgrePosition() + Ogre::Vector3(0, 5, 5));
+
+
+    btQuaternion q = pShooter->getBody()->getOrientation();
+    Ogre::Quaternion cQ = mCamera->getOrientation();
+
+    pShooter->getBody()->activate(true);
+
+    float ctheta = std::asin(-2.0f * (cQ.y * cQ.w - cQ.x * cQ.z));
+    float theta = std::asin(-2.0f * (q.getY() * q.getW() - q.getX() * q.getZ()));
+
+    float sign = 1.0f;
+    if (old_x < 0.0f) {
+        sign = -1.0f;
+    }
+    float spin = 5.0f * sign;
+
+    if (theta >= ctheta - 0.1f && theta <= ctheta + 0.1f) {
+        pShooter->getBody()->setAngularVelocity(btVector3(0.0f, 0.0f, 0.0f));
+    } else {
+        pShooter->getBody()->setAngularVelocity(btVector3(0.0f, spin, 0.0f));
+    }
 
     if(isMultiplayer)
         checkMultiStart();
@@ -495,16 +515,30 @@ bool TutorialApplication::keyPressed(const OIS::KeyEvent& arg) {
         Shooter* player = (Shooter*) simulator->getObject("PlayerShooter");
         Ogre::Vector3 location = (Ogre::Vector3) player->getPosition();
         if(!player->hasFired()) {
-            if(player->getNumShots() == 0) {
-                Ball* laser = new Ball("plaser", mSceneMgr, simulator,
-                 Ogre::Vector3(location.x, location.y, location.z-10), 2.0f,
+            float avgVel = sqrt(640000/3);
+            Ogre::Vector3 cDir = mCamera->getDirection();
+            int numShots = player->getNumShots();
+
+            Ogre::String lName;
+                if(numShots%3 == 0)
+                    lName = "p1";
+                else if(numShots%3 == 1)
+                    lName = "p2";
+                else
+                    lName = "p3";
+
+            if(player->getNumShots() < 3) {
+                Laser* laser = new Laser(lName, mSceneMgr, simulator,
+                 Ogre::Vector3(location.x+cDir.x, location.y+cDir.y, location.z+cDir.z), 2.0f,
                  "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic);
-                laser->setVelocity(btVector3(0, 0, -800));
+                laser->setVelocity(btVector3(avgVel*cDir.x, avgVel*cDir.y, avgVel*cDir.z));
+                printf("Creating %s\n", lName.c_str());
             }
             else {
-                Ball* laser = (Ball*) simulator->getObject("plaser");
-                laser->setPosition(btVector3(location.x, location.y, location.z-10));
-                laser->setVelocity(btVector3(0, 0, -800));
+                Laser* laser = (Laser*) simulator->getObject("p1");
+                laser->setPosition(btVector3(location.x+cDir.x, location.y+cDir.y, location.z+cDir.z));
+                laser->setVelocity(btVector3(avgVel*cDir.x, avgVel*cDir.y, avgVel*cDir.z));
+                printf("%s\n", lName.c_str());
             }
             player->shot();
             simulator->soundSystem->playSound("laserSound");
@@ -547,6 +581,7 @@ bool TutorialApplication::mouseMoved(const OIS::MouseEvent& arg) {
 
     // Use mouse to control camera
     float cRotSpd = 0.5f;
+    old_x = -arg.state.X.rel;
     mCamera->yaw(Ogre::Degree(-arg.state.X.rel * cRotSpd));
     mCamera->pitch(Ogre::Degree(-arg.state.Y.rel * cRotSpd));
 

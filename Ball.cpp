@@ -107,6 +107,7 @@ void Ball::update(float elapsedTime) {
             if(objName.compare("plaser") == 0) {
                 p->shot();      //Update the firing status
                 ps->shot();
+                printf("Shot\n");
             }
             else if(objName.compare("cpulaser") == 0) {
                 cpu->shot();    //Update the firing status

@@ -22,6 +22,7 @@ http://www.ogre3d.org/wiki/
 #include <btBulletDynamicsCommon.h>
 #include "Simulator.h"
 #include "Ball.h"
+#include "Laser.h"
 #include "Wall.h"
 #include "Paddle.h"
 #include "GameSettings.h"
@@ -94,6 +95,8 @@ private:
     void decodePositionString(std::string);
     void checkMultiStart();
     bool quit();
+
+    float old_x;
 };
 
 //---------------------------------------------------------------------------
