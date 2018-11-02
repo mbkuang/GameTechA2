@@ -514,18 +514,18 @@ bool TutorialApplication::keyPressed(const OIS::KeyEvent& arg) {
     else if(arg.key == OIS::KC_LSHIFT) {
         Shooter* player = (Shooter*) simulator->getObject("PlayerShooter");
         Ogre::Vector3 location = (Ogre::Vector3) player->getPosition();
-        if(!player->hasFired()) {
+        //if(!player->hasFired()) {
             float avgVel = sqrt(640000/3);
             Ogre::Vector3 cDir = mCamera->getDirection();
             int numShots = player->getNumShots();
 
             Ogre::String lName;
                 if(numShots%3 == 0)
-                    lName = "p1";
+                    lName = "b1";
                 else if(numShots%3 == 1)
-                    lName = "p2";
+                    lName = "b2";
                 else
-                    lName = "p3";
+                    lName = "b3";
 
             if(player->getNumShots() < 3) {
                 Laser* laser = new Laser(lName, mSceneMgr, simulator,
@@ -533,17 +533,21 @@ bool TutorialApplication::keyPressed(const OIS::KeyEvent& arg) {
                  "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic);
                 laser->setVelocity(btVector3(avgVel*cDir.x, avgVel*cDir.y, avgVel*cDir.z));
                 printf("Creating %s\n", lName.c_str());
+                player->shot();
+                simulator->soundSystem->playSound("laserSound");
             }
             else {
-                Laser* laser = (Laser*) simulator->getObject("p1");
-                laser->setPosition(btVector3(location.x+cDir.x, location.y+cDir.y, location.z+cDir.z));
-                laser->setVelocity(btVector3(avgVel*cDir.x, avgVel*cDir.y, avgVel*cDir.z));
-                printf("%s\n", lName.c_str());
+                Laser* laser = (Laser*) simulator->getObject(lName);
+                if(laser->isAvailable()) {
+                    laser->setPosition(btVector3(location.x+cDir.x, location.y+cDir.y, location.z+cDir.z));
+                    laser->setVelocity(btVector3(avgVel*cDir.x, avgVel*cDir.y, avgVel*cDir.z));
+                    printf("%s\n", lName.c_str());
+                    player->shot();
+                    simulator->soundSystem->playSound("laserSound");
+                }
             }
-            player->shot();
-            simulator->soundSystem->playSound("laserSound");
         }
-    }
+    //}
     else if(arg.key == OIS::KC_UP) {
         simulator->soundSystem->volumeUp();
     }

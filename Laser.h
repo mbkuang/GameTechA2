@@ -14,6 +14,7 @@ protected:
 	float lastTime;
 	Ogre::SceneNode* markerNode;
 	Ogre::Entity* marker;
+    bool availability;
 
 public:
     Laser(Ogre::String name, Ogre::SceneManager* sceneMgr, Simulator* simulator,
@@ -22,6 +23,7 @@ public:
     ~Laser();
     void update(float elapsedTime);
     void setVelocity(btVector3 vel);
+    bool isAvailable();
 };
 
 #endif

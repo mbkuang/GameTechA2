@@ -13,6 +13,7 @@ Laser::Laser(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
     this->friction = friction;
     this->kinematic = kinematic;
     lastTime = 0.0f;
+    availability = false;
 
     // Set the entity.
     geom = sceneMgr->createEntity(name, "sphere.mesh");
@@ -44,6 +45,10 @@ void Laser::setVelocity(btVector3 vel) {
     this->body->setLinearVelocity(vel);
 }
 
+bool Laser::isAvailable() {
+    return availability;
+}
+
 // Specific game object update routine.
 void Laser::update(float elapsedTime) {
     lastTime += elapsedTime;
@@ -62,7 +67,7 @@ void Laser::update(float elapsedTime) {
         Player* p = simulator->getPlayer("Player1");
         Player* cpu = simulator->getPlayer("CPU");
         Shooter* ps = (Shooter*) simulator->getObject("PlayerShooter");
-        if(objName.compare("p1") == 0 || objName.compare("p2") == 0 || objName.compare("p3") == 0) {
+        if(objName.compare("b1") == 0 || objName.compare("b2") == 0 || objName.compare("b3") == 0) {
             p->shot();      //Update the firing status
             ps->shot();
             printf("zzz\n");
@@ -71,9 +76,10 @@ void Laser::update(float elapsedTime) {
             cpu->shot();    //Update the firing status
         }
 
-        this->setPosition(0, 400, 0);  //Hide the projectile off screen
+        this->setPosition(100*ps->getNumShots(), 400, 0);  //Hide the projectile off screen
         this->setVelocity(btVector3(0, 1, 0));
         this->inertia = btVector3(0.0f, 0.0f, 0.0f);
+        availability = true;
         simulator->soundSystem->playSound("deathSound");
         this->context->reset(); //Reset the callback
         if(contactName.compare("PlayerPaddle") == 0) {

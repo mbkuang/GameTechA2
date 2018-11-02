@@ -132,7 +132,9 @@ bool Shooter::hasFired() {
 // Either the player just shot or the shot collided with something
 void Shooter::shot() {
     fired = !fired;
-    numShots++;
+    if(fired) {
+        numShots++;
+    }
 }
 
 int Shooter::getNumShots() {
