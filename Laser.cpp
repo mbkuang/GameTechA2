@@ -71,7 +71,7 @@ void Laser::update(float elapsedTime) {
             cpu->shot();    //Update the firing status
         }
 
-        this->setPosition(0, 400, 0);  //Hide the ball off screen
+        this->setPosition(0, 400, 0);  //Hide the projectile off screen
         this->setVelocity(btVector3(0, 1, 0));
         this->inertia = btVector3(0.0f, 0.0f, 0.0f);
         simulator->soundSystem->playSound("deathSound");
