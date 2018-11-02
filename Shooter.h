@@ -13,7 +13,8 @@ private:
     Ogre::String material;
     btQuaternion orientation;
     float lastTime;
-
+    bool fired;
+    int numShots;
     //Gun* gun;
 
 public:
@@ -28,6 +29,10 @@ public:
     Ogre::Quaternion getOgreOrientation();
     btQuaternion getOrientation();
     void update(float elapsedTime);
+    
+    bool hasFired();
+    void shot();
+    int getNumShots(); 
 };
 
 #endif

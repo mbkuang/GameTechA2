@@ -103,10 +103,14 @@ void Ball::update(float elapsedTime) {
         if(objName.compare("Ball") != 0) {
             Player* p = simulator->getPlayer("Player1");
             Player* cpu = simulator->getPlayer("CPU");
-            if(objName.compare("plaser") == 0)
+            Shooter* ps = (Shooter*) simulator->getObject("PlayerShooter");
+            if(objName.compare("plaser") == 0) {
                 p->shot();      //Update the firing status
-            else if(objName.compare("cpulaser") == 0)
+                ps->shot();
+            }
+            else if(objName.compare("cpulaser") == 0) {
                 cpu->shot();    //Update the firing status
+            }
 
             this->setPosition(0, 200, 0);  //Hide the ball off screen
             this->setVelocity(btVector3(0, 1, 0));

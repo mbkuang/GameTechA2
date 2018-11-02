@@ -147,12 +147,12 @@ bool TutorialApplication::setupNetwork(bool isHost) {
     success = network.initNetManager();
     netStarted = true;
     if(isHost) {
-        network.addNetworkInfo(PROTOCOL_ALL, NULL, port_number);
+        network.addNetworkInfo(PROTOCOL_TCP, NULL, port_number);
         network.acceptConnections();
         success = network.startServer();
     }
     else {
-        network.addNetworkInfo(PROTOCOL_ALL, hostName, port_number);
+        network.addNetworkInfo(PROTOCOL_TCP, hostName, port_number);
         success = network.startClient();
     }
     return success;
@@ -200,6 +200,7 @@ void TutorialApplication::joinGame() {
         p2joined->show();
         startButton->setText("Waiting for host");
         network.messageServer(PROTOCOL_TCP, "p2joined", 8);
+        //network.messageServer(PROTOCOL_UDP, " ", 1);
 
         // Player positional/orientation/bullet pos coords
         positions.xPPos = 0.0f; positions.yPPos = 0.0f; positions.zPPos = -50.0f;
@@ -416,9 +417,9 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
         if (multiPlayerStarted) {
             printf("Sending position string length: %d\nString: {%s}\n", positionString.length(), positionString.c_str());
             if (isHost) {
-                network.messageClients(PROTOCOL_UDP, positionString.c_str(), positionString.length());
+                network.messageClients(PROTOCOL_TCP, positionString.c_str(), positionString.length());
             } else {
-                network.messageServer(PROTOCOL_UDP, positionString.c_str(), positionString.length());
+                network.messageServer(PROTOCOL_TCP, positionString.c_str(), positionString.length());
             }
         }
 
@@ -432,27 +433,18 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
                     simulator->overlay->pauseGame();
                 }
 
-                printf("Checkin the udp client data\n");
-                if (network.udpClientData[0]->output) {
-                    printf("Passed that hurdle\n");
-                    std::istringstream ssudp(network.udpClientData[0]->output);
-                    printf("Clearing the string\n");
-                    s.clear();
-                    printf("Cleared the string\n");
-                    ssudp >> s;
-                    printf("Received string length [%d] : {%s}\n", s.length(), s.c_str());
-                    if (s.length() > 0) {
-                        if (s.at(s.length()-1) == 'z') {
-                            // Update player position
-                            decodePositionString(s);
-                            btVector3 ePos = btVector3(positions.xEPos, positions.yEPos, positions.zEPos);
-                            btVector3 eDir = btVector3(positions.xEDir, positions.yEDir, positions.zEDir);
-                            btVector3 eBulletPos = btVector3(positions.xEBPos, positions.yEBPos, positions.zEBPos);
+                printf("Received string length [%d] : {%s}\n", s.length(), s.c_str());
+                if (s.length() > 0) {
+                    if (s.at(s.length()-1) == 'z') {
+                        // Update player position
+                        decodePositionString(s);
+                        btVector3 ePos = btVector3(positions.xEPos, positions.yEPos, positions.zEPos);
+                        btVector3 eDir = btVector3(positions.xEDir, positions.yEDir, positions.zEDir);
+                        btVector3 eBulletPos = btVector3(positions.xEBPos, positions.yEBPos, positions.zEBPos);
 
-                            EnemyShooter* enemyShooter = (EnemyShooter*) simulator->getObject("CPUShooter");
-                            enemyShooter->setNewPos(ePos);
-                            enemyShooter->setNewDir(eDir);
-                        }
+                        EnemyShooter* enemyShooter = (EnemyShooter*) simulator->getObject("CPUShooter");
+                        enemyShooter->setNewPos(ePos);
+                        enemyShooter->setNewDir(eDir);
                     }
                 }
             } else {
@@ -463,11 +455,6 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
                 if(s.compare("pause") == 0) {
                     simulator->overlay->pauseGame();
                 }
-
-                printf("Checkin the udp server data\n");
-                std::istringstream ssudp(network.udpServerData[0].output);
-                s.clear();
-                ssudp >> s;
                 printf("Received string length [%d] : {%s}\n", s.length(), s.c_str());
                 if (s.length() > 0) {
                     if (s.at(s.length()-1) == 'z') {
@@ -501,28 +488,27 @@ bool TutorialApplication::keyPressed(const OIS::KeyEvent& arg) {
         // ball->init();
     }
     else if(arg.key == OIS::KC_SPACE) {
-        // Player* p = simulator->getPlayer("Player1");
-        // if(!p->hasFired()) {
-        //     GameObject* paddle = simulator->getObject("PlayerPaddle");
-        //     Ogre::Vector3 location = (Ogre::Vector3) paddle->getPosition();
-        //
-        //     if(p->getNumShots() == 0) {
-        //         Ball* laser = new Ball("plaser", mSceneMgr, simulator,
-        //         Ogre::Vector3(location.x, location.y, location.z-20), 2.0f,
-        //         "greenball", ballMass, ballRestitution, ballFriction, ballKinematic);
-        //
-        //         laser->setVelocity(btVector3(0, 0, -200));
-        //     }
-        //     else {
-        //         Ball* laser = (Ball*) simulator->getObject("plaser");
-        //         laser->setPosition(btVector3(location.x, location.y, location.z-20));
-        //         laser->setVelocity(btVector3(0, 0, -200));
-        //     }
-        //     p->shot();
-        //     simulator->soundSystem->playSound("laserSound");
-        // }
         Shooter* player = (Shooter*) simulator->getObject("PlayerShooter");
         player->setVelocity(0,10,0);
+    }
+    else if(arg.key == OIS::KC_LSHIFT) {
+        Shooter* player = (Shooter*) simulator->getObject("PlayerShooter");
+        Ogre::Vector3 location = (Ogre::Vector3) player->getPosition();
+        if(!player->hasFired()) {
+            if(player->getNumShots() == 0) {
+                Ball* laser = new Ball("plaser", mSceneMgr, simulator,
+                 Ogre::Vector3(location.x, location.y, location.z-10), 2.0f,
+                 "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic);
+                laser->setVelocity(btVector3(0, 0, -800));
+            }
+            else {
+                Ball* laser = (Ball*) simulator->getObject("plaser");
+                laser->setPosition(btVector3(location.x, location.y, location.z-10));
+                laser->setVelocity(btVector3(0, 0, -800));
+            }
+            player->shot();
+            simulator->soundSystem->playSound("laserSound");
+        }
     }
     else if(arg.key == OIS::KC_UP) {
         simulator->soundSystem->volumeUp();

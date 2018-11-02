@@ -40,6 +40,9 @@ Shooter::Shooter(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* si
     addToSimulator();
 
     body->setAngularFactor(0.0f);
+
+    fired = false;
+    numShots = 0;
 }
 
 Shooter::~Shooter() {
@@ -119,4 +122,19 @@ void Shooter::update(float elapsedTime) {
     }
 
     context->hit = false;
+}
+
+// Has the player already shot at the oponent?
+bool Shooter::hasFired() {
+    return fired;
+}
+
+// Either the player just shot or the shot collided with something
+void Shooter::shot() {
+    fired = !fired;
+    numShots++;
+}
+
+int Shooter::getNumShots() {
+    return numShots;
 }

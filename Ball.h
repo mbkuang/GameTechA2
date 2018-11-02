@@ -2,6 +2,7 @@
 #define __Ball_h_
 
 #include "GameObject.h"
+#include "Shooter.h"
 #include <string>
 #include <sstream>
 
