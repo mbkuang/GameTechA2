@@ -15,7 +15,7 @@ private:
     float lastTime;
     bool fired;
     int numShots;
-    //Gun* gun;
+    Gun* gun;
 
 public:
     Shooter(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
@@ -23,13 +23,7 @@ public:
         float mass, float restitution, float friction, bool kinematic);
     ~Shooter();
     Ogre::String nameGun(Ogre::String gunName);
-    void move(Ogre::Real x, Ogre::Real y, Ogre::Real z);
-    void rotate(btQuaternion quat);
-    void rotate(btVector3 axis, float angle);
-    Ogre::Quaternion getOgreOrientation();
-    btQuaternion getOrientation();
     void update(float elapsedTime);
-    
     bool hasFired();
     void shot();
     int getNumShots(); 

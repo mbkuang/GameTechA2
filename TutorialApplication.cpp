@@ -399,15 +399,13 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
     // Update Ogre with Bullet's State
 	if (this->simulator != NULL && !simulator->paused()) {
 		//suppose you have 60 frames per second
-        simulator->stepSimulation(fe.timeSinceLastFrame, 60.0f, 1.0f/60.0f);
+        simulator->stepSimulation(fe.timeSinceLastFrame, 1, 1.0f/60.0f);
 
     }
 
-    // Update the mCamera
+    // Update the mCamera and player's orientation.
     Shooter* pShooter = (Shooter*) simulator->getObject("PlayerShooter");
-    mCamera->setPosition(pShooter->getOgrePosition() - 6 * mCamera->getDirection());
-    updatePositions();
-
+    mCamera->setPosition(pShooter->getOgrePosition() - mCamera->getDirection());
 
     btQuaternion q = pShooter->getBody()->getOrientation();
     Ogre::Quaternion cQ = mCamera->getOrientation();
@@ -428,6 +426,9 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
     } else {
         pShooter->getBody()->setAngularVelocity(btVector3(0.0f, spin, 0.0f));
     }
+
+    // Update positional data.
+    updatePositions();
 
     if(isMultiplayer)
         checkMultiStart();
@@ -601,12 +602,6 @@ bool TutorialApplication::mouseReleased(const OIS::MouseEvent& arg, OIS::MouseBu
     CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonUp(convertButton(id));
     return true;
 }
-
-// Ogre::Vector2 getMouseScreenPosition() {
-//     CEGUI::Vector2f mousePos = CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().getPosition();
-//
-//     return Ogre::Vector2(mousePos.d_x, mousePos.d_y);
-// }
 //---------------------------------------------------------------------------
 bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& fe)
 {
@@ -627,8 +622,6 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& fe)
     }
     mCamera->setDirection(cDir);
 
-    //player->rotate(btQuaternion(0.0f, cDir.x, cDir.y, cDir.z));
-
     Ogre::Vector3 moveDir = Ogre::Vector3(0.0f, 0.0f, 0.0f);
     Ogre::Vector3 cDirPerp = Ogre::Quaternion(Ogre::Degree(-90), Ogre::Vector3::UNIT_Y) * cDir;
 
@@ -645,16 +638,6 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& fe)
     float yVelocity = player->getVelocity().getY();
 
     player->setVelocity(moveDir.x, yVelocity, moveDir.z);
-
-    //printf("direction: (%f, %f, %f)\n", moveDir.x, moveDir.y, moveDir.z);
-
-
-    // Ogre::Vector3 v = Ogre::Vector3(cDir.x, 0.0f, cDir.z);
-    // float angle = v.dotProduct(Ogre::Vector3::UNIT_X);
-    // //printf("Angle: %f\n", angle);
-
-    // btQuaternion q = btQuaternion(btVector3(0.0f, 1.0f, 0.0f), angle);
-    // player->rotate(q);
 
     return true;
 }
