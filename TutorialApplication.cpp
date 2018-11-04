@@ -117,6 +117,10 @@ void TutorialApplication::createObjects() {
         enemyPosition, Ogre::Vector3(2.0f, 10.0f, 0.5f),
         "PaddleTexture", enemyShooterMass, shooterRestitution, shooterFriction, enemyShooterKinematic);
 
+    Laser* enemyLaser = new Laser("e1", mSceneMgr, simulator,
+                 Ogre::Vector3(-500, -500, -500), 2.0f,
+                 "BallTexture", ballMass, ballRestitution, ballFriction, true);
+
     // aimanager->update(mSceneMgr, simulator, cpuPaddle, playerPaddle, ball);
 
     simulator->overlay->createScoreboard();
@@ -196,23 +200,23 @@ void TutorialApplication::joinGame() {
         network.messageServer(PROTOCOL_TCP, "p2joined", 8);
         //network.messageServer(PROTOCOL_UDP, " ", 1);
 
-        // Player positional/orientation/bullet pos coords
+/*        // Player positional/orientation/bullet pos coords
         positions.xPPos = 0.0f; positions.yPPos = 0.0f; positions.zPPos = -50.0f;
         positions.xPDir = 0.0f; positions.yPDir = 0.0f; positions.zPDir = 1.0f;
         positions.xPBPos = -100.0f; positions.yPBPos = -50.0f; positions.zPBPos = 0.0f;
         // // Enemy positional/orientation/ bullet pos coords;
         positions.xEPos = 0.0f; positions.yEPos = 0.0f; positions.zEPos = -10.0f;
         positions.xEDir = 0.0f; positions.yEDir = 0.0f; positions.zEDir = -1.0f;
-        positions.xEBPos = 100.0f; positions.yEBPos = -50.0f; positions.zEBPos = 0.0f;
+        positions.xEBPos = 100.0f; positions.yEBPos = -50.0f; positions.zEBPos = 0.0f;*/
 
-        Shooter* playerShooter = (Shooter*) simulator->getObject("PlayerShooter");
-        playerShooter->setPosition(0.0f, 10.0f, -50.0f);
+        // Shooter* playerShooter = (Shooter*) simulator->getObject("PlayerShooter");
+        // //playerShooter->setPosition(0.0f, 10.0f, -50.0f);
 
-        mCamera->setPosition(playerShooter->getOgrePosition());
-        mCamera->lookAt(0.0f, 10.0f, 0.0f);
+        // mCamera->setPosition(playerShooter->getOgrePosition());
+        // mCamera->lookAt(0.0f, 10.0f, 0.0f);
 
-        Shooter* enemyShooter = (Shooter*) simulator->getObject("CPUShooter");
-        enemyShooter->setPosition(0.0f, 10.0f, 0.0f);
+        // Shooter* enemyShooter = (Shooter*) simulator->getObject("CPUShooter");
+        // enemyShooter->setPosition(0.0f, 10.0f, 0.0f);
 
         isMultiplayer = true;
     }
@@ -275,13 +279,27 @@ void TutorialApplication::createFrameListener(void)
 void TutorialApplication::updatePositions() {
     // Player positional/orientation/bullet pos coords
     Shooter* playerShooter = (Shooter*) simulator->getObject("PlayerShooter");
+    bool hasShot = playerShooter->getNumShots() > 0;
+
+    Laser* pLaser;
+    if(hasShot)
+        pLaser = (Laser*) simulator->getObject("b1");
+
     if (playerShooter) {
         Ogre::Vector3 pPos = playerShooter->getOgrePosition();
         Ogre::Vector3 pDir = playerShooter->getOgreDirection() * Ogre::Vector3(0, 0, -1);
+        
+        Ogre::Vector3 bPos(0,0,0);
+        Ogre::Vector3 bVel(0,0,0);
+        if(hasShot) {
+            Ogre::Vector3 bPos = pLaser->getOgrePosition();
+            Ogre::Vector3 bVel = pLaser->getOgreVelocity();
+        }
+
         positions.xPPos = pPos.x; positions.yPPos = pPos.y; positions.zPPos = pPos.z;
         positions.xPDir = pDir.x; positions.yPDir = pDir.y; positions.zPDir = pDir.z;
-        positions.xPBPos = 0; positions.yPBPos = 0; positions.zPBPos = 0;
-        positions.xPBVel = 0; positions.yPBVel = 0; positions.zPBVel = 0;
+        positions.xPBPos = bPos.x; positions.yPBPos = bPos.y; positions.zPBPos = bPos.z;
+        positions.xPBVel = bVel.x; positions.yPBVel = bVel.y; positions.zPBVel = bVel.z;
     }
     // Enemy positional/orientation/ bullet pos coords;
     EnemyShooter* enemyShooter = (EnemyShooter*) simulator->getObject("CPUShooter");
@@ -290,8 +308,8 @@ void TutorialApplication::updatePositions() {
         Ogre::Vector3 eDir = enemyShooter->getOgreDirection() * Ogre::Vector3(0, 0, -1);
         positions.xEPos = ePos.x; positions.yEPos = ePos.y; positions.zEPos = ePos.z;
         positions.xEDir = eDir.x; positions.yEDir = eDir.y; positions.zEDir = eDir.z;
-        positions.xEBPos = 0; positions.yEBPos = 0; positions.zEBPos = 0;
-        positions.xEBVel = 0; positions.yEBVel = 0; positions.zEBVel = 0;
+        // positions.xEBPos = 0; positions.yEBPos = 0; positions.zEBPos = 0;
+        // positions.xEBVel = 0; positions.yEBVel = 0; positions.zEBVel = 0;
     }
 }
 //---------------------------------------------------------------------------
@@ -326,6 +344,7 @@ void TutorialApplication::decodePositionString(std::string positionString) {
     positions.xEBPos = std::strtof(strtok(NULL, ","), NULL);
     positions.yEBPos = std::strtof(strtok(NULL, ","), NULL);
     positions.zEBPos = std::strtof(strtok(NULL, ","), NULL);
+    
     free(ps);
 }
 //---------------------------------------------------------------------------
@@ -462,6 +481,9 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
                         EnemyShooter* enemyShooter = (EnemyShooter*) simulator->getObject("CPUShooter");
                         enemyShooter->setNewPos(ePos);
                         enemyShooter->setNewDir(eDir);
+
+                        Laser* eLaser = (Laser*) simulator->getObject("e1");
+                        eLaser->setPosition(eBulletPos);
                     }
                 }
             } else {
@@ -484,6 +506,9 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
                         EnemyShooter* enemyShooter = (EnemyShooter*) simulator->getObject("CPUShooter");
                         enemyShooter->setNewPos(ePos);
                         enemyShooter->setNewDir(eDir);
+
+                        Laser* eLaser = (Laser*) simulator->getObject("e1");
+                        eLaser->setPosition(eBulletPos);
                     }
                 }
             }
@@ -517,12 +542,15 @@ bool TutorialApplication::keyPressed(const OIS::KeyEvent& arg) {
             int numShots = player->getNumShots();
 
             Ogre::String lName;
-                if(numShots%3 == 0)
+                if(numShots%3 == 0) {
                     lName = "b1";
-                else if(numShots%3 == 1)
+                }
+                else if(numShots%3 == 1) {
                     lName = "b2";
-                else
+                }
+                else {
                     lName = "b3";
+                }
 
             if(player->getNumShots() < 3) {
                 Laser* laser = new Laser(lName, mSceneMgr, simulator,

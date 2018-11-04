@@ -54,6 +54,10 @@ void Laser::update(float elapsedTime) {
     lastTime += elapsedTime;
     simulator->getDynamicsWorld()->contactTest(body, *cCallBack);
 
+    Ogre::String objName = this->getName();
+    if(objName.compare("e1") == 0)
+        return;
+
     if (context->hit && (context->velNorm > 2.0 || context->velNorm < -2.0)
         && (lastTime > 0.5 || (context->lastBody != context->body && lastTime > 0.1))) {
         //Handle the hit
@@ -61,8 +65,6 @@ void Laser::update(float elapsedTime) {
         Ogre::String nw = "NorthWall";
         GameObject* contact = context->theObject;
         Ogre::String contactName = contact->getName();
-
-        Ogre::String objName = this->getName();
 
         Player* p = simulator->getPlayer("Player1");
         Player* cpu = simulator->getPlayer("CPU");
