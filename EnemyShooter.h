@@ -6,6 +6,8 @@
 class EnemyShooter : public Shooter {
 protected:
     btVector3 newPos;
+    float lastTime;
+    Gun* gun;
 public:
     EnemyShooter(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
         Ogre::Vector3 position, Ogre::Vector3 scale, Ogre::String material,

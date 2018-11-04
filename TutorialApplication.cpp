@@ -321,6 +321,14 @@ std::string TutorialApplication::getPositionString() {
         } else {
             network->messageServer(PROTOCOL_TCP, winstring.c_str(), 3);
         }
+        simulator->overlay->gameOverMenu->show();
+        CEGUI::Window *p1wins = simulator->overlay->gameOverMenu->getChildRecursive("p1wins");
+        CEGUI::Window *quitButton = simulator->overlay->gameOverMenu->getChildRecursive("quit");
+        CEGUI::Window *newGameButton = simulator->overlay->gameOverMenu->getChildRecursive("newGame");
+        newGameButton->setDisabled(true);
+        quitButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&TutorialApplication::quit, this));
+
+        p1wins->show();
     }
 
     ss<<positions.xPPos<<","<<positions.yPPos<<","<<positions.zPPos<<","<<
@@ -477,6 +485,13 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
                     // cpu->setHP(positions.eHealth);
                     simulator->overlay->updateScore();
                     simulator->pause();
+                    simulator->overlay->gameOverMenu->show();
+                    CEGUI::Window *p2wins = simulator->overlay->gameOverMenu->getChildRecursive("p2wins");
+                    CEGUI::Window *quitButton = simulator->overlay->gameOverMenu->getChildRecursive("quit");
+                    CEGUI::Window *newGameButton = simulator->overlay->gameOverMenu->getChildRecursive("newGame");
+                    newGameButton->setDisabled(true);
+                    quitButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&TutorialApplication::quit, this));
+                    p2wins->show();
                 }
 
                 if (s.length() > 0) {
@@ -513,6 +528,14 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
                     player1->setHP(positions.pHealth);
                     simulator->overlay->updateScore();
                     simulator->pause();
+                    simulator->overlay->gameOverMenu->show();
+                    CEGUI::Window *p2wins = simulator->overlay->gameOverMenu->getChildRecursive("p2wins");
+                    CEGUI::Window *quitButton = simulator->overlay->gameOverMenu->getChildRecursive("quit");
+                    CEGUI::Window *newGameButton = simulator->overlay->gameOverMenu->getChildRecursive("newGame");
+                    newGameButton->setDisabled(true);
+                    quitButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&TutorialApplication::quit, this));
+
+                    p2wins->show();
                 }
                 if (s.length() > 0) {
                     if (s.at(s.length()-1) == 'z') {

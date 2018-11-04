@@ -46,6 +46,10 @@ void Overlay::createMainMenu() {
     multiMenu->hide();
     sheet->addChild(multiMenu);
 
+    gameOverMenu = wmgr.loadLayoutFromFile("gameOver.layout");
+    gameOverMenu->hide();
+    sheet->addChild(gameOverMenu);
+
     /* Main Menu Buttons */
     CEGUI::Window *singlePlayerButton = mainMenu->getChildRecursive("singlePlayerButton");
     singlePlayerButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::singlePlayer, this));
@@ -78,7 +82,7 @@ void Overlay::createMainMenu() {
     musicSettings->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::showMusicMenu, this));
 
     CEGUI::Window *ms2 = settingsMenu->getChildRecursive("Setting2");
-    ms2->setDisabled(true);
+    ms2->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::showControls, this));
 
     CEGUI::Window *ms3 = settingsMenu->getChildRecursive("Setting3");
     ms3->setDisabled(true);
@@ -116,6 +120,12 @@ void Overlay::createMainMenu() {
 
     CEGUI::Window *backMusic = musicMenu->getChildRecursive("Setting4");
     backMusic->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::settings, this));
+
+    /* Game Over Stuff */
+    CEGUI::Window *p1wins = gameOverMenu->getChildRecursive("p1wins");
+    CEGUI::Window *p2wins = gameOverMenu->getChildRecursive("p2wins");
+    p1wins->hide();
+    p2wins->hide();
 }
 
 /* Display the scoreboard */
@@ -146,12 +156,12 @@ void Overlay::updateScore() {
     int cpuhp = cpu->getHP();
 
     if(p1score == 3 || cpuhp == 0) {
-        CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
-        p1wins = wmgr.createWindow("TaharezLook/Button", "CEGUIDemo/QuitButton");
-        p1wins->setSize(CEGUI::USize(CEGUI::UDim(.4, 0), CEGUI::UDim(.1, 0)));
-        p1wins->setPosition(CEGUI::UVector2(CEGUI::UDim(.3, 0), CEGUI::UDim(0, 0)));
-        p1wins->setText("[colour='FFFF0000']Player 1 wins!\n\nPlayer2 gets tougher...");
-        sheet->addChild(p1wins);
+        // CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
+        // p1wins = wmgr.createWindow("TaharezLook/Button", "CEGUIDemo/QuitButton");
+        // p1wins->setSize(CEGUI::USize(CEGUI::UDim(.4, 0), CEGUI::UDim(.1, 0)));
+        // p1wins->setPosition(CEGUI::UVector2(CEGUI::UDim(.3, 0), CEGUI::UDim(0, 0)));
+        // p1wins->setText("[colour='FFFF0000']Player 1 wins!\n\nPlayer2 gets tougher...");
+        // sheet->addChild(p1wins);
         p1->setScore(0);
         // p1->setHP(5);
         cpu->setScore(0);
@@ -159,21 +169,20 @@ void Overlay::updateScore() {
         simulator->pause();
     }
     else if(cpuscore == 3 || p1hp == 0) {
-        CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
-        p1wins = wmgr.createWindow("TaharezLook/Button", "CEGUIDemo/QuitButton");
-        p1wins->setSize(CEGUI::USize(CEGUI::UDim(.4, 0), CEGUI::UDim(.1, 0)));
-        p1wins->setPosition(CEGUI::UVector2(CEGUI::UDim(.3, 0), CEGUI::UDim(0, 0)));
-        p1wins->setText("[colour='FFFF0000']Player2 wins!\n\nYou must prove your worth!");
-        sheet->addChild(p1wins);
+        // CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
+        // p1wins = wmgr.createWindow("TaharezLook/Button", "CEGUIDemo/QuitButton");
+        // p1wins->setSize(CEGUI::USize(CEGUI::UDim(.4, 0), CEGUI::UDim(.1, 0)));
+        // p1wins->setPosition(CEGUI::UVector2(CEGUI::UDim(.3, 0), CEGUI::UDim(0, 0)));
+        // p1wins->setText("[colour='FFFF0000']Player2 wins!\n\nYou must prove your worth!");
+        // sheet->addChild(p1wins);
         p1->setScore(0);
         // p1->setHP(5);
         cpu->setScore(0);
         // cpu->setHP(5);
-        simulator->pause();
     }
 
     ss1 << "Player 1\nScore: "<<p1score<<"\nHP: "<<p1hp;
-    ss2 << "CPU\nScore: "<<cpuscore <<"\nHP: "<<cpuhp;
+    ss2 << "Enemy\nScore: "<<cpuscore <<"\nHP: "<<cpuhp;
 
     playerScore->setText("[colour='FFFF0000']"+ ss1.str());
     cpuScore->setText("[colour='FFFF0000']"+ ss2.str());
@@ -202,6 +211,7 @@ bool Overlay::singlePlayer() {
     mainMenu->hide();
     pauseMenu->hide();
     simulator->pause();
+    gameOverMenu->hide();
     return true;
 }
 

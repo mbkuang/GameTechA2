@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<GUILayout version="4" >
+    <Window type="TaharezLook/FrameWindow" name="Controls" >
+        <Property name="Area" value="{{0.25,0},{0.25,0},{0.75,0},{0.75,0}}" />
+        <Property name="Text" value="Settings" />
+        <Window type="TaharezLook/Label" name="Setting1" >
+            <Property name="Area" value="{{0.25,0},{0.10,0},{0.75,0},{0.70,0}}" />
+            <Property name="Text" value="Controls \n test" />
+        </Window>
+        <Window type="TaharezLook/Button" name="Setting4" >
+            <Property name="Area" value="{{0.25,0},{0.70,0},{0.75,0},{0.90,0}}" />
+            <Property name="Text" value="Back" />
+        </Window>
+    </Window>
+</GUILayout>

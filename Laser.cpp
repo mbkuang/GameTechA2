@@ -85,14 +85,15 @@ void Laser::update(float elapsedTime) {
         availability = true;
         simulator->soundSystem->playSound("deathSound");
         this->context->reset(); //Reset the callback
-        // if(contactName.compare("PlayerShooter") == 0) {
-        //     p->setHP(p->getHP()-1);
-        //     simulator->overlay->updateScore();
-        //     return;
-        // } else 
+        if(contactName.compare("PlayerShooter") == 0) {
+            p->setHP(p->getHP()-1);
+            simulator->overlay->updateScore();
+            return;
+        } else 
         if(contactName.compare("EnemyShooter") == 0) {
             cpu->setHP(cpu->getHP()-1);
             simulator->overlay->updateScore();
+            printf("Hit\n");
             return;
         }
 

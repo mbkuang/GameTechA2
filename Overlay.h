@@ -25,6 +25,7 @@ public:
 	CEGUI::Window *pauseMenu;
 	CEGUI::Window *musicMenu;
 	CEGUI::Window *multiMenu;
+	CEGUI::Window *gameOverMenu;
 	CEGUI::Window *playerScore;
 	CEGUI::Window *cpuScore;
 	bool done;
@@ -45,6 +46,7 @@ protected:
 	void volumeDown();
 	void volumeUp();
 	void mute();
+	void showControls();
 
 	bool lastMenu;	//Keep track of what the last menu was before settings
 };
