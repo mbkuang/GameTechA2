@@ -116,11 +116,11 @@ void TutorialApplication::createObjects() {
     }
 
     Shooter* playerShooter = new Shooter("PlayerShooter", mSceneMgr, simulator,
-        shooterPosition, Ogre::Vector3(0.5f, 1.0f, 0.5f),
+        shooterPosition, Ogre::Vector3(2.0f, 10.0f, 0.5f),
         "PaddleTexture", shooterMass, shooterRestitution, shooterFriction, shooterKinematic);
 
     EnemyShooter* cpuShooter = new EnemyShooter("CPUShooter", mSceneMgr, simulator,
-        Ogre::Vector3(0.0f, 0.0f, -50.0f), Ogre::Vector3(0.5f, 1.0f, 0.5f),//12.0f, 100.0f, 1.0f),
+        enemyPosition, Ogre::Vector3(2.0f, 10.0f, 0.5f),
         "PaddleTexture", enemyShooterMass, shooterRestitution, shooterFriction, enemyShooterKinematic);
 
     // aimanager->update(mSceneMgr, simulator, cpuPaddle, playerPaddle, ball);
@@ -405,7 +405,9 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
 
     // Update the mCamera and player's orientation.
     Shooter* pShooter = (Shooter*) simulator->getObject("PlayerShooter");
-    mCamera->setPosition(pShooter->getOgrePosition() - mCamera->getDirection());
+    Ogre::Vector3 position = pShooter->getOgrePosition();
+    position.y += 2.5f;
+    mCamera->setPosition(position - 6 * mCamera->getDirection());
 
     btQuaternion q = pShooter->getBody()->getOrientation();
     Ogre::Quaternion cQ = mCamera->getOrientation();

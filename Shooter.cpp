@@ -35,7 +35,7 @@ Shooter::Shooter(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* si
     motionState = new OgreMotionState(transform, rootNode);
 
     gun = new Gun(nameGun("_Gun"), this->sceneMgr,
-        this->position, Ogre::Vector3(1,1,5), this->material);
+        this->position + Ogre::Vector3(0.0f, 2.5f, 1.5f), Ogre::Vector3(0.5f, 1.0f, 3.0f), this->material);
 
     addToSimulator();
 
@@ -57,24 +57,20 @@ Ogre::String Shooter::nameGun(Ogre::String gunName) {
 // Specific game object update routine.
 void Shooter::update(float elapsedTime) {
     btVector3 pos = this->getPosition();
-
-    gun->rotate(1,0,0,0);
-    gun->setPosition(3,-2,-5);
-    gun->getRootNode()->rotate(this->getOgreDirection(),
-        Ogre::Node::TS_WORLD);
-    
-    pos += gun->getPosition();
     gun->setPosition(pos);
+    gun->rotate(this->getOgreDirection());
+    Ogre::Vector3 dir = this->getOgreDirection() * Ogre::Vector3(1.0f, 0.0f, 0.0f);
+    gun->setPosition(pos + btVector3(dir.x, 2.5f, dir.z));
 
-    lastTime += elapsedTime;
-    simulator->getDynamicsWorld()->contactTest(body, *cCallBack);
-    if (context->hit && (context->velNorm > 2.0 || context->velNorm < -2.0)
-        && (lastTime > 0.5 || (context->lastBody != context->body && lastTime > 0.1))) {
-        //Handle the hit
-        lastTime = 0.0f;
-    }
+    // lastTime += elapsedTime;
+    // simulator->getDynamicsWorld()->contactTest(body, *cCallBack);
+    // if (context->hit && (context->velNorm > 2.0 || context->velNorm < -2.0)
+    //     && (lastTime > 0.5 || (context->lastBody != context->body && lastTime > 0.1))) {
+    //     //Handle the hit
+    //     lastTime = 0.0f;
+    // }
 
-    context->hit = false;
+    // context->hit = false;
 }
 
 // Has the player already shot at the oponent?
