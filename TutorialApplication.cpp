@@ -110,16 +110,28 @@ void TutorialApplication::createObjects() {
     }
 
     Shooter* playerShooter = new Shooter("PlayerShooter", mSceneMgr, simulator,
-        shooterPosition, Ogre::Vector3(0.5f, 1.0f, 0.5f),
+        shooterPosition, Ogre::Vector3(1.0f, 5.0f, 1.0f),
         "ShooterTexture", shooterMass, shooterRestitution, shooterFriction, shooterKinematic);
 
-    EnemyShooter* cpuShooter = new EnemyShooter("CPUShooter", mSceneMgr, simulator,
-        Ogre::Vector3(0.0f, 0.0f, -50.0f), Ogre::Vector3(0.5f, 1.0f, 0.5f),//12.0f, 100.0f, 1.0f),
+    Laser* pLaser = new Laser("PlayerLaser", mSceneMgr, simulator,
+        Ogre::Vector3(positions.xPBPos, positions.yPBPos, positions.zPBPos), 2.0f,
+        "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic);
+    //
+    // Laser* pLaser2 = new Laser("b2", mSceneMgr, simulator,
+    //     Ogre::Vector3(positions.xPBPos, positions.yPBPos, positions.zPBPos), 2.0f,
+    //     "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic);
+    //
+    // Laser* pLaser3 = new Laser("b3", mSceneMgr, simulator,
+    //     Ogre::Vector3(positions.xPBPos, positions.yPBPos, positions.zPBPos), 2.0f,
+    //     "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic);
+
+    EnemyShooter* enemyShooter = new EnemyShooter("EnemyShooter", mSceneMgr, simulator,
+        Ogre::Vector3(0.0f, 0.0f, -50.0f), Ogre::Vector3(1.0f, 5.0f, 1.0f),//12.0f, 100.0f, 1.0f),
         "ShooterTexture", enemyShooterMass, shooterRestitution, shooterFriction, enemyShooterKinematic);
 
-    Laser* enemyLaser = new Laser("e1", mSceneMgr, simulator,
-                 Ogre::Vector3(-500, -500, -500), 2.0f,
-                 "BallTexture", ballMass, ballRestitution, ballFriction, true);
+    Laser* enemyLaser = new Laser("EnemyLaser", mSceneMgr, simulator,
+         Ogre::Vector3(-500, -500, -500), 2.0f,
+         "BallTexture", ballMass, ballRestitution, ballFriction, true);
 
     // aimanager->update(mSceneMgr, simulator, cpuPaddle, playerPaddle, ball);
 
@@ -201,11 +213,11 @@ void TutorialApplication::joinGame() {
         //network.messageServer(PROTOCOL_UDP, " ", 1);
 
         // Player positional/orientation/ bullet pos coords;
-        positions.xPPos = 0.0f; positions.yPPos = -100.0f; positions.zPPos = -100.0f;
+        positions.xPPos = 0.0f; positions.yPPos = -100.0f; positions.zPPos = 100.0f;
         positions.xPDir = 0.0f; positions.yPDir = 0.0f; positions.zPDir = 1.0f;
         positions.xPBPos = -400.0f; positions.yPBPos = -400.0f; positions.zPBPos = -400.0f; //Hide projectiles offscreen
         // Enemy positional/orientation/bullet pos coords
-        positions.xEPos = 0.0f; positions.yEPos = -100.0f; positions.zEPos = 100.0f;
+        positions.xEPos = 0.0f; positions.yEPos = -100.0f; positions.zEPos = -100.0f;
         positions.xEDir = 0.0f; positions.yEDir = 0.0f; positions.zEDir = -1.0f;
         positions.xEBPos = 400.0f; positions.yEBPos = 400.0f; positions.zEBPos = 400.0f;    //Hide projectiles offscreen
 
@@ -215,7 +227,7 @@ void TutorialApplication::joinGame() {
         mCamera->setPosition(playerShooter->getOgrePosition());
         mCamera->lookAt(0.0f, 10.0f, 0.0f);
 
-        Shooter* enemyShooter = (Shooter*) simulator->getObject("CPUShooter");
+        Shooter* enemyShooter = (Shooter*) simulator->getObject("EnemyShooter");
         enemyShooter->setPosition(positions.xEPos, positions.yEPos, positions.zEPos);
 
         isMultiplayer = true;
@@ -283,7 +295,7 @@ void TutorialApplication::updatePositions() {
 
     Laser* pLaser;
     if(hasShot)
-        pLaser = (Laser*) simulator->getObject("b1");
+        pLaser = (Laser*) simulator->getObject("PlayerLaser");
 
     if (playerShooter) {
         Ogre::Vector3 pPos = playerShooter->getOgrePosition();
@@ -302,7 +314,7 @@ void TutorialApplication::updatePositions() {
         positions.xPBVel = bVel.x; positions.yPBVel = bVel.y; positions.zPBVel = bVel.z;
     }
     // Enemy positional/orientation/ bullet pos coords;
-    EnemyShooter* enemyShooter = (EnemyShooter*) simulator->getObject("CPUShooter");
+    EnemyShooter* enemyShooter = (EnemyShooter*) simulator->getObject("EnemyShooter");
     if (enemyShooter) {
         Ogre::Vector3 ePos = enemyShooter->getOgrePosition();
         Ogre::Vector3 eDir = enemyShooter->getOgreDirection() * Ogre::Vector3(0, 0, -1);
@@ -478,11 +490,11 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
                         btVector3 eDir = btVector3(positions.xEDir, positions.yEDir, positions.zEDir);
                         btVector3 eBulletPos = btVector3(positions.xEBPos, positions.yEBPos, positions.zEBPos);
 
-                        EnemyShooter* enemyShooter = (EnemyShooter*) simulator->getObject("CPUShooter");
+                        EnemyShooter* enemyShooter = (EnemyShooter*) simulator->getObject("EnemyShooter");
                         enemyShooter->setNewPos(ePos);
                         enemyShooter->setNewDir(eDir);
 
-                        Laser* eLaser = (Laser*) simulator->getObject("e1");
+                        Laser* eLaser = (Laser*) simulator->getObject("EnemyLaser");
                         eLaser->setPosition(eBulletPos);
                     }
                 }
@@ -503,11 +515,11 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
                         btVector3 eDir = btVector3(positions.xEDir, positions.yEDir, positions.zEDir);
                         btVector3 eBulletPos = btVector3(positions.xEBPos, positions.yEBPos, positions.zEBPos);
 
-                        EnemyShooter* enemyShooter = (EnemyShooter*) simulator->getObject("CPUShooter");
+                        EnemyShooter* enemyShooter = (EnemyShooter*) simulator->getObject("EnemyShooter");
                         enemyShooter->setNewPos(ePos);
                         enemyShooter->setNewDir(eDir);
 
-                        Laser* eLaser = (Laser*) simulator->getObject("e1");
+                        Laser* eLaser = (Laser*) simulator->getObject("EnemyLaser");
                         eLaser->setPosition(eBulletPos);
                     }
                 }
@@ -529,57 +541,53 @@ bool TutorialApplication::keyPressed(const OIS::KeyEvent& arg) {
         // Ball* ball = (Ball*) simulator->getObject("Ball");
         // ball->init();
     }
-    else if(arg.key == OIS::KC_SPACE) {
+    else if (arg.key == OIS::KC_SPACE) {
         Shooter* player = (Shooter*) simulator->getObject("PlayerShooter");
-        player->setVelocity(0,10,0);
-    }
-    else if(arg.key == OIS::KC_LSHIFT) {
+        player->setVelocity(0,15,0);
+    } else if (arg.key == OIS::KC_LSHIFT) {
         Shooter* player = (Shooter*) simulator->getObject("PlayerShooter");
         Ogre::Vector3 location = player->getGunPosition();//(Ogre::Vector3) player->getPosition();
         //if(!player->hasFired()) {
             float avgVel = sqrt(640000/3);
             Ogre::Vector3 cDir = mCamera->getDirection();
-            int numShots = player->getNumShots();
+            // int numShots = player->getNumShots();
+            //
+            // Ogre::String lName;
+            // if (numShots % 3 == 0) {
+            //     lName = "PlayerLaser";
+            // } else if (numShots % 3 == 1) {
+            //     lName = "b2";
+            // } else {
+            //     lName = "b3";
+            // }
 
-            Ogre::String lName;
-                if(numShots%3 == 0) {
-                    lName = "b1";
-                }
-                else if(numShots%3 == 1) {
-                    lName = "b2";
-                }
-                else {
-                    lName = "b3";
-                }
+            // if (player->getNumShots() < 3) {
 
-            if(player->getNumShots() < 3) {
-                Laser* laser = new Laser(lName, mSceneMgr, simulator,
-                 Ogre::Vector3(location.x+cDir.x, location.y+cDir.y, location.z+cDir.z), 2.0f,
-                 "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic);
+            //     laser->setVelocity(btVector3(avgVel*cDir.x, avgVel*cDir.y, avgVel*cDir.z));
+            //     printf("Creating %s\n", lName.c_str());
+            //     player->shot();
+            //     simulator->soundSystem->playSound("laserSound");
+            // } else {
+            Laser* laser = (Laser*) simulator->getObject("PlayerLaser");
+            if (laser->isAvailable()) {
+                printf("Hmm\n");
+                laser->setPosition(btVector3(location.x+cDir.x*1.5, location.y+cDir.y, location.z+cDir.z*1.5));
                 laser->setVelocity(btVector3(avgVel*cDir.x, avgVel*cDir.y, avgVel*cDir.z));
-                printf("Creating %s\n", lName.c_str());
+                // printf("%s\n", lName.c_str());
                 player->shot();
+                laser->setAvailablity(false);
                 simulator->soundSystem->playSound("laserSound");
-            }
-            else {
-                Laser* laser = (Laser*) simulator->getObject(lName);
-                if(laser->isAvailable()) {
-                    laser->setPosition(btVector3(location.x+cDir.x, location.y+cDir.y, location.z+cDir.z));
-                    laser->setVelocity(btVector3(avgVel*cDir.x, avgVel*cDir.y, avgVel*cDir.z));
-                    printf("%s\n", lName.c_str());
-                    player->shot();
-                    simulator->soundSystem->playSound("laserSound");
-                }
+            } else printf("Fuck this shit\n");
 
-                if(lName.compare("b1") == 0) {
-                    positions.xPBPos = location.x+cDir.x;
-                    positions.yPBPos = location.y+cDir.y;
-                    positions.zPBPos = location.z+cDir.z;
-                    positions.xPBVel = avgVel*cDir.x;
-                    positions.yPBVel = avgVel*cDir.y;
-                    positions.zPBVel = avgVel*cDir.z;
-                }
-            }
+            // if (lName.compare("PlayerLaser") == 0) {
+            positions.xPBPos = location.x+cDir.x;
+            positions.yPBPos = location.y+cDir.y;
+            positions.zPBPos = location.z+cDir.z;
+            positions.xPBVel = avgVel*cDir.x;
+            positions.yPBVel = avgVel*cDir.y;
+            positions.zPBVel = avgVel*cDir.z;
+            // }
+            // }
         }
     //}
     else if(arg.key == OIS::KC_UP) {

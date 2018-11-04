@@ -24,6 +24,7 @@ public:
     void update(float elapsedTime);
     void setVelocity(btVector3 vel);
     bool isAvailable();
+    void setAvailablity(bool);
 };
 
 #endif

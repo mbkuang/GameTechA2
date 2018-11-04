@@ -13,7 +13,7 @@ Laser::Laser(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
     this->friction = friction;
     this->kinematic = kinematic;
     lastTime = 0.0f;
-    availability = false;
+    availability = true;
 
     // Set the entity.
     geom = sceneMgr->createEntity(name, "sphere.mesh");
@@ -49,32 +49,34 @@ bool Laser::isAvailable() {
     return availability;
 }
 
+void Laser::setAvailablity(bool a) {
+    availability = a;
+}
+
 // Specific game object update routine.
 void Laser::update(float elapsedTime) {
     lastTime += elapsedTime;
     simulator->getDynamicsWorld()->contactTest(body, *cCallBack);
 
     Ogre::String objName = this->getName();
-    if(objName.compare("e1") == 0)
+    if(objName.compare("EnemyLaser") == 0)
         return;
 
     if (context->hit && (context->velNorm > 2.0 || context->velNorm < -2.0)
         && (lastTime > 0.5 || (context->lastBody != context->body && lastTime > 0.1))) {
         //Handle the hit
-        Ogre::String sw = "SouthWall";
-        Ogre::String nw = "NorthWall";
         GameObject* contact = context->theObject;
         Ogre::String contactName = contact->getName();
 
         Player* p = simulator->getPlayer("Player1");
         Player* cpu = simulator->getPlayer("CPU");
         Shooter* ps = (Shooter*) simulator->getObject("PlayerShooter");
-        if(objName.compare("b1") == 0 || objName.compare("b2") == 0 || objName.compare("b3") == 0) {
+        if(objName.compare("PlayerLaser") == 0) {// || objName.compare("b2") == 0 || objName.compare("b3") == 0) {
             p->shot();      //Update the firing status
             ps->shot();
             printf("zzz\n");
         }
-        else if(objName.compare("cpulaser") == 0) {
+        else if(objName.compare("EnemyLaser") == 0) {
             cpu->shot();    //Update the firing status
         }
 
@@ -84,17 +86,16 @@ void Laser::update(float elapsedTime) {
         availability = true;
         simulator->soundSystem->playSound("deathSound");
         this->context->reset(); //Reset the callback
-        if(contactName.compare("PlayerPaddle") == 0) {
+        if(contactName.compare("PlayerShooter") == 0) {
             p->setHP(p->getHP()-1);
+            printf("You shot yourself\n");
             simulator->overlay->updateScore();
             return;
-        }
-        else if(contactName.compare("CPUPaddle") == 0) {
+        } else if(contactName.compare("EnemyShooter") == 0) {
             cpu->setHP(cpu->getHP()-1);
             simulator->overlay->updateScore();
             return;
         }
-        return;
 
         lastTime = 0.0f;
     }
