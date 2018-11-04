@@ -479,6 +479,7 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
                         player1->setHP(positions.pHealth);
                         Player* cpu = simulator->getPlayer("CPU");
                         cpu->setHP(positions.eHealth);
+                        simulator->overlay->updateScore();
                     }
                 }
             } else {
@@ -502,6 +503,12 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
 
                         Laser* eLaser = (Laser*) simulator->getObject("EnemyLaser");
                         eLaser->setPosition(eBulletPos);
+
+                        Player* player1 = simulator->getPlayer("Player1");
+                        player1->setHP(positions.pHealth);
+                        Player* cpu = simulator->getPlayer("CPU");
+                        cpu->setHP(positions.eHealth);
+                        simulator->overlay->updateScore();
                     }
                 }
             }

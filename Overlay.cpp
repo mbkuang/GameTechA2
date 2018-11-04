@@ -156,7 +156,7 @@ void Overlay::updateScore() {
         p1->setHP(5);
         cpu->setScore(0);
         cpu->setHP(5);
-        alarm = 60*10*3;
+        simulator->pause();
     }
     else if(cpuscore == 3 || p1hp == 0) {
         CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
@@ -169,7 +169,7 @@ void Overlay::updateScore() {
         p1->setHP(5);
         cpu->setScore(0);
         cpu->setHP(5);
-        alarm = 60*10*3;
+        simulator->pause();
     }
 
     ss1 << "Player 1\nScore: "<<p1score<<"\nHP: "<<p1hp;
