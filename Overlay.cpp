@@ -46,6 +46,10 @@ void Overlay::createMainMenu() {
     multiMenu->hide();
     sheet->addChild(multiMenu);
 
+    gameOverMenu = wmgr.loadLayoutFromFile("gameOver.layout");
+    gameOverMenu->hide();
+    sheet->addChild(gameOverMenu);
+
     /* Main Menu Buttons */
     CEGUI::Window *singlePlayerButton = mainMenu->getChildRecursive("singlePlayerButton");
     singlePlayerButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::singlePlayer, this));
@@ -116,6 +120,12 @@ void Overlay::createMainMenu() {
 
     CEGUI::Window *backMusic = musicMenu->getChildRecursive("Setting4");
     backMusic->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::settings, this));
+
+    /* Game Over Stuff */
+    CEGUI::Window *p1wins = gameOverMenu->getChildRecursive("p1wins");
+    CEGUI::Window *p2wins = gameOverMenu->getChildRecursive("p2wins");
+    p1wins->hide();
+    p2wins->hide();
 }
 
 /* Display the scoreboard */
@@ -202,6 +212,7 @@ bool Overlay::singlePlayer() {
     mainMenu->hide();
     pauseMenu->hide();
     simulator->pause();
+    gameOverMenu->show();
     return true;
 }
 

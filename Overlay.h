@@ -25,6 +25,7 @@ public:
 	CEGUI::Window *pauseMenu;
 	CEGUI::Window *musicMenu;
 	CEGUI::Window *multiMenu;
+	CEGUI::Window *gameOverMenu;
 	CEGUI::Window *playerScore;
 	CEGUI::Window *cpuScore;
 	bool done;
