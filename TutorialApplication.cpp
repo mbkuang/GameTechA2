@@ -339,8 +339,8 @@ void TutorialApplication::decodePositionString(std::string positionString) {
     positions.xEBPos = std::strtof(strtok(NULL, ","), NULL);
     positions.yEBPos = std::strtof(strtok(NULL, ","), NULL);
     positions.zEBPos = std::strtof(strtok(NULL, ","), NULL);
-    positions.pHealth = std::strtod(strtok(NULL, ","), NULL);
     positions.eHealth = std::strtod(strtok(NULL, ","), NULL);
+    positions.pHealth = std::strtod(strtok(NULL, ","), NULL);
 
     free(ps);
 }
