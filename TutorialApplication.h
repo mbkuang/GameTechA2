@@ -55,7 +55,7 @@ protected:
     AIManager* aimanager;
 
     /* Network Stuff */
-    NetManager network;
+    NetManager* network;
     bool isHost;
     bool isMultiplayer;
     const char* hostName;

@@ -23,6 +23,7 @@ TutorialApplication::TutorialApplication(void)
 {
     simulator = new Simulator();
     aimanager = new AIManager(simulator);
+    network = new NetManager();
 
     port_number = 51215;    // Default port
     bool netStarted = false;
@@ -98,6 +99,8 @@ void TutorialApplication::createObjects() {
     positions.xEDir = 0.0f; positions.yEDir = 0.0f; positions.zEDir = 1.0f;
     positions.xEBPos = -400.0f; positions.yEBPos = -400.0f; positions.zEBPos = -400.0f; //Hide projectiles offscreen
 
+    positions.pHealth = 5; positions.eHealth = 5;
+
     Ogre::Vector3 shooterPosition;
     Ogre::Vector3 enemyPosition;
     if(isHost || !isMultiplayer) {
@@ -131,10 +134,10 @@ void TutorialApplication::createObjects() {
 bool TutorialApplication::quit() {
     if (isMultiplayer) {
         if (isHost) {
-            network.stopClient(PROTOCOL_TCP);
-            network.stopServer(PROTOCOL_TCP);
+            network->stopClient(PROTOCOL_TCP);
+            network->stopServer(PROTOCOL_TCP);
         } else {
-            network.dropClient(PROTOCOL_TCP, network.getIPnbo());
+            network->dropClient(PROTOCOL_TCP, network->getIPnbo());
         }
     }
     mShutDown = true;
@@ -144,28 +147,28 @@ bool TutorialApplication::quit() {
 bool TutorialApplication::setupNetwork(bool isHost) {
     this->isHost = isHost;
     bool success;
-    success = network.initNetManager();
+    success = network->initNetManager();
     netStarted = true;
     if(isHost) {
-        network.addNetworkInfo(PROTOCOL_TCP, NULL, port_number);
-        network.acceptConnections();
-        success = network.startServer();
+        network->addNetworkInfo(PROTOCOL_TCP, NULL, port_number);
+        network->acceptConnections();
+        success = network->startServer();
     }
     else {
-        network.addNetworkInfo(PROTOCOL_TCP, hostName, port_number);
-        success = network.startClient();
+        network->addNetworkInfo(PROTOCOL_TCP, hostName, port_number);
+        success = network->startClient();
     }
     return success;
 }
 //---------------------------------------------------------------------------
 void TutorialApplication::closeNetwork() {
-    network.close();
+    network->close();
 }
 //---------------------------------------------------------------------------
 void TutorialApplication::hostGame() {
     bool success = setupNetwork(true);
     CEGUI::Window *hostLabel = simulator->overlay->multiMenu->getChildRecursive("hostLabel");
-    hostLabel->setText("Host Name: " + network.getIPstring());
+    hostLabel->setText("Host Name: " + network->getIPstring());
     if(success) {
         CEGUI::Window *hostButton = simulator->overlay->multiMenu->getChildRecursive("HostButton");
         CEGUI::Window *joinButton = simulator->overlay->multiMenu->getChildRecursive("JoinButton");
@@ -199,7 +202,7 @@ void TutorialApplication::joinGame() {
         p1joined->show();
         p2joined->show();
         startButton->setText("Waiting for host");
-        network.messageServer(PROTOCOL_TCP, "p2joined", 8);
+        network->messageServer(PROTOCOL_TCP, "p2joined", 8);
 
         // Player positional/orientation/ bullet pos coords;
         positions.xPPos = 0.0f; positions.yPPos = -100.0f; positions.zPPos = -10.0f;
@@ -228,7 +231,7 @@ void TutorialApplication::joinGame() {
 }
 //---------------------------------------------------------------------------
 void TutorialApplication::startMulti() {
-    network.messageClients(PROTOCOL_TCP, "Start", 5);
+    network->messageClients(PROTOCOL_TCP, "Start", 5);
     multiPlayerStarted = true;
 }
 //---------------------------------------------------------------------------
@@ -304,8 +307,6 @@ void TutorialApplication::updatePositions() {
 
     Player* player1 = simulator->getPlayer("Player1");
     positions.pHealth = player1->getHP();
-    Player* cpu = simulator->getPlayer("CPU");
-    positions.eHealth = cpu->getHP();
 }
 //---------------------------------------------------------------------------
 std::string TutorialApplication::getPositionString() {
@@ -347,9 +348,9 @@ void TutorialApplication::decodePositionString(std::string positionString) {
 //---------------------------------------------------------------------------
 void TutorialApplication::checkMultiStart() {
     if (netStarted && !multiPlayerStarted) {
-        if(network.pollForActivity(1)) {
+        if(network->pollForActivity(1)) {
             if(isHost) {
-                std::istringstream ss(network.tcpClientData[0]->output);
+                std::istringstream ss(network->tcpClientData[0]->output);
                 std::string s;
                 ss >> s;
                 if(!connectionMade) {
@@ -363,7 +364,7 @@ void TutorialApplication::checkMultiStart() {
                     }
                 }
             } else {
-                std::istringstream ss(network.tcpServerData.output);
+                std::istringstream ss(network->tcpServerData.output);
                 std::string s;
                 ss >> s;
                 if(s.compare("Start") == 0) {
@@ -445,15 +446,15 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
         std::string positionString = getPositionString();
         if (multiPlayerStarted) {
             if (isHost) {
-                network.messageClients(PROTOCOL_TCP, positionString.c_str(), positionString.length());
+                network->messageClients(PROTOCOL_TCP, positionString.c_str(), positionString.length());
             } else {
-                network.messageServer(PROTOCOL_TCP, positionString.c_str(), positionString.length());
+                network->messageServer(PROTOCOL_TCP, positionString.c_str(), positionString.length());
             }
         }
 
-        if (network.pollForActivity(1)) {
+        if (network->pollForActivity(1)) {
             if (isHost) {
-                std::istringstream ss(network.tcpClientData[0]->output);
+                std::istringstream ss(network->tcpClientData[0]->output);
                 std::string s = "";
                 ss >> s;
                 if(s.compare("pause") == 0) {
@@ -483,7 +484,7 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
                     }
                 }
             } else {
-                std::istringstream ss(network.tcpServerData.output);
+                std::istringstream ss(network->tcpServerData.output);
                 std::string s = "";
                 ss >> s;
                 if(s.compare("pause") == 0) {
@@ -539,9 +540,9 @@ bool TutorialApplication::keyPressed(const OIS::KeyEvent& arg) {
     } else if(arg.key == OIS::KC_M) {
         simulator->overlay->pauseGame();
         if(gameStarted && !isHost)
-            network.messageServer(PROTOCOL_TCP, "pause", 7);
+            network->messageServer(PROTOCOL_TCP, "pause", 7);
         else if(gameStarted && isHost)
-            network.messageClients(PROTOCOL_TCP, "pause", 7);
+            network->messageClients(PROTOCOL_TCP, "pause", 7);
     }
     return true;
 }

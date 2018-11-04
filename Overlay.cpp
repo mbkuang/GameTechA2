@@ -150,7 +150,7 @@ void Overlay::updateScore() {
         p1wins = wmgr.createWindow("TaharezLook/Button", "CEGUIDemo/QuitButton");
         p1wins->setSize(CEGUI::USize(CEGUI::UDim(.4, 0), CEGUI::UDim(.1, 0)));
         p1wins->setPosition(CEGUI::UVector2(CEGUI::UDim(.3, 0), CEGUI::UDim(0, 0)));
-        p1wins->setText("[colour='FFFF0000']Player 1 wins!\n\nCPU gets tougher...");
+        p1wins->setText("[colour='FFFF0000']Player 1 wins!\n\nPlayer2 gets tougher...");
         sheet->addChild(p1wins);
         p1->setScore(0);
         p1->setHP(5);
@@ -163,7 +163,7 @@ void Overlay::updateScore() {
         p1wins = wmgr.createWindow("TaharezLook/Button", "CEGUIDemo/QuitButton");
         p1wins->setSize(CEGUI::USize(CEGUI::UDim(.4, 0), CEGUI::UDim(.1, 0)));
         p1wins->setPosition(CEGUI::UVector2(CEGUI::UDim(.3, 0), CEGUI::UDim(0, 0)));
-        p1wins->setText("[colour='FFFF0000']CPU wins!\n\nYou must prove your worth!");
+        p1wins->setText("[colour='FFFF0000']Player2 wins!\n\nYou must prove your worth!");
         sheet->addChild(p1wins);
         p1->setScore(0);
         p1->setHP(5);
