@@ -200,23 +200,23 @@ void TutorialApplication::joinGame() {
         network.messageServer(PROTOCOL_TCP, "p2joined", 8);
         //network.messageServer(PROTOCOL_UDP, " ", 1);
 
-/*        // Player positional/orientation/bullet pos coords
-        positions.xPPos = 0.0f; positions.yPPos = 0.0f; positions.zPPos = -50.0f;
+        // Player positional/orientation/ bullet pos coords;
+        positions.xPPos = 0.0f; positions.yPPos = -100.0f; positions.zPPos = -100.0f;
         positions.xPDir = 0.0f; positions.yPDir = 0.0f; positions.zPDir = 1.0f;
-        positions.xPBPos = -100.0f; positions.yPBPos = -50.0f; positions.zPBPos = 0.0f;
-        // // Enemy positional/orientation/ bullet pos coords;
-        positions.xEPos = 0.0f; positions.yEPos = 0.0f; positions.zEPos = -10.0f;
+        positions.xPBPos = -400.0f; positions.yPBPos = -400.0f; positions.zPBPos = -400.0f; //Hide projectiles offscreen
+        // Enemy positional/orientation/bullet pos coords
+        positions.xEPos = 0.0f; positions.yEPos = -100.0f; positions.zEPos = 100.0f;
         positions.xEDir = 0.0f; positions.yEDir = 0.0f; positions.zEDir = -1.0f;
-        positions.xEBPos = 100.0f; positions.yEBPos = -50.0f; positions.zEBPos = 0.0f;*/
+        positions.xEBPos = 400.0f; positions.yEBPos = 400.0f; positions.zEBPos = 400.0f;    //Hide projectiles offscreen
 
-        // Shooter* playerShooter = (Shooter*) simulator->getObject("PlayerShooter");
-        // //playerShooter->setPosition(0.0f, 10.0f, -50.0f);
+        Shooter* playerShooter = (Shooter*) simulator->getObject("PlayerShooter");
+        playerShooter->setPosition(positions.xPPos, positions.yPPos, positions.zPPos);
 
-        // mCamera->setPosition(playerShooter->getOgrePosition());
-        // mCamera->lookAt(0.0f, 10.0f, 0.0f);
+        mCamera->setPosition(playerShooter->getOgrePosition());
+        mCamera->lookAt(0.0f, 10.0f, 0.0f);
 
-        // Shooter* enemyShooter = (Shooter*) simulator->getObject("CPUShooter");
-        // enemyShooter->setPosition(0.0f, 10.0f, 0.0f);
+        Shooter* enemyShooter = (Shooter*) simulator->getObject("CPUShooter");
+        enemyShooter->setPosition(positions.xEPos, positions.yEPos, positions.zEPos);
 
         isMultiplayer = true;
     }
@@ -344,7 +344,7 @@ void TutorialApplication::decodePositionString(std::string positionString) {
     positions.xEBPos = std::strtof(strtok(NULL, ","), NULL);
     positions.yEBPos = std::strtof(strtok(NULL, ","), NULL);
     positions.zEBPos = std::strtof(strtok(NULL, ","), NULL);
-    
+
     free(ps);
 }
 //---------------------------------------------------------------------------
