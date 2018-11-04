@@ -510,7 +510,7 @@ bool TutorialApplication::keyPressed(const OIS::KeyEvent& arg) {
     }
     else if(arg.key == OIS::KC_LSHIFT) {
         Shooter* player = (Shooter*) simulator->getObject("PlayerShooter");
-        Ogre::Vector3 location = (Ogre::Vector3) player->getPosition();
+        Ogre::Vector3 location = player->getGunPosition();//(Ogre::Vector3) player->getPosition();
         //if(!player->hasFired()) {
             float avgVel = sqrt(640000/3);
             Ogre::Vector3 cDir = mCamera->getDirection();

@@ -54,13 +54,18 @@ Ogre::String Shooter::nameGun(Ogre::String gunName) {
     return result.append(gunName);
 }
 
+Ogre::Vector3 Shooter::getGunPosition() {
+    btVector3 position = gun->getPosition();
+    return Ogre::Vector3(position.getX(), position.getY(), position.getZ());
+}
+
 // Specific game object update routine.
 void Shooter::update(float elapsedTime) {
     btVector3 pos = this->getPosition();
     gun->setPosition(pos);
     gun->rotate(this->getOgreDirection());
-    Ogre::Vector3 dir = this->getOgreDirection() * Ogre::Vector3(1.0f, 0.0f, 0.0f);
-    gun->setPosition(pos + btVector3(dir.x, 2.5f, dir.z));
+    Ogre::Vector3 dir = this->getOgreDirection() * Ogre::Vector3(0.0f, 0.0f, -1.0f);
+    gun->setPosition(pos + btVector3(dir.x * 1.5f, 2.5f, dir.z * 1.5f));
 
     // lastTime += elapsedTime;
     // simulator->getDynamicsWorld()->contactTest(body, *cCallBack);

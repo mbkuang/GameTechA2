@@ -23,6 +23,7 @@ public:
         float mass, float restitution, float friction, bool kinematic);
     ~Shooter();
     Ogre::String nameGun(Ogre::String gunName);
+    Ogre::Vector3 getGunPosition();
     void update(float elapsedTime);
     bool hasFired();
     void shot();
