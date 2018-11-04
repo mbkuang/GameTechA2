@@ -67,19 +67,17 @@ void TutorialApplication::createScene(void)
 }
 //---------------------------------------------------------------------------
 void TutorialApplication::createObjects() {
-    float zMid = -150.0f;
-
     Wall* flooring = new Wall("Flooring", mSceneMgr, simulator,
         Ogre::Vector3(0.0f, yFWall, 0.0f), Ogre::Vector3(wallWidth, wallThickness, wallLength),
         "WallTexture2Inverse", wallMass, wallRestitution, wallFriction, wallKinematic);
     Wall* ceiling = new Wall("Ceiling", mSceneMgr, simulator,
-        Ogre::Vector3(0.0f, yCWall, zMid), Ogre::Vector3(wallWidth, wallThickness, wallLength),
+        Ogre::Vector3(0.0f, yCWall, 0.0f), Ogre::Vector3(wallWidth, wallThickness, wallLength),
         "WallTexture2Inverse", wallMass, wallRestitution, wallFriction, wallKinematic);
     Wall* westWall = new Wall("WestWall", mSceneMgr, simulator,
-        Ogre::Vector3(xWWall, 0.0f, zMid), Ogre::Vector3(wallThickness, wallWidth-20.0f, wallLength),
+        Ogre::Vector3(xWWall, 0.0f, 0.0f), Ogre::Vector3(wallThickness, wallWidth - wallThickness, wallLength),
         "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
     Wall* eastWall = new Wall("EastWall", mSceneMgr, simulator,
-        Ogre::Vector3(xEWall, 0.0f, zMid), Ogre::Vector3(wallThickness, wallWidth-20.0f, wallLength),
+        Ogre::Vector3(xEWall, 0.0f, 0.0f), Ogre::Vector3(wallThickness, wallWidth - wallThickness, wallLength),
         "WallTextureInverse", wallMass, wallRestitution, wallFriction, wallKinematic);
     Wall* northWall = new Wall("NorthWall", mSceneMgr, simulator,
         Ogre::Vector3(0.0f, 0.0f, zNWall), Ogre::Vector3(wallWidth, wallWidth, wallThickness),
@@ -90,10 +88,6 @@ void TutorialApplication::createObjects() {
 
     Player* player1 = new Player("Player1", simulator);
     Player* cpuPlayer = new Player("CPU", simulator);
-
-    // Ball* ball = new Ball("Ball", mSceneMgr, simulator,
-    //     Ogre::Vector3(0.0f, 0.0f, zMid), 2.0f,
-    //     "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic);
 
     // Player positional/orientation/bullet pos coords
     positions.xPPos = 0.0f; positions.yPPos = 0.0f; positions.zPPos = -1.0f;
