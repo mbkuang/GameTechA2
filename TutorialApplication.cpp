@@ -301,12 +301,12 @@ void TutorialApplication::updatePositions() {
         Ogre::Vector3 pPos = playerShooter->getOgrePosition();
         Ogre::Vector3 pDir = playerShooter->getOgreDirection() * Ogre::Vector3(0, 0, -1);
 
-        Ogre::Vector3 bPos(0,0,0);
-        Ogre::Vector3 bVel(0,0,0);
-        if(hasShot) {
+        // Ogre::Vector3 bPos(0,0,0);
+        // Ogre::Vector3 bVel(0,0,0);
+        // if(hasShot) {
             Ogre::Vector3 bPos = pLaser->getOgrePosition();
             Ogre::Vector3 bVel = pLaser->getOgreVelocity();
-        }
+        // }
 
         positions.xPPos = pPos.x; positions.yPPos = pPos.y; positions.zPPos = pPos.z;
         positions.xPDir = pDir.x; positions.yPDir = pDir.y; positions.zPDir = pDir.z;
