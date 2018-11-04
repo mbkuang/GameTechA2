@@ -153,9 +153,9 @@ void Overlay::updateScore() {
         p1wins->setText("[colour='FFFF0000']Player 1 wins!\n\nPlayer2 gets tougher...");
         sheet->addChild(p1wins);
         p1->setScore(0);
-        p1->setHP(5);
+        // p1->setHP(5);
         cpu->setScore(0);
-        cpu->setHP(5);
+        // cpu->setHP(5);
         simulator->pause();
     }
     else if(cpuscore == 3 || p1hp == 0) {
@@ -166,9 +166,9 @@ void Overlay::updateScore() {
         p1wins->setText("[colour='FFFF0000']Player2 wins!\n\nYou must prove your worth!");
         sheet->addChild(p1wins);
         p1->setScore(0);
-        p1->setHP(5);
+        // p1->setHP(5);
         cpu->setScore(0);
-        cpu->setHP(5);
+        // cpu->setHP(5);
         simulator->pause();
     }
 

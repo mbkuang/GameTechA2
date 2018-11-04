@@ -305,17 +305,28 @@ void TutorialApplication::updatePositions() {
         positions.xEDir = eDir.x; positions.yEDir = eDir.y; positions.zEDir = eDir.z;
     }
 
-    Player* player1 = simulator->getPlayer("Player1");
-    positions.pHealth = player1->getHP();
+    // Player* player1 = simulator->getPlayer("Player1");
+    // positions.pHealth = player1->getHP();
+    Player* enemy = simulator->getPlayer("CPU");
+    positions.eHealth = enemy->getHP();
 }
 //---------------------------------------------------------------------------
 std::string TutorialApplication::getPositionString() {
     Ogre::stringstream ss;
 
+    if (positions.eHealth <= 0) {
+        std::string winstring = "win";
+        if (isHost) {
+            network->messageClients(PROTOCOL_TCP, winstring.c_str(), 3);
+        } else {
+            network->messageServer(PROTOCOL_TCP, winstring.c_str(), 3);
+        }
+    }
+
     ss<<positions.xPPos<<","<<positions.yPPos<<","<<positions.zPPos<<","<<
         positions.xPDir<<","<<positions.yPDir<<","<<positions.zPDir<<","<<
         positions.xPBPos<<","<<positions.yPBPos<<","<<positions.zPBPos<<","<<
-        positions.pHealth<<","<<positions.eHealth;
+        positions.eHealth;
 
     ss << ",z";
 
@@ -340,7 +351,6 @@ void TutorialApplication::decodePositionString(std::string positionString) {
     positions.xEBPos = std::strtof(strtok(NULL, ","), NULL);
     positions.yEBPos = std::strtof(strtok(NULL, ","), NULL);
     positions.zEBPos = std::strtof(strtok(NULL, ","), NULL);
-    positions.eHealth = std::strtod(strtok(NULL, ","), NULL);
     positions.pHealth = std::strtod(strtok(NULL, ","), NULL);
 
     free(ps);
@@ -459,6 +469,14 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
                 ss >> s;
                 if(s.compare("pause") == 0) {
                     simulator->overlay->pauseGame();
+                } else if (s.compare("win") == 0) {
+                    Player* player1 = simulator->getPlayer("Player1");
+                    positions.pHealth = 0;
+                    player1->setHP(positions.pHealth);
+                    // Player* cpu = simulator->getPlayer("CPU");
+                    // cpu->setHP(positions.eHealth);
+                    simulator->overlay->updateScore();
+                    simulator->pause();
                 }
 
                 if (s.length() > 0) {
@@ -478,8 +496,8 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
 
                         Player* player1 = simulator->getPlayer("Player1");
                         player1->setHP(positions.pHealth);
-                        Player* cpu = simulator->getPlayer("CPU");
-                        cpu->setHP(positions.eHealth);
+                        // Player* cpu = simulator->getPlayer("CPU");
+                        // cpu->setHP(positions.eHealth);
                         simulator->overlay->updateScore();
                     }
                 }
@@ -489,6 +507,12 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
                 ss >> s;
                 if(s.compare("pause") == 0) {
                     simulator->overlay->pauseGame();
+                } else if (s.compare("win") == 0) {
+                    Player* player1 = simulator->getPlayer("Player1");
+                    positions.pHealth = 0;
+                    player1->setHP(positions.pHealth);
+                    simulator->overlay->updateScore();
+                    simulator->pause();
                 }
                 if (s.length() > 0) {
                     if (s.at(s.length()-1) == 'z') {
@@ -507,8 +531,8 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
 
                         Player* player1 = simulator->getPlayer("Player1");
                         player1->setHP(positions.pHealth);
-                        Player* cpu = simulator->getPlayer("CPU");
-                        cpu->setHP(positions.eHealth);
+                        // Player* cpu = simulator->getPlayer("CPU");
+                        // cpu->setHP(positions.eHealth);
                         simulator->overlay->updateScore();
                     }
                 }
