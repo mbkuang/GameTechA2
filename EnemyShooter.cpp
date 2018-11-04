@@ -31,7 +31,7 @@ void EnemyShooter::setNewPos(btVector3 nPos) {
 }
 
 void EnemyShooter::setNewDir(btVector3 nDir) {
-    this->rotate(btQuaternion(nDir.getX(), nDir.getY(), nDir.getZ()));
+    this->rotate(btQuaternion(0, nDir.getY(), 0));
 }
 
 void EnemyShooter::update(float elapsedTime) {

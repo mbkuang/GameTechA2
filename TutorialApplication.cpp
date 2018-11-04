@@ -90,11 +90,11 @@ void TutorialApplication::createObjects() {
     Player* cpuPlayer = new Player("CPU", simulator);
 
     // Player positional/orientation/bullet pos coords
-    positions.xPPos = 0.0f; positions.yPPos = -100.0f; positions.zPPos = -100.0f;
+    positions.xPPos = 0.0f; positions.yPPos = -100.0f; positions.zPPos = -50.0f;
     positions.xPDir = 0.0f; positions.yPDir = 0.0f; positions.zPDir = -1.0f;
     positions.xPBPos = 400.0f; positions.yPBPos = 400.0f; positions.zPBPos = 400.0f;    //Hide projectiles offscreen
     // // Enemy positional/orientation/ bullet pos coords;
-    positions.xEPos = 0.0f; positions.yEPos = -100.0f; positions.zEPos = 100.0f;
+    positions.xEPos = 0.0f; positions.yEPos = -100.0f; positions.zEPos = -10.0f;
     positions.xEDir = 0.0f; positions.yEDir = 0.0f; positions.zEDir = 1.0f;
     positions.xEBPos = -400.0f; positions.yEBPos = -400.0f; positions.zEBPos = -400.0f; //Hide projectiles offscreen
 
@@ -213,11 +213,11 @@ void TutorialApplication::joinGame() {
         //network.messageServer(PROTOCOL_UDP, " ", 1);
 
         // Player positional/orientation/ bullet pos coords;
-        positions.xPPos = 0.0f; positions.yPPos = -100.0f; positions.zPPos = 100.0f;
+        positions.xPPos = 0.0f; positions.yPPos = -100.0f; positions.zPPos = -10.0f;
         positions.xPDir = 0.0f; positions.yPDir = 0.0f; positions.zPDir = 1.0f;
         positions.xPBPos = -400.0f; positions.yPBPos = -400.0f; positions.zPBPos = -400.0f; //Hide projectiles offscreen
         // Enemy positional/orientation/bullet pos coords
-        positions.xEPos = 0.0f; positions.yEPos = -100.0f; positions.zEPos = -100.0f;
+        positions.xEPos = 0.0f; positions.yEPos = -100.0f; positions.zEPos = -50.0f;
         positions.xEDir = 0.0f; positions.yEDir = 0.0f; positions.zEDir = -1.0f;
         positions.xEBPos = 400.0f; positions.yEBPos = 400.0f; positions.zEBPos = 400.0f;    //Hide projectiles offscreen
 
@@ -291,10 +291,10 @@ void TutorialApplication::createFrameListener(void)
 void TutorialApplication::updatePositions() {
     // Player positional/orientation/bullet pos coords
     Shooter* playerShooter = (Shooter*) simulator->getObject("PlayerShooter");
-    bool hasShot = playerShooter->getNumShots() > 0;
+    // bool hasShot = playerShooter->getNumShots() > 0;
 
     Laser* pLaser;
-    if(hasShot)
+    // if(hasShot)
         pLaser = (Laser*) simulator->getObject("PlayerLaser");
 
     if (playerShooter) {
