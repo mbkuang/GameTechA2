@@ -79,12 +79,12 @@ protected:
         float xPPos, yPPos, zPPos;
         float xPDir, yPDir, zPDir;
         float xPBPos, yPBPos, zPBPos;
-        float xPBVel, yPBVel, zPBVel;
         // Enemy positional/orientation/ bullet pos coords;
         float xEPos, yEPos, zEPos;
         float xEDir, yEDir, zEDir;
         float xEBPos, yEBPos, zEBPos;
-        float xEBVel, yEBVel, zEBVel;
+
+        int pHealth, eHealth;
     };
 
     Positions positions;

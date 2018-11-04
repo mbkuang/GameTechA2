@@ -74,7 +74,6 @@ void Laser::update(float elapsedTime) {
         if(objName.compare("PlayerLaser") == 0) {// || objName.compare("b2") == 0 || objName.compare("b3") == 0) {
             p->shot();      //Update the firing status
             ps->shot();
-            printf("zzz\n");
         }
         else if(objName.compare("EnemyLaser") == 0) {
             cpu->shot();    //Update the firing status
@@ -88,7 +87,6 @@ void Laser::update(float elapsedTime) {
         this->context->reset(); //Reset the callback
         if(contactName.compare("PlayerShooter") == 0) {
             p->setHP(p->getHP()-1);
-            printf("You shot yourself\n");
             simulator->overlay->updateScore();
             return;
         } else if(contactName.compare("EnemyShooter") == 0) {

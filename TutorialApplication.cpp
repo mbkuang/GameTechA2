@@ -110,30 +110,20 @@ void TutorialApplication::createObjects() {
     }
 
     Shooter* playerShooter = new Shooter("PlayerShooter", mSceneMgr, simulator,
-        shooterPosition, Ogre::Vector3(1.0f, 5.0f, 1.0f),
+        shooterPosition, Ogre::Vector3(1.5f, 5.0f, 1.5f),
         "ShooterTexture", shooterMass, shooterRestitution, shooterFriction, shooterKinematic);
 
     Laser* pLaser = new Laser("PlayerLaser", mSceneMgr, simulator,
         Ogre::Vector3(positions.xPBPos, positions.yPBPos, positions.zPBPos), 2.0f,
         "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic);
-    //
-    // Laser* pLaser2 = new Laser("b2", mSceneMgr, simulator,
-    //     Ogre::Vector3(positions.xPBPos, positions.yPBPos, positions.zPBPos), 2.0f,
-    //     "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic);
-    //
-    // Laser* pLaser3 = new Laser("b3", mSceneMgr, simulator,
-    //     Ogre::Vector3(positions.xPBPos, positions.yPBPos, positions.zPBPos), 2.0f,
-    //     "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic);
 
     EnemyShooter* enemyShooter = new EnemyShooter("EnemyShooter", mSceneMgr, simulator,
-        Ogre::Vector3(0.0f, 0.0f, -50.0f), Ogre::Vector3(1.0f, 5.0f, 1.0f),//12.0f, 100.0f, 1.0f),
+        Ogre::Vector3(0.0f, 0.0f, -50.0f), Ogre::Vector3(1.5f, 5.0f, 1.5f),//12.0f, 100.0f, 1.0f),
         "ShooterTexture", enemyShooterMass, shooterRestitution, shooterFriction, enemyShooterKinematic);
 
     Laser* enemyLaser = new Laser("EnemyLaser", mSceneMgr, simulator,
          Ogre::Vector3(-500, -500, -500), 2.0f,
          "BallTexture", ballMass, ballRestitution, ballFriction, true);
-
-    // aimanager->update(mSceneMgr, simulator, cpuPaddle, playerPaddle, ball);
 
     simulator->overlay->createScoreboard();
 }
@@ -210,7 +200,6 @@ void TutorialApplication::joinGame() {
         p2joined->show();
         startButton->setText("Waiting for host");
         network.messageServer(PROTOCOL_TCP, "p2joined", 8);
-        //network.messageServer(PROTOCOL_UDP, " ", 1);
 
         // Player positional/orientation/ bullet pos coords;
         positions.xPPos = 0.0f; positions.yPPos = -100.0f; positions.zPPos = -10.0f;
@@ -220,6 +209,8 @@ void TutorialApplication::joinGame() {
         positions.xEPos = 0.0f; positions.yEPos = -100.0f; positions.zEPos = -50.0f;
         positions.xEDir = 0.0f; positions.yEDir = 0.0f; positions.zEDir = -1.0f;
         positions.xEBPos = 400.0f; positions.yEBPos = 400.0f; positions.zEBPos = 400.0f;    //Hide projectiles offscreen
+
+        positions.pHealth = 5; positions.eHealth = 5;
 
         Shooter* playerShooter = (Shooter*) simulator->getObject("PlayerShooter");
         playerShooter->setPosition(positions.xPPos, positions.yPPos, positions.zPPos);
@@ -239,8 +230,6 @@ void TutorialApplication::joinGame() {
 void TutorialApplication::startMulti() {
     network.messageClients(PROTOCOL_TCP, "Start", 5);
     multiPlayerStarted = true;
-
-    //createObjects();
 }
 //---------------------------------------------------------------------------
 CEGUI::MouseButton convertButton(OIS::MouseButtonID buttonID) {
@@ -291,27 +280,18 @@ void TutorialApplication::createFrameListener(void)
 void TutorialApplication::updatePositions() {
     // Player positional/orientation/bullet pos coords
     Shooter* playerShooter = (Shooter*) simulator->getObject("PlayerShooter");
-    // bool hasShot = playerShooter->getNumShots() > 0;
-
-    Laser* pLaser;
-    // if(hasShot)
-        pLaser = (Laser*) simulator->getObject("PlayerLaser");
+    Laser* pLaser = (Laser*) simulator->getObject("PlayerLaser");
 
     if (playerShooter) {
         Ogre::Vector3 pPos = playerShooter->getOgrePosition();
         Ogre::Vector3 pDir = playerShooter->getOgreDirection() * Ogre::Vector3(0, 0, -1);
-
-        // Ogre::Vector3 bPos(0,0,0);
-        // Ogre::Vector3 bVel(0,0,0);
-        // if(hasShot) {
-            Ogre::Vector3 bPos = pLaser->getOgrePosition();
-            Ogre::Vector3 bVel = pLaser->getOgreVelocity();
-        // }
+        Ogre::Vector3 bPos = pLaser->getOgrePosition();
+        Ogre::Vector3 bVel = pLaser->getOgreVelocity();
 
         positions.xPPos = pPos.x; positions.yPPos = pPos.y; positions.zPPos = pPos.z;
         positions.xPDir = pDir.x; positions.yPDir = pDir.y; positions.zPDir = pDir.z;
         positions.xPBPos = bPos.x; positions.yPBPos = bPos.y; positions.zPBPos = bPos.z;
-        positions.xPBVel = bVel.x; positions.yPBVel = bVel.y; positions.zPBVel = bVel.z;
+
     }
     // Enemy positional/orientation/ bullet pos coords;
     EnemyShooter* enemyShooter = (EnemyShooter*) simulator->getObject("EnemyShooter");
@@ -320,21 +300,23 @@ void TutorialApplication::updatePositions() {
         Ogre::Vector3 eDir = enemyShooter->getOgreDirection() * Ogre::Vector3(0, 0, -1);
         positions.xEPos = ePos.x; positions.yEPos = ePos.y; positions.zEPos = ePos.z;
         positions.xEDir = eDir.x; positions.yEDir = eDir.y; positions.zEDir = eDir.z;
-        // positions.xEBPos = 0; positions.yEBPos = 0; positions.zEBPos = 0;
-        // positions.xEBVel = 0; positions.yEBVel = 0; positions.zEBVel = 0;
     }
+
+    Player* player1 = simulator->getPlayer("Player1");
+    positions.pHealth = player1->getHP();
+    Player* cpu = simulator->getPlayer("CPU");
+    positions.eHealth = cpu->getHP();
 }
 //---------------------------------------------------------------------------
 std::string TutorialApplication::getPositionString() {
-    //std::string s = "";
     Ogre::stringstream ss;
 
     ss<<positions.xPPos<<","<<positions.yPPos<<","<<positions.zPPos<<","<<
         positions.xPDir<<","<<positions.yPDir<<","<<positions.zPDir<<","<<
-        positions.xPBPos<<","<<positions.yPBPos<<","<<positions.zPBPos;
+        positions.xPBPos<<","<<positions.yPBPos<<","<<positions.zPBPos<<","<<
+        positions.pHealth<<","<<positions.eHealth;
 
     ss << ",z";
-    //ss >> s;
 
     return ss.str();
 }
@@ -346,7 +328,8 @@ void TutorialApplication::decodePositionString(std::string positionString) {
     float xEBPos, yEBPos, zEBPos;
     */
     char* ps = (char*) malloc(positionString.length()+1);
-    strcpy(ps, positionString.c_str()); // strcpy(destination, source)
+    strcpy(ps, positionString.c_str());
+
     positions.xEPos = std::strtof(strtok(ps, ","), NULL);
     positions.yEPos = std::strtof(strtok(NULL, ","), NULL);
     positions.zEPos = std::strtof(strtok(NULL, ","), NULL);
@@ -356,6 +339,8 @@ void TutorialApplication::decodePositionString(std::string positionString) {
     positions.xEBPos = std::strtof(strtok(NULL, ","), NULL);
     positions.yEBPos = std::strtof(strtok(NULL, ","), NULL);
     positions.zEBPos = std::strtof(strtok(NULL, ","), NULL);
+    positions.pHealth = std::strtod(strtok(NULL, ","), NULL);
+    positions.eHealth = std::strtod(strtok(NULL, ","), NULL);
 
     free(ps);
 }
@@ -383,7 +368,6 @@ void TutorialApplication::checkMultiStart() {
                 ss >> s;
                 if(s.compare("Start") == 0) {
                     multiPlayerStarted = true;
-                    //createObjects();
                 }
             }
         }
@@ -417,9 +401,6 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
 
     if (!processUnbufferedInput(fe))
         return false;
-
-    // aimanager->move(fe);
-    // aimanager->shoot();
 
     // Update Ogre with Bullet's State
 	if (this->simulator != NULL && !simulator->paused()) {
@@ -463,7 +444,6 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
     if (gameStarted) {
         std::string positionString = getPositionString();
         if (multiPlayerStarted) {
-            printf("Sending position string length: %d\nString: {%s}\n", positionString.length(), positionString.c_str());
             if (isHost) {
                 network.messageClients(PROTOCOL_TCP, positionString.c_str(), positionString.length());
             } else {
@@ -473,7 +453,6 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
 
         if (network.pollForActivity(1)) {
             if (isHost) {
-                printf("Checkin the tcp client data\n");
                 std::istringstream ss(network.tcpClientData[0]->output);
                 std::string s = "";
                 ss >> s;
@@ -481,7 +460,6 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
                     simulator->overlay->pauseGame();
                 }
 
-                printf("Received string length [%d] : {%s}\n", s.length(), s.c_str());
                 if (s.length() > 0) {
                     if (s.at(s.length()-1) == 'z') {
                         // Update player position
@@ -496,17 +474,20 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
 
                         Laser* eLaser = (Laser*) simulator->getObject("EnemyLaser");
                         eLaser->setPosition(eBulletPos);
+
+                        Player* player1 = simulator->getPlayer("Player1");
+                        player1->setHP(positions.pHealth);
+                        Player* cpu = simulator->getPlayer("CPU");
+                        cpu->setHP(positions.eHealth);
                     }
                 }
             } else {
-                printf("Checkin the tcp server data\n");
                 std::istringstream ss(network.tcpServerData.output);
                 std::string s = "";
                 ss >> s;
                 if(s.compare("pause") == 0) {
                     simulator->overlay->pauseGame();
                 }
-                printf("Received string length [%d] : {%s}\n", s.length(), s.c_str());
                 if (s.length() > 0) {
                     if (s.at(s.length()-1) == 'z') {
                         // Update player position
@@ -536,70 +517,19 @@ bool TutorialApplication::keyPressed(const OIS::KeyEvent& arg) {
     context.injectChar((CEGUI::Key::Scan)arg.text);
     if (arg.key == OIS::KC_ESCAPE) {
         quit();
-    } else if (arg.key == OIS::KC_R) {
-        //Reset the ball's position
-        // Ball* ball = (Ball*) simulator->getObject("Ball");
-        // ball->init();
-    }
-    else if (arg.key == OIS::KC_SPACE) {
+    } else if (arg.key == OIS::KC_SPACE) {
         Shooter* player = (Shooter*) simulator->getObject("PlayerShooter");
-        player->setVelocity(0,15,0);
+        player->setVelocity(0,50,0);
+
     } else if (arg.key == OIS::KC_LSHIFT) {
-        Shooter* player = (Shooter*) simulator->getObject("PlayerShooter");
-        Ogre::Vector3 location = player->getGunPosition();//(Ogre::Vector3) player->getPosition();
-        //if(!player->hasFired()) {
-            float avgVel = sqrt(640000/3);
-            Ogre::Vector3 cDir = mCamera->getDirection();
-            // int numShots = player->getNumShots();
-            //
-            // Ogre::String lName;
-            // if (numShots % 3 == 0) {
-            //     lName = "PlayerLaser";
-            // } else if (numShots % 3 == 1) {
-            //     lName = "b2";
-            // } else {
-            //     lName = "b3";
-            // }
 
-            // if (player->getNumShots() < 3) {
-
-            //     laser->setVelocity(btVector3(avgVel*cDir.x, avgVel*cDir.y, avgVel*cDir.z));
-            //     printf("Creating %s\n", lName.c_str());
-            //     player->shot();
-            //     simulator->soundSystem->playSound("laserSound");
-            // } else {
-            Laser* laser = (Laser*) simulator->getObject("PlayerLaser");
-            if (laser->isAvailable()) {
-                printf("Hmm\n");
-                laser->setPosition(btVector3(location.x+cDir.x*1.5, location.y+cDir.y, location.z+cDir.z*1.5));
-                laser->setVelocity(btVector3(avgVel*cDir.x, avgVel*cDir.y, avgVel*cDir.z));
-                // printf("%s\n", lName.c_str());
-                player->shot();
-                laser->setAvailablity(false);
-                simulator->soundSystem->playSound("laserSound");
-            } else printf("Fuck this shit\n");
-
-            // if (lName.compare("PlayerLaser") == 0) {
-            positions.xPBPos = location.x+cDir.x;
-            positions.yPBPos = location.y+cDir.y;
-            positions.zPBPos = location.z+cDir.z;
-            positions.xPBVel = avgVel*cDir.x;
-            positions.yPBVel = avgVel*cDir.y;
-            positions.zPBVel = avgVel*cDir.z;
-            // }
-            // }
-        }
-    //}
-    else if(arg.key == OIS::KC_UP) {
+    } else if(arg.key == OIS::KC_UP) {
         simulator->soundSystem->volumeUp();
-    }
-    else if(arg.key == OIS::KC_DOWN) {
+    } else if(arg.key == OIS::KC_DOWN) {
         simulator->soundSystem->volumeDown();
-    }
-    else if(arg.key == OIS::KC_P) {
+    } else if(arg.key == OIS::KC_P) {
         simulator->soundSystem->playSound("bg_music");
-    }
-    else if(arg.key == OIS::KC_M) {
+    } else if(arg.key == OIS::KC_M) {
         simulator->overlay->pauseGame();
         if(gameStarted && !isHost)
             network.messageServer(PROTOCOL_TCP, "pause", 7);
@@ -636,11 +566,33 @@ bool TutorialApplication::mouseMoved(const OIS::MouseEvent& arg) {
 //---------------------------------------------------------------------------
 bool TutorialApplication::mousePressed(const OIS::MouseEvent& arg, OIS::MouseButtonID id) {
     CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonDown(convertButton(id));
+    if (!simulator->paused()) {
+        if (id == OIS::MB_Left) {
+            Shooter* player = (Shooter*) simulator->getObject("PlayerShooter");
+            Ogre::Vector3 location = player->getGunPosition();
+            float avgVel = sqrt(640000/3);
+            Ogre::Vector3 cDir = mCamera->getDirection();
+            Laser* laser = (Laser*) simulator->getObject("PlayerLaser");
+
+            if (laser->isAvailable()) {
+                laser->setPosition(btVector3(location.x+cDir.x*1.5, location.y+cDir.y, location.z+cDir.z*1.5));
+                laser->setVelocity(btVector3(avgVel*cDir.x, avgVel*cDir.y, avgVel*cDir.z));
+                player->shot();
+                laser->setAvailablity(false);
+                simulator->soundSystem->playSound("laserSound");
+            }
+
+            positions.xPBPos = location.x+cDir.x;
+            positions.yPBPos = location.y+cDir.y;
+            positions.zPBPos = location.z+cDir.z;
+        }
+    }
     return true;
 }
 //---------------------------------------------------------------------------
 bool TutorialApplication::mouseReleased(const OIS::MouseEvent& arg, OIS::MouseButtonID id) {
     CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonUp(convertButton(id));
+
     return true;
 }
 //---------------------------------------------------------------------------
