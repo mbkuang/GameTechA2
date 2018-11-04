@@ -117,11 +117,11 @@ void TutorialApplication::createObjects() {
 
     Shooter* playerShooter = new Shooter("PlayerShooter", mSceneMgr, simulator,
         shooterPosition, Ogre::Vector3(0.5f, 1.0f, 0.5f),
-        "PaddleTexture", shooterMass, shooterRestitution, shooterFriction, shooterKinematic);
+        "ShooterTexture", shooterMass, shooterRestitution, shooterFriction, shooterKinematic);
 
     EnemyShooter* cpuShooter = new EnemyShooter("CPUShooter", mSceneMgr, simulator,
         Ogre::Vector3(0.0f, 0.0f, -50.0f), Ogre::Vector3(0.5f, 1.0f, 0.5f),//12.0f, 100.0f, 1.0f),
-        "PaddleTexture", enemyShooterMass, shooterRestitution, shooterFriction, enemyShooterKinematic);
+        "ShooterTexture", enemyShooterMass, shooterRestitution, shooterFriction, enemyShooterKinematic);
 
     // aimanager->update(mSceneMgr, simulator, cpuPaddle, playerPaddle, ball);
 
