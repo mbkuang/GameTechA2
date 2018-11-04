@@ -90,13 +90,13 @@ void TutorialApplication::createObjects() {
     Player* cpuPlayer = new Player("CPU", simulator);
 
     // Player positional/orientation/bullet pos coords
-    positions.xPPos = 0.0f; positions.yPPos = 0.0f; positions.zPPos = -1.0f;
+    positions.xPPos = 0.0f; positions.yPPos = -100.0f; positions.zPPos = -100.0f;
     positions.xPDir = 0.0f; positions.yPDir = 0.0f; positions.zPDir = -1.0f;
-    positions.xPBPos = 100.0f; positions.yPBPos = -50.0f; positions.zPBPos = 0.0f;
+    positions.xPBPos = 400.0f; positions.yPBPos = 400.0f; positions.zPBPos = 400.0f;    //Hide projectiles offscreen
     // // Enemy positional/orientation/ bullet pos coords;
-    positions.xEPos = 0.0f; positions.yEPos = 0.0f; positions.zEPos = -50.0f;
+    positions.xEPos = 0.0f; positions.yEPos = -100.0f; positions.zEPos = 100.0f;
     positions.xEDir = 0.0f; positions.yEDir = 0.0f; positions.zEDir = 1.0f;
-    positions.xEBPos = -100.0f; positions.yEBPos = -50.0f; positions.zEBPos = 0.0f;
+    positions.xEBPos = -400.0f; positions.yEBPos = -400.0f; positions.zEBPos = -400.0f; //Hide projectiles offscreen
 
     Ogre::Vector3 shooterPosition;
     Ogre::Vector3 enemyPosition;
@@ -541,6 +541,15 @@ bool TutorialApplication::keyPressed(const OIS::KeyEvent& arg) {
                     printf("%s\n", lName.c_str());
                     player->shot();
                     simulator->soundSystem->playSound("laserSound");
+                }
+
+                if(lName.compare("b1") == 0) {
+                    positions.xPBPos = location.x+cDir.x;
+                    positions.yPBPos = location.y+cDir.y;
+                    positions.zPBPos = location.z+cDir.z;
+                    positions.xPBVel = avgVel*cDir.x;
+                    positions.yPBVel = avgVel*cDir.y;
+                    positions.zPBVel = avgVel*cDir.z;
                 }
             }
         }
