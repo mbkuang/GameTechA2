@@ -10,7 +10,7 @@
         </Window>
         <Window type="TaharezLook/Button" name="Setting2" >
             <Property name="Area" value="{{0.25,0},{0.30,0},{0.75,0},{0.50,0}}" />
-            <Property name="Text" value="Controls" />
+            <Property name="Text" value="More Features Coming Soon!" />
         </Window>
         <Window type="TaharezLook/Button" name="Setting3" >
             <Property name="Area" value="{{0.25,0},{0.50,0},{0.75,0},{0.70,0}}" />

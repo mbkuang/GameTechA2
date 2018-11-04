@@ -82,7 +82,7 @@ void Overlay::createMainMenu() {
     musicSettings->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::showMusicMenu, this));
 
     CEGUI::Window *ms2 = settingsMenu->getChildRecursive("Setting2");
-    ms2->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::showControls, this));
+    ms2->setDisabled(true);
 
     CEGUI::Window *ms3 = settingsMenu->getChildRecursive("Setting3");
     ms3->setDisabled(true);
