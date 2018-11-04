@@ -110,12 +110,12 @@ void TutorialApplication::createObjects() {
     }
 
     Shooter* playerShooter = new Shooter("PlayerShooter", mSceneMgr, simulator,
-        shooterPosition, Ogre::Vector3(2.0f, 10.0f, 0.5f),
-        "PaddleTexture", shooterMass, shooterRestitution, shooterFriction, shooterKinematic);
+        shooterPosition, Ogre::Vector3(0.5f, 1.0f, 0.5f),
+        "ShooterTexture", shooterMass, shooterRestitution, shooterFriction, shooterKinematic);
 
     EnemyShooter* cpuShooter = new EnemyShooter("CPUShooter", mSceneMgr, simulator,
-        enemyPosition, Ogre::Vector3(2.0f, 10.0f, 0.5f),
-        "PaddleTexture", enemyShooterMass, shooterRestitution, shooterFriction, enemyShooterKinematic);
+        Ogre::Vector3(0.0f, 0.0f, -50.0f), Ogre::Vector3(0.5f, 1.0f, 0.5f),//12.0f, 100.0f, 1.0f),
+        "ShooterTexture", enemyShooterMass, shooterRestitution, shooterFriction, enemyShooterKinematic);
 
     Laser* enemyLaser = new Laser("e1", mSceneMgr, simulator,
                  Ogre::Vector3(-500, -500, -500), 2.0f,
@@ -288,7 +288,7 @@ void TutorialApplication::updatePositions() {
     if (playerShooter) {
         Ogre::Vector3 pPos = playerShooter->getOgrePosition();
         Ogre::Vector3 pDir = playerShooter->getOgreDirection() * Ogre::Vector3(0, 0, -1);
-        
+
         Ogre::Vector3 bPos(0,0,0);
         Ogre::Vector3 bVel(0,0,0);
         if(hasShot) {
