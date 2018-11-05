@@ -1,0 +1,38 @@
+﻿Final Report
+
+Sons of Liberty reporting in! We extended our game engine to accommodate networking 
+and demo a third person shooter. Down below are our personal thoughts to what we 
+succeeded and failed in while developing this project. 
+
+Overall, we’re satisfied with our project and teamwork. It’s rewarding to see our 
+game networked across two computers. Much of this success comes from grouping up 
+more often to discuss ideas and pair-program. Such teamwork, we we’re able to flesh 
+out a GUI system that is intuitive to networking. In addition, we are thankful for 
+the NetManager code given to us, despite the issues.
+
+We discovered two issues with the NetManager. The first issue is that UDP doesn’t work. 
+We suspect there is either logic error or missing code. The second problem is that 
+NetManager relies on data being sent and received via cstr. This is quite cumbersome 
+given the fact we already know the data types within a struct. 
+
+Working with Ogre and Bullet Physic is another cumbersome thing. We learned that dynamic 
+objects can only be updated by forces while kinematic objects must be updated by 
+transformations. Mixing the two types of objects can cause problems in the simulation. 
+For instance, we directly transform some of our dynamic objects to reset position. This 
+can sometimes cause the simulation to not register collisions on that object.
+ 
+Given what we learned by integrating Ogre and Bullet Physics, we decided to control our 
+player dynamically since the trade off was minor and easier to implement. The trade off 
+is whether to implement force logic or collision logic. We felt that applying linear and 
+angular forces was much easier than determining the many different instance of collisions 
+that our player could make. Our dynamic character controller works well, but orientation 
+of player to camera updates slowly because catching “real-time” data in the render loop is 
+hard. In other words, we apply an angular force to the character, then stop the force when 
+the quaternion of the player and camera match up within error. 
+
+Throughout the design of this project, our engine got messy since we we’re all learning 
+Ogre and Bullet Physics differently. We dislike that the GameObject now has many different 
+transformational getters and setters. There was no easy way to delete or combine them 
+since our code is spread out. 
+
+

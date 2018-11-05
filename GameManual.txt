@@ -1,0 +1,21 @@
+﻿Shooter Demo Manual
+
+Objective: To win the game, you must kill your opponent.
+
+Health Points: Each time you get hit with a bullet, you lose 
+a health point. The same goes for your opponent. Health 
+points will be tracked under Player 1 and Player 2 panes.
+
+Controls
+W – walk forward.
+A – strafe left.
+S – walk backward.
+D – strafe right.
+Mouse Track - aim or look around.
+Mouse Left - fire the gun.
+Spacebar – jump (jet up).
+Up Arrow – increase sound volume.
+Down Arrow – decrease sound volume.
+P – turn on background sound.
+M - menu (pause).
+ESC - quit.
