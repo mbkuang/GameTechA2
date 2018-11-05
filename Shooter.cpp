@@ -66,16 +66,6 @@ void Shooter::update(float elapsedTime) {
     gun->rotate(this->getOgreDirection());
     Ogre::Vector3 dir = this->getOgreDirection() * Ogre::Vector3(0.0f, 0.0f, -1.0f);
     gun->setPosition(pos + btVector3(dir.x * 1.5f, 2.5f, dir.z * 1.5f));
-
-    // lastTime += elapsedTime;
-    // simulator->getDynamicsWorld()->contactTest(body, *cCallBack);
-    // if (context->hit && (context->velNorm > 2.0 || context->velNorm < -2.0)
-    //     && (lastTime > 0.5 || (context->lastBody != context->body && lastTime > 0.1))) {
-    //     //Handle the hit
-    //     lastTime = 0.0f;
-    // }
-
-    // context->hit = false;
 }
 
 // Has the player already shot at the oponent?

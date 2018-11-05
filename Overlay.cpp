@@ -156,33 +156,17 @@ void Overlay::updateScore() {
     int cpuhp = cpu->getHP();
 
     if(p1score == 3 || cpuhp == 0) {
-        // CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
-        // p1wins = wmgr.createWindow("TaharezLook/Button", "CEGUIDemo/QuitButton");
-        // p1wins->setSize(CEGUI::USize(CEGUI::UDim(.4, 0), CEGUI::UDim(.1, 0)));
-        // p1wins->setPosition(CEGUI::UVector2(CEGUI::UDim(.3, 0), CEGUI::UDim(0, 0)));
-        // p1wins->setText("[colour='FFFF0000']Player 1 wins!\n\nPlayer2 gets tougher...");
-        // sheet->addChild(p1wins);
         p1->setScore(0);
-        // p1->setHP(5);
         cpu->setScore(0);
-        // cpu->setHP(5);
-        simulator->pause();
+        //simulator->pause();
     }
     else if(cpuscore == 3 || p1hp == 0) {
-        // CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
-        // p1wins = wmgr.createWindow("TaharezLook/Button", "CEGUIDemo/QuitButton");
-        // p1wins->setSize(CEGUI::USize(CEGUI::UDim(.4, 0), CEGUI::UDim(.1, 0)));
-        // p1wins->setPosition(CEGUI::UVector2(CEGUI::UDim(.3, 0), CEGUI::UDim(0, 0)));
-        // p1wins->setText("[colour='FFFF0000']Player2 wins!\n\nYou must prove your worth!");
-        // sheet->addChild(p1wins);
         p1->setScore(0);
-        // p1->setHP(5);
         cpu->setScore(0);
-        // cpu->setHP(5);
     }
 
-    ss1 << "Player 1\nScore: "<<p1score<<"\nHP: "<<p1hp;
-    ss2 << "Enemy\nScore: "<<cpuscore <<"\nHP: "<<cpuhp;
+    ss1 << "Player 1\nWins: "<<p1score<<"\nHP: "<<p1hp;
+    ss2 << "Enemy\nWins: "<<cpuscore <<"\nHP: "<<cpuhp;
 
     playerScore->setText("[colour='FFFF0000']"+ ss1.str());
     cpuScore->setText("[colour='FFFF0000']"+ ss2.str());

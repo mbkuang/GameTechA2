@@ -19,3 +19,11 @@ Down Arrow – decrease sound volume.
 P – turn on background sound.
 M - menu (pause).
 ESC - quit.
+
+To create a Multiplayer game, one player must host the game
+in the multiplayer lobby. The host's IP address will appear,
+and a player looking to join the game should enter that IP
+to join the server.
+
+If you're struggling to hit opponents in multiplayer, you
+might want to practice in the Training Mode. 

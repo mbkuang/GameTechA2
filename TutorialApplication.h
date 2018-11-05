@@ -95,6 +95,7 @@ private:
     void decodePositionString(std::string);
     void checkMultiStart();
     bool quit();
+    void newGame();
 
     float old_x;
 };

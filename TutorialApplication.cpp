@@ -144,6 +144,16 @@ bool TutorialApplication::quit() {
     return true;
 }
 //---------------------------------------------------------------------------
+void TutorialApplication::newGame() {
+    positions.pHealth = 5;
+    positions.eHealth = 5;
+    simulator->getPlayer("Player1")->setHP(5);
+    simulator->getPlayer("CPU")->setHP(5);
+    network->messageClients(PROTOCOL_TCP, "new", 3);
+    simulator->pause();
+    simulator->overlay->gameOverMenu->hide();
+}
+//---------------------------------------------------------------------------
 bool TutorialApplication::setupNetwork(bool isHost) {
     this->isHost = isHost;
     bool success;
@@ -305,8 +315,6 @@ void TutorialApplication::updatePositions() {
         positions.xEDir = eDir.x; positions.yEDir = eDir.y; positions.zEDir = eDir.z;
     }
 
-    // Player* player1 = simulator->getPlayer("Player1");
-    // positions.pHealth = player1->getHP();
     Player* enemy = simulator->getPlayer("CPU");
     positions.eHealth = enemy->getHP();
 }
@@ -316,19 +324,21 @@ std::string TutorialApplication::getPositionString() {
 
     if (positions.eHealth <= 0) {
         std::string winstring = "win";
+        simulator->getPlayer("Player1")->incrementScore();
         if (isHost) {
             network->messageClients(PROTOCOL_TCP, winstring.c_str(), 3);
         } else {
             network->messageServer(PROTOCOL_TCP, winstring.c_str(), 3);
         }
+        simulator->pause();
         simulator->overlay->gameOverMenu->show();
         CEGUI::Window *p1wins = simulator->overlay->gameOverMenu->getChildRecursive("p1wins");
         CEGUI::Window *quitButton = simulator->overlay->gameOverMenu->getChildRecursive("quit");
         CEGUI::Window *newGameButton = simulator->overlay->gameOverMenu->getChildRecursive("newGame");
-        newGameButton->setDisabled(true);
         quitButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&TutorialApplication::quit, this));
-
+        newGameButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&TutorialApplication::newGame, this));
         p1wins->show();
+        newGameButton->setDisabled(true);
     }
 
     ss<<positions.xPPos<<","<<positions.yPPos<<","<<positions.zPPos<<","<<
@@ -342,11 +352,6 @@ std::string TutorialApplication::getPositionString() {
 }
 //---------------------------------------------------------------------------
 void TutorialApplication::decodePositionString(std::string positionString) {
-    /*
-    float xEPos, yEPos, zEPos;
-    float xEDir, yEDir, zEDir;
-    float xEBPos, yEBPos, zEBPos;
-    */
     char* ps = (char*) malloc(positionString.length()+1);
     strcpy(ps, positionString.c_str());
 
@@ -481,8 +486,6 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
                     Player* player1 = simulator->getPlayer("Player1");
                     positions.pHealth = 0;
                     player1->setHP(positions.pHealth);
-                    // Player* cpu = simulator->getPlayer("CPU");
-                    // cpu->setHP(positions.eHealth);
                     simulator->overlay->updateScore();
                     simulator->pause();
                     simulator->overlay->gameOverMenu->show();
@@ -492,6 +495,13 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
                     newGameButton->setDisabled(true);
                     quitButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&TutorialApplication::quit, this));
                     p2wins->show();
+                } else if (s.compare("new") == 0) {
+                    positions.pHealth = 5;
+                    positions.eHealth = 5;
+                    simulator->getPlayer("Player1")->setHP(5);
+                    simulator->getPlayer("CPU")->setHP(5);
+                    simulator->pause();
+                    simulator->overlay->gameOverMenu->hide();
                 }
 
                 if (s.length() > 0) {
@@ -511,8 +521,6 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
 
                         Player* player1 = simulator->getPlayer("Player1");
                         player1->setHP(positions.pHealth);
-                        // Player* cpu = simulator->getPlayer("CPU");
-                        // cpu->setHP(positions.eHealth);
                         simulator->overlay->updateScore();
                     }
                 }
@@ -534,7 +542,7 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
                     CEGUI::Window *newGameButton = simulator->overlay->gameOverMenu->getChildRecursive("newGame");
                     newGameButton->setDisabled(true);
                     quitButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&TutorialApplication::quit, this));
-
+                    newGameButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&TutorialApplication::newGame, this));
                     p2wins->show();
                 }
                 if (s.length() > 0) {
@@ -554,8 +562,6 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
 
                         Player* player1 = simulator->getPlayer("Player1");
                         player1->setHP(positions.pHealth);
-                        // Player* cpu = simulator->getPlayer("CPU");
-                        // cpu->setHP(positions.eHealth);
                         simulator->overlay->updateScore();
                     }
                 }

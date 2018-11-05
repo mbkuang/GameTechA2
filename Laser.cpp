@@ -80,7 +80,6 @@ void Laser::update(float elapsedTime) {
         }
 
         this->setPosition(100*ps->getNumShots(), 400, 0);  //Hide the projectile off screen
-        //this->setVelocity(btVector3(0, 1, 0));
         this->inertia = btVector3(0.0f, 0.0f, 0.0f);
         availability = true;
         simulator->soundSystem->playSound("deathSound");
@@ -93,7 +92,6 @@ void Laser::update(float elapsedTime) {
         if(contactName.compare("EnemyShooter") == 0) {
             cpu->setHP(cpu->getHP()-1);
             simulator->overlay->updateScore();
-            printf("Hit\n");
             return;
         }
 
