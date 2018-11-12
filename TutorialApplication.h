@@ -25,6 +25,7 @@ http://www.ogre3d.org/wiki/
 #include "Laser.h"
 #include "Wall.h"
 #include "Paddle.h"
+#include "Bird.h"
 #include "GameSettings.h"
 #include "AIManager.h"
 #include "Overlay.h"

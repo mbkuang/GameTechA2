@@ -120,6 +120,11 @@ void TutorialApplication::createObjects() {
         Ogre::Vector3(positions.xPBPos, positions.yPBPos, positions.zPBPos), 2.0f,
         "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic);
 
+    Bird* bird1 = new Bird("Bird1", mSceneMgr, simulator,
+        Ogre::Vector3(0, 25.0f, -40), 2.0f,
+        "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic);
+    bird1->setTarget(playerShooter);
+
     EnemyShooter* enemyShooter = new EnemyShooter("EnemyShooter", mSceneMgr, simulator,
         Ogre::Vector3(0.0f, 0.0f, -50.0f), Ogre::Vector3(1.5f, 5.0f, 1.5f),//12.0f, 100.0f, 1.0f),
         "ShooterTexture", enemyShooterMass, shooterRestitution, shooterFriction, enemyShooterKinematic);
@@ -437,7 +442,7 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
     Shooter* pShooter = (Shooter*) simulator->getObject("PlayerShooter");
     Ogre::Vector3 position = pShooter->getOgrePosition();
     position.y += 2.5f;
-    mCamera->setPosition(position - 6 * mCamera->getDirection());
+    mCamera->setPosition(position);// - 6 * mCamera->getDirection());
 
     btQuaternion q = pShooter->getBody()->getOrientation();
     Ogre::Quaternion cQ = mCamera->getOrientation();
