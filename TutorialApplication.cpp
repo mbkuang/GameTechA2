@@ -68,24 +68,27 @@ void TutorialApplication::createScene(void)
 }
 //---------------------------------------------------------------------------
 void TutorialApplication::createObjects() {
-    Wall* flooring = new Wall("Flooring", mSceneMgr, simulator,
-        Ogre::Vector3(0.0f, yFWall, 0.0f), Ogre::Vector3(wallWidth, wallThickness, wallLength),
+    Wall* flooring1 = new Wall("Flooring1", mSceneMgr, simulator,
+        Ogre::Vector3(0.0f, yFWall, -50.0f), Ogre::Vector3(10, wallThickness, 100),
         "WallTexture2Inverse", wallMass, wallRestitution, wallFriction, wallKinematic);
-    Wall* ceiling = new Wall("Ceiling", mSceneMgr, simulator,
-        Ogre::Vector3(0.0f, yCWall, 0.0f), Ogre::Vector3(wallWidth, wallThickness, wallLength),
+    Wall* flooring2 = new Wall("Flooring2", mSceneMgr, simulator,
+        Ogre::Vector3(-45.0f, yFWall, -105.0f), Ogre::Vector3(100, wallThickness, 10),
         "WallTexture2Inverse", wallMass, wallRestitution, wallFriction, wallKinematic);
-    Wall* westWall = new Wall("WestWall", mSceneMgr, simulator,
-        Ogre::Vector3(xWWall, 0.0f, 0.0f), Ogre::Vector3(wallThickness, wallWidth - wallThickness, wallLength),
-        "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
-    Wall* eastWall = new Wall("EastWall", mSceneMgr, simulator,
-        Ogre::Vector3(xEWall, 0.0f, 0.0f), Ogre::Vector3(wallThickness, wallWidth - wallThickness, wallLength),
-        "WallTextureInverse", wallMass, wallRestitution, wallFriction, wallKinematic);
-    Wall* northWall = new Wall("NorthWall", mSceneMgr, simulator,
-        Ogre::Vector3(0.0f, 0.0f, zNWall), Ogre::Vector3(wallWidth, wallWidth, wallThickness),
-        "WallTextureInvisible", wallMass, wallRestitution, wallFriction, wallKinematic);
-    Wall* southWall = new Wall("SouthWall", mSceneMgr, simulator,
-        Ogre::Vector3(0.0f, 0.0f, zSWall), Ogre::Vector3(wallWidth, wallWidth, wallThickness),
-        "WallTextureInvisible", wallMass, wallRestitution, wallFriction, wallKinematic);
+    // Wall* ceiling = new Wall("Ceiling", mSceneMgr, simulator,
+    //     Ogre::Vector3(0.0f, yCWall, 0.0f), Ogre::Vector3(wallWidth, wallThickness, wallLength),
+    //     "WallTexture2Inverse", wallMass, wallRestitution, wallFriction, wallKinematic);
+    // Wall* westWall = new Wall("WestWall", mSceneMgr, simulator,
+    //     Ogre::Vector3(xWWall, 0.0f, 0.0f), Ogre::Vector3(wallThickness, wallWidth - wallThickness, wallLength),
+    //     "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
+    // Wall* eastWall = new Wall("EastWall", mSceneMgr, simulator,
+    //     Ogre::Vector3(xEWall, 0.0f, 0.0f), Ogre::Vector3(wallThickness, wallWidth - wallThickness, wallLength),
+    //     "WallTextureInverse", wallMass, wallRestitution, wallFriction, wallKinematic);
+    // Wall* northWall = new Wall("NorthWall", mSceneMgr, simulator,
+    //     Ogre::Vector3(0.0f, 0.0f, zNWall), Ogre::Vector3(wallWidth, wallWidth, wallThickness),
+    //     "WallTextureInvisible", wallMass, wallRestitution, wallFriction, wallKinematic);
+    // Wall* southWall = new Wall("SouthWall", mSceneMgr, simulator,
+    //     Ogre::Vector3(0.0f, 0.0f, zSWall), Ogre::Vector3(wallWidth, wallWidth, wallThickness),
+    //     "WallTextureInvisible", wallMass, wallRestitution, wallFriction, wallKinematic);
 
     Player* player1 = new Player("Player1", simulator);
     Player* cpuPlayer = new Player("CPU", simulator);
@@ -121,7 +124,7 @@ void TutorialApplication::createObjects() {
         "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic);
 
     Bird* bird1 = new Bird("Bird1", mSceneMgr, simulator,
-        Ogre::Vector3(0, 25.0f, -40), 2.0f,
+        Ogre::Vector3(0, 10.0f, 100.0f), 2.0f,
         "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic);
     bird1->setTarget(playerShooter);
 
@@ -234,7 +237,7 @@ void TutorialApplication::joinGame() {
         playerShooter->setPosition(positions.xPPos, positions.yPPos, positions.zPPos);
 
         mCamera->setPosition(playerShooter->getOgrePosition());
-        mCamera->lookAt(0.0f, 10.0f, 0.0f);
+        mCamera->lookAt(0.0f, 0.0f, -1.0f);
 
         Shooter* enemyShooter = (Shooter*) simulator->getObject("EnemyShooter");
         enemyShooter->setPosition(positions.xEPos, positions.yEPos, positions.zEPos);

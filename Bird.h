@@ -23,10 +23,10 @@ protected:
         CHASE = 1
     };
     btVector3 flyVector;
-    int maxSpd = 100;
-    int flySpd = 75;
-    int minSpd = 20;
-    int speed = 50;
+    int maxSpd = 150;
+    int flySpd = 90;
+    int minSpd = 80;
+    int speed = 80;
 
 public:
     Bird(Ogre::String name, Ogre::SceneManager* sceneMgr, Simulator* simulator,

@@ -38,6 +38,8 @@ Bird::Bird(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
     flyVector = btVector3(0,0,0);
 
     addToSimulator();
+
+    this->getBody()->setGravity(btVector3(0,0,0));
 }
 
 Bird::~Bird() {
@@ -106,7 +108,7 @@ void Bird::update(float elapsedTime) {
 void Bird::chaseState() {
     btVector3 vel = this->getVelocity();
     flyVector = target->getPosition() - this->getPosition();
-    flyVector = flyVector.normalized() * maxSpd;
+    flyVector = flyVector.normalized() * speed;
     if (vel.angle(flyVector) > 15) {
         if (speed > minSpd) {speed --;}
         else {speed = minSpd;}
@@ -118,7 +120,7 @@ void Bird::chaseState() {
 
 void Bird::flyState() {
     btVector3 vel = this->getVelocity();
-    flyVector = vel.lerp(vel + btVector3(1,1,-1), .1);
+    flyVector = vel.lerp(vel + btVector3(1,.01,-1), .1);
     flyVector = flyVector.normalized() * flySpd;
-    this->setVelocity(this->getVelocity().lerp(flyVector, .005));
+    this->setVelocity(this->getVelocity().lerp(flyVector, .05));
 }
