@@ -7,6 +7,8 @@
 #include "Player.h"
 #include "Sound.h"
 #include "Overlay.h"
+#include <deque>
+#include <iostream>
 
 class GameObject;
 class Player;
@@ -46,6 +48,8 @@ public:
     bool paused();
 
     Overlay* overlay;
+
+    void printList();
 };
 
 #endif

@@ -38,7 +38,21 @@ Laser::Laser(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
 }
 
 Laser::~Laser() {
-
+    printf("Calling destructor\n");
+    simulator->removeObject(this);
+    sceneMgr->destroySceneNode(rootNode);
+    printf("Yay\n");
+    sceneMgr->destroyEntity(this->getName());
+    simulator->getDynamicsWorld()->removeRigidBody(this->body);
+    printf("Yay x2\n");
+    geom = NULL;
+    motionState = NULL;
+    shape = NULL;
+    body = NULL;
+    context = NULL;
+    cCallBack = NULL;
+    printf("hooray\n");
+    simulator->printList();
 }
 
 void Laser::setVelocity(btVector3 vel) {
@@ -79,7 +93,7 @@ void Laser::update(float elapsedTime) {
             cpu->shot();    //Update the firing status
         }
 
-        this->setPosition(100*ps->getNumShots(), 400, 0);  //Hide the projectile off screen
+        //this->setPosition(100*ps->getNumShots(), 400, 0);  //Hide the projectile off screen
         this->inertia = btVector3(0.0f, 0.0f, 0.0f);
         availability = true;
         simulator->soundSystem->playSound("deathSound");
@@ -96,6 +110,8 @@ void Laser::update(float elapsedTime) {
         }
 
         lastTime = 0.0f;
+
+        this->~Laser();
     }
-    context->hit = false;
+    // context->hit = false;
 }

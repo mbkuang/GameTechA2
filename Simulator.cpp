@@ -27,11 +27,26 @@ void Simulator::addObject (GameObject* o) {
 }
 
 bool Simulator::removeObject(GameObject*  o) {
-	objList.pop_back();
+	// objList.pop_back();
+	for(std::deque<GameObject*>::iterator i = objList.begin(); i != objList.end(); i++) {
+		if((*i)->getName().compare(o->getName()) == 0) {
+			printf("Removed %s successfully\n", o->getName().c_str());
+			objList.erase(i);
+			i--;
+		}
+	}
 	objMap.erase(o->getName());
 	Ogre::SceneNode* n = o->getNode();
 	n = NULL;
 	return true;
+}
+
+void Simulator::printList() {
+	printf("Printing object list \n\n");
+	for(std::deque<GameObject*>::iterator i = objList.begin(); i != objList.end(); i++) {
+		printf("%s\n", (*i)->getName().c_str());
+	}
+	printf("\nEnd of object list \n\n");
 }
 
 void Simulator::stepSimulation(const Ogre::Real elapsedTime, int maxSubSteps, const Ogre::Real fixedTimestep) {
