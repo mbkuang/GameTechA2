@@ -35,11 +35,10 @@ public:
 	bool removeObject(GameObject* o);
 	void stepSimulation(const Ogre::Real elapsedTime, int maxSubSteps = 1, const Ogre::Real fixedTimestep = 1.0f/60.0f);
     btDiscreteDynamicsWorld* getDynamicsWorld();
-    //std::vector<btCollisionShape*> getCollisionShapes();
-    //int getCollisionObjectCount();
     GameObject* getObject(Ogre::String oName);
     void addPlayer(Player* p);
     Player* getPlayer(Ogre::String pName);
+	void destroyWorld();
 
     Sound *soundSystem;
     bool soundOn;
@@ -50,6 +49,7 @@ public:
     Overlay* overlay;
 
     void printList();
+	void printMap();
 };
 
 #endif

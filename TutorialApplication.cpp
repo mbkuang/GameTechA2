@@ -116,21 +116,26 @@ void TutorialApplication::createObjects() {
         shooterPosition, Ogre::Vector3(1.5f, 5.0f, 1.5f),
         "ShooterTexture", shooterMass, shooterRestitution, shooterFriction, shooterKinematic);
 
+    // Laser* pLaser = new Laser("PlayerLaser", mSceneMgr, simulator,
+    //     Ogre::Vector3(positions.xPBPos, positions.yPBPos, positions.zPBPos), 2.0f,
+    //     "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic);
+
     Bird* bird1 = new Bird("Bird1", mSceneMgr, simulator,
         Ogre::Vector3(0, 25.0f, -40), 2.0f,
         "greenball", ballMass, ballRestitution, ballFriction, ballKinematic);
     bird1->setTarget(playerShooter);
 
-    EnemyShooter* enemyShooter = new EnemyShooter("EnemyShooter", mSceneMgr, simulator,
-        Ogre::Vector3(0.0f, 0.0f, -50.0f), Ogre::Vector3(1.5f, 5.0f, 1.5f),//12.0f, 100.0f, 1.0f),
-        "ShooterTexture", enemyShooterMass, shooterRestitution, shooterFriction, enemyShooterKinematic);
+    // EnemyShooter* enemyShooter = new EnemyShooter("EnemyShooter", mSceneMgr, simulator,
+    //     Ogre::Vector3(0.0f, 0.0f, -50.0f), Ogre::Vector3(1.5f, 5.0f, 1.5f),//12.0f, 100.0f, 1.0f),
+    //     "ShooterTexture", enemyShooterMass, shooterRestitution, shooterFriction, enemyShooterKinematic);
 
-    Laser* enemyLaser = new Laser("EnemyLaser", mSceneMgr, simulator,
-         Ogre::Vector3(-500, -500, -500), 2.0f,
-         "BallTexture", ballMass, ballRestitution, ballFriction, true);
+    // Laser* enemyLaser = new Laser("EnemyLaser", mSceneMgr, simulator,
+    //      Ogre::Vector3(-500, -500, -500), 2.0f,
+    //      "BallTexture", ballMass, ballRestitution, ballFriction, true);
 
     simulator->overlay->createScoreboard();
 }
+
 //---------------------------------------------------------------------------
 bool TutorialApplication::quit() {
     if (isMultiplayer) {
@@ -584,7 +589,7 @@ bool TutorialApplication::keyPressed(const OIS::KeyEvent& arg) {
         player->setVelocity(0,50,0);
 
     } else if (arg.key == OIS::KC_LSHIFT) {
-
+        simulator->destroyWorld();
     } else if(arg.key == OIS::KC_UP) {
         simulator->soundSystem->volumeUp();
     } else if(arg.key == OIS::KC_DOWN) {
@@ -597,6 +602,9 @@ bool TutorialApplication::keyPressed(const OIS::KeyEvent& arg) {
             network->messageServer(PROTOCOL_TCP, "pause", 7);
         else if(gameStarted && isHost)
             network->messageClients(PROTOCOL_TCP, "pause", 7);
+    } else if(arg.key == OIS::KC_L) {
+        simulator->printMap();
+        simulator->printList();
     }
     return true;
 }
@@ -635,20 +643,39 @@ bool TutorialApplication::mousePressed(const OIS::MouseEvent& arg, OIS::MouseBut
             float avgVel = sqrt(640000/3);
             Ogre::Vector3 cDir = mCamera->getDirection();
 
-            Ogre::stringstream ss;
-            ss << "PlayerLaser" << player->getNumShots();
+            if(simulator->getObject("PlayerLaser")) {
+                // Laser* laser = (Laser*) simulator->getObject("PlayerLaser");
 
-            Laser* laser = new Laser(ss.str(), mSceneMgr, simulator,
-            Ogre::Vector3(location.x+cDir.x*1.5, location.y+cDir.y, location.z+cDir.z*1.5), 2.0f,
-            "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic);
-            laser->setVelocity(btVector3(avgVel*cDir.x, avgVel*cDir.y, avgVel*cDir.z));
+                // if (laser->isAvailable()) {
+                //     laser->setPosition(btVector3(location.x+cDir.x*1.5, location.y+cDir.y, location.z+cDir.z*1.5));
+                //     laser->setVelocity(btVector3(avgVel*cDir.x, avgVel*cDir.y, avgVel*cDir.z));
+                //     player->shot();
+                //     laser->setAvailablity(false);
+                //     simulator->soundSystem->playSound("laserSound");
+                // }
+            }
+            else {
+                Laser* laser = new Laser("PlayerLaser", mSceneMgr, simulator,
+                Ogre::Vector3(location.x+cDir.x*1.5, location.y+cDir.y, location.z+cDir.z*1.5), 2.0f,
+                "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic);
+                laser->setVelocity(btVector3(avgVel*cDir.x, avgVel*cDir.y, avgVel*cDir.z));
+            }
 
-            player->shot();
 
             positions.xPBPos = location.x+cDir.x;
             positions.yPBPos = location.y+cDir.y;
             positions.zPBPos = location.z+cDir.z;
         }
+        // if(id == OIS::MB_Right) {
+        //     if(simulator->getObject("asdf")) {
+        //         asdf->~Laser();
+        //     }
+        //     Laser* asdf = new Laser("asdf", mSceneMgr, simulator,
+        //         Ogre::Vector3(positions.xPBPos, positions.yPBPos, positions.zPBPos), 2.0f,
+        //         "greenball", ballMass, ballRestitution, ballFriction, ballKinematic);
+        //     asdf->setPosition(btVector3(location.x+cDir.x*1.5, location.y+cDir.y, location.z+cDir.z*1.5));
+        //     asdf->setVelocity(btVector3(2*cDir.x, 2*cDir.y, 2*cDir.z));
+        // }
     }
     return true;
 }

@@ -104,6 +104,7 @@ void Laser::update(float elapsedTime) {
         lastTime = 0.0f;
 
         this->~GameObject();
+        simulator->removeObject(this);
     }
     // context->hit = false;
 }
