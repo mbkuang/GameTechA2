@@ -35,6 +35,7 @@ Bird::Bird(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
     motionState = new OgreMotionState(transform, rootNode);
 
     state = CHASE;
+    timer = SECOND*2;
     flyVector = btVector3(0,0,0);
 
     addToSimulator();
@@ -78,11 +79,13 @@ void Bird::update(float elapsedTime) {
             p->setHP(p->getHP()-1);
             simulator->overlay->updateScore();
             state = FLY;
+            timer = FLYTIME;
             return;
         } else if (contactName.compare("EnemyShooter") == 0) {
             cpu->setHP(cpu->getHP()-1);
             simulator->overlay->updateScore();
             state = FLY;
+            timer = FLYTIME;
             return;
         }
 
@@ -109,9 +112,11 @@ void Bird::chaseState() {
     btVector3 vel = this->getVelocity();
     flyVector = target->getPosition() - this->getPosition();
     flyVector = flyVector.normalized() * speed;
-    if (vel.angle(flyVector) > 15) {
+    if (fabs(vel.angle(flyVector)) > .26) {
         if (speed > minSpd) {speed --;}
         else {speed = minSpd;}
+        timer --;
+        if (!timer) {timer = CHASEFLYTIME; state = FLY;}
     }
     else if (speed < maxSpd) {speed ++;}
     else {speed = maxSpd;}
@@ -120,7 +125,11 @@ void Bird::chaseState() {
 
 void Bird::flyState() {
     btVector3 vel = this->getVelocity();
-    flyVector = vel.lerp(vel + btVector3(1,.01,-1), .1);
+    flyVector = vel.lerp(vel + btVector3(1,0,-1), .1);
+    if (flyVector.getY() < 0) {flyVector.setY(flyVector.getY() + .1);}
     flyVector = flyVector.normalized() * flySpd;
     this->setVelocity(this->getVelocity().lerp(flyVector, .05));
+
+    timer --;
+    if (!timer) {timer = CHASETIME; state = CHASE;}
 }

@@ -24,9 +24,17 @@ protected:
     };
     btVector3 flyVector;
     int maxSpd = 150;
-    int flySpd = 90;
+    int flySpd = 110;
     int minSpd = 80;
     int speed = 80;
+
+    enum TIMES {
+        SECOND = 60 * 20,
+        FLYTIME = SECOND * 20,
+        CHASETIME = SECOND * 3,
+        CHASEFLYTIME = SECOND * 10
+    };
+    int timer;
 
 public:
     Bird(Ogre::String name, Ogre::SceneManager* sceneMgr, Simulator* simulator,

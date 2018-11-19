@@ -64,10 +64,10 @@ void TutorialApplication::createScene(void)
     CEGUI::Window *joinButton = simulator->overlay->multiMenu->getChildRecursive("JoinButton");
     joinButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&TutorialApplication::joinGame, this));
 
-    createObjects();
+    createLevel1();
 }
 //---------------------------------------------------------------------------
-void TutorialApplication::createObjects() {
+void TutorialApplication::createLevel1() {
     Wall* flooring1 = new Wall("Flooring1", mSceneMgr, simulator,
         Ogre::Vector3(0.0f, yFWall, -50.0f), Ogre::Vector3(10, wallThickness, 100),
         "WallTexture2Inverse", wallMass, wallRestitution, wallFriction, wallKinematic);
@@ -93,48 +93,49 @@ void TutorialApplication::createObjects() {
     Player* player1 = new Player("Player1", simulator);
     Player* cpuPlayer = new Player("CPU", simulator);
 
-    // Player positional/orientation/bullet pos coords
-    positions.xPPos = 0.0f; positions.yPPos = -100.0f; positions.zPPos = -50.0f;
-    positions.xPDir = 0.0f; positions.yPDir = 0.0f; positions.zPDir = -1.0f;
-    positions.xPBPos = 400.0f; positions.yPBPos = 400.0f; positions.zPBPos = 400.0f;    //Hide projectiles offscreen
-    // // Enemy positional/orientation/ bullet pos coords;
-    positions.xEPos = 0.0f; positions.yEPos = -100.0f; positions.zEPos = -10.0f;
-    positions.xEDir = 0.0f; positions.yEDir = 0.0f; positions.zEDir = 1.0f;
-    positions.xEBPos = -400.0f; positions.yEBPos = -400.0f; positions.zEBPos = -400.0f; //Hide projectiles offscreen
-
-    positions.pHealth = 5; positions.eHealth = 5;
-
-    Ogre::Vector3 shooterPosition;
-    Ogre::Vector3 enemyPosition;
-    if(isHost || !isMultiplayer) {
-        shooterPosition = Ogre::Vector3(positions.xPPos, positions.yPPos, positions.zPPos);
-        enemyPosition = Ogre::Vector3(positions.xEPos, positions.yEPos, positions.zEPos);
-    }
-    else {
-        shooterPosition = Ogre::Vector3(positions.xEPos, positions.yEPos, positions.zEPos);
-        enemyPosition = Ogre::Vector3(positions.xPPos, positions.yPPos, positions.zPPos);
-    }
+    // // Player positional/orientation/bullet pos coords
+    // positions.xPPos = 0.0f; positions.yPPos = -100.0f; positions.zPPos = -50.0f;
+    // positions.xPDir = 0.0f; positions.yPDir = 0.0f; positions.zPDir = -1.0f;
+    // positions.xPBPos = 400.0f; positions.yPBPos = 400.0f; positions.zPBPos = 400.0f;    //Hide projectiles offscreen
+    // // // Enemy positional/orientation/ bullet pos coords;
+    // positions.xEPos = 0.0f; positions.yEPos = -100.0f; positions.zEPos = -10.0f;
+    // positions.xEDir = 0.0f; positions.yEDir = 0.0f; positions.zEDir = 1.0f;
+    // positions.xEBPos = -400.0f; positions.yEBPos = -400.0f; positions.zEBPos = -400.0f; //Hide projectiles offscreen
+    //
+    // positions.pHealth = 5; positions.eHealth = 5;
+    //
+    // Ogre::Vector3 shooterPosition;
+    // Ogre::Vector3 enemyPosition;
+    // if(isHost || !isMultiplayer) {
+    //     shooterPosition = Ogre::Vector3(positions.xPPos, positions.yPPos, positions.zPPos);
+    //     enemyPosition = Ogre::Vector3(positions.xEPos, positions.yEPos, positions.zEPos);
+    // }
+    // else {
+    //     shooterPosition = Ogre::Vector3(positions.xEPos, positions.yEPos, positions.zEPos);
+    //     enemyPosition = Ogre::Vector3(positions.xPPos, positions.yPPos, positions.zPPos);
+    // }
 
     Shooter* playerShooter = new Shooter("PlayerShooter", mSceneMgr, simulator,
-        shooterPosition, Ogre::Vector3(1.5f, 5.0f, 1.5f),
+        Ogre::Vector3(0.0f, -50.0f, -50.0f), Ogre::Vector3(1.5f, 5.0f, 1.5f),
         "ShooterTexture", shooterMass, shooterRestitution, shooterFriction, shooterKinematic);
 
     Laser* pLaser = new Laser("PlayerLaser", mSceneMgr, simulator,
-        Ogre::Vector3(positions.xPBPos, positions.yPBPos, positions.zPBPos), 2.0f,
+        //Ogre::Vector3(positions.xPBPos, positions.yPBPos, positions.zPBPos), 2.0f,
+        Ogre::Vector3(0.0f, -400.0f, -50.0f), 2.0f,
         "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic);
 
     Bird* bird1 = new Bird("Bird1", mSceneMgr, simulator,
-        Ogre::Vector3(0, 10.0f, 100.0f), 2.0f,
+        Ogre::Vector3(0, 10.0f, -300.0f), 2.0f,
         "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic);
     bird1->setTarget(playerShooter);
 
-    EnemyShooter* enemyShooter = new EnemyShooter("EnemyShooter", mSceneMgr, simulator,
-        Ogre::Vector3(0.0f, 0.0f, -50.0f), Ogre::Vector3(1.5f, 5.0f, 1.5f),//12.0f, 100.0f, 1.0f),
-        "ShooterTexture", enemyShooterMass, shooterRestitution, shooterFriction, enemyShooterKinematic);
-
-    Laser* enemyLaser = new Laser("EnemyLaser", mSceneMgr, simulator,
-         Ogre::Vector3(-500, -500, -500), 2.0f,
-         "BallTexture", ballMass, ballRestitution, ballFriction, true);
+    // EnemyShooter* enemyShooter = new EnemyShooter("EnemyShooter", mSceneMgr, simulator,
+    //     Ogre::Vector3(0.0f, 0.0f, -50.0f), Ogre::Vector3(1.5f, 5.0f, 1.5f),//12.0f, 100.0f, 1.0f),
+    //     "ShooterTexture", enemyShooterMass, shooterRestitution, shooterFriction, enemyShooterKinematic);
+    //
+    // Laser* enemyLaser = new Laser("EnemyLaser", mSceneMgr, simulator,
+    //      Ogre::Vector3(-500, -500, -500), 2.0f,
+    //      "BallTexture", ballMass, ballRestitution, ballFriction, true);
 
     simulator->overlay->createScoreboard();
 }
@@ -445,7 +446,7 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
     Shooter* pShooter = (Shooter*) simulator->getObject("PlayerShooter");
     Ogre::Vector3 position = pShooter->getOgrePosition();
     position.y += 2.5f;
-    mCamera->setPosition(position);// - 6 * mCamera->getDirection());
+    mCamera->setPosition(position - 50 * mCamera->getDirection());
 
     btQuaternion q = pShooter->getBody()->getOrientation();
     Ogre::Quaternion cQ = mCamera->getOrientation();
