@@ -37,23 +37,23 @@ Laser::Laser(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
     addToSimulator();
 }
 
-Laser::~Laser() {
-    printf("Calling destructor\n");
-    simulator->removeObject(this);
-    sceneMgr->destroySceneNode(rootNode);
-    printf("Yay\n");
-    sceneMgr->destroyEntity(this->getName());
-    simulator->getDynamicsWorld()->removeRigidBody(this->body);
-    printf("Yay x2\n");
-    geom = NULL;
-    motionState = NULL;
-    shape = NULL;
-    body = NULL;
-    context = NULL;
-    cCallBack = NULL;
-    printf("hooray\n");
-    simulator->printList();
-}
+// Laser::~Laser() {
+//     printf("Calling destructor\n");
+//     simulator->removeObject(this);
+//     sceneMgr->destroySceneNode(rootNode);
+//     printf("Yay\n");
+//     sceneMgr->destroyEntity(this->getName());
+//     simulator->getDynamicsWorld()->removeRigidBody(this->body);
+//     printf("Yay x2\n");
+//     geom = NULL;
+//     motionState = NULL;
+//     shape = NULL;
+//     body = NULL;
+//     context = NULL;
+//     cCallBack = NULL;
+//     printf("hooray\n");
+//     simulator->printList();
+// }
 
 void Laser::setVelocity(btVector3 vel) {
     this->body->setLinearVelocity(vel);
@@ -85,15 +85,7 @@ void Laser::update(float elapsedTime) {
         Player* p = simulator->getPlayer("Player1");
         Player* cpu = simulator->getPlayer("CPU");
         Shooter* ps = (Shooter*) simulator->getObject("PlayerShooter");
-        if(objName.compare("PlayerLaser") == 0) {// || objName.compare("b2") == 0 || objName.compare("b3") == 0) {
-            p->shot();      //Update the firing status
-            ps->shot();
-        }
-        else if(objName.compare("EnemyLaser") == 0) {
-            cpu->shot();    //Update the firing status
-        }
-
-        //this->setPosition(100*ps->getNumShots(), 400, 0);  //Hide the projectile off screen
+       
         this->inertia = btVector3(0.0f, 0.0f, 0.0f);
         availability = true;
         simulator->soundSystem->playSound("deathSound");
@@ -111,7 +103,7 @@ void Laser::update(float elapsedTime) {
 
         lastTime = 0.0f;
 
-        this->~Laser();
+        this->~GameObject();
     }
     // context->hit = false;
 }

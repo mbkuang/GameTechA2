@@ -24,10 +24,21 @@ GameObject::GameObject(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulat
 }
 
 GameObject::~GameObject() {
-	//TODO:
+	printf("Calling destructor\n");
     simulator->removeObject(this);
+    sceneMgr->destroySceneNode(rootNode);
+    printf("Yay\n");
     sceneMgr->destroyEntity(this->getName());
-    this->rootNode = NULL;
+    simulator->getDynamicsWorld()->removeRigidBody(this->body);
+    printf("Yay x2\n");
+    geom = NULL;
+    motionState = NULL;
+    shape = NULL;
+    body = NULL;
+    context = NULL;
+    cCallBack = NULL;
+    printf("hooray\n");
+    simulator->printList();
 }
 
 btRigidBody* GameObject::getBody() {
