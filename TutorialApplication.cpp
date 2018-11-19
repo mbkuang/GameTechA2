@@ -53,7 +53,6 @@ void TutorialApplication::createScene(void)
     light->setDiffuseColour(1.0,1.0,1.0);
     lightNode->attachObject(light);
 
-
     mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
 
     simulator->overlay->createMainMenu();
@@ -64,63 +63,65 @@ void TutorialApplication::createScene(void)
     CEGUI::Window *joinButton = simulator->overlay->multiMenu->getChildRecursive("JoinButton");
     joinButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&TutorialApplication::joinGame, this));
 
-    createObjects();
-    simulator->printList();
+    Shooter* playerShooter = new Shooter("PlayerShooter", mSceneMgr, simulator,
+        Ogre::Vector3(0.0f, -50.0f, -50.0f), Ogre::Vector3(1.5f, 5.0f, 1.5f),
+        "ShooterTexture", shooterMass, shooterRestitution, shooterFriction, shooterKinematic);
+
+    createLevel1();
 }
 //---------------------------------------------------------------------------
-void TutorialApplication::createObjects() {
-    Wall* flooring = new Wall("Flooring", mSceneMgr, simulator,
-        Ogre::Vector3(0.0f, yFWall, 0.0f), Ogre::Vector3(wallWidth, wallThickness, wallLength),
+void TutorialApplication::createLevel1() {
+    Wall* flooring1 = new Wall("Flooring1", mSceneMgr, simulator,
+        Ogre::Vector3(0.0f, yFWall, -50.0f), Ogre::Vector3(10, wallThickness, 100),
         "WallTexture2Inverse", wallMass, wallRestitution, wallFriction, wallKinematic);
-    Wall* ceiling = new Wall("Ceiling", mSceneMgr, simulator,
-        Ogre::Vector3(0.0f, yCWall, 0.0f), Ogre::Vector3(wallWidth, wallThickness, wallLength),
+    Wall* flooring2 = new Wall("Flooring2", mSceneMgr, simulator,
+        Ogre::Vector3(-45.0f, yFWall, -105.0f), Ogre::Vector3(100, wallThickness, 10),
         "WallTexture2Inverse", wallMass, wallRestitution, wallFriction, wallKinematic);
-    Wall* westWall = new Wall("WestWall", mSceneMgr, simulator,
-        Ogre::Vector3(xWWall, 0.0f, 0.0f), Ogre::Vector3(wallThickness, wallWidth - wallThickness, wallLength),
-        "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
-    Wall* eastWall = new Wall("EastWall", mSceneMgr, simulator,
-        Ogre::Vector3(xEWall, 0.0f, 0.0f), Ogre::Vector3(wallThickness, wallWidth - wallThickness, wallLength),
-        "WallTextureInverse", wallMass, wallRestitution, wallFriction, wallKinematic);
-    Wall* northWall = new Wall("NorthWall", mSceneMgr, simulator,
-        Ogre::Vector3(0.0f, 0.0f, zNWall), Ogre::Vector3(wallWidth, wallWidth, wallThickness),
-        "WallTextureInvisible", wallMass, wallRestitution, wallFriction, wallKinematic);
-    Wall* southWall = new Wall("SouthWall", mSceneMgr, simulator,
-        Ogre::Vector3(0.0f, 0.0f, zSWall), Ogre::Vector3(wallWidth, wallWidth, wallThickness),
-        "WallTextureInvisible", wallMass, wallRestitution, wallFriction, wallKinematic);
+    // Wall* ceiling = new Wall("Ceiling", mSceneMgr, simulator,
+    //     Ogre::Vector3(0.0f, yCWall, 0.0f), Ogre::Vector3(wallWidth, wallThickness, wallLength),
+    //     "WallTexture2Inverse", wallMass, wallRestitution, wallFriction, wallKinematic);
+    // Wall* westWall = new Wall("WestWall", mSceneMgr, simulator,
+    //     Ogre::Vector3(xWWall, 0.0f, 0.0f), Ogre::Vector3(wallThickness, wallWidth - wallThickness, wallLength),
+    //     "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
+    // Wall* eastWall = new Wall("EastWall", mSceneMgr, simulator,
+    //     Ogre::Vector3(xEWall, 0.0f, 0.0f), Ogre::Vector3(wallThickness, wallWidth - wallThickness, wallLength),
+    //     "WallTextureInverse", wallMass, wallRestitution, wallFriction, wallKinematic);
+    // Wall* northWall = new Wall("NorthWall", mSceneMgr, simulator,
+    //     Ogre::Vector3(0.0f, 0.0f, zNWall), Ogre::Vector3(wallWidth, wallWidth, wallThickness),
+    //     "WallTextureInvisible", wallMass, wallRestitution, wallFriction, wallKinematic);
+    // Wall* southWall = new Wall("SouthWall", mSceneMgr, simulator,
+    //     Ogre::Vector3(0.0f, 0.0f, zSWall), Ogre::Vector3(wallWidth, wallWidth, wallThickness),
+    //     "WallTextureInvisible", wallMass, wallRestitution, wallFriction, wallKinematic);
 
     Player* player1 = new Player("Player1", simulator);
     Player* cpuPlayer = new Player("CPU", simulator);
 
-    // Player positional/orientation/bullet pos coords
-    positions.xPPos = 0.0f; positions.yPPos = -100.0f; positions.zPPos = -50.0f;
-    positions.xPDir = 0.0f; positions.yPDir = 0.0f; positions.zPDir = -1.0f;
-    positions.xPBPos = 400.0f; positions.yPBPos = 400.0f; positions.zPBPos = 400.0f;    //Hide projectiles offscreen
-    // // Enemy positional/orientation/ bullet pos coords;
-    positions.xEPos = 0.0f; positions.yEPos = -100.0f; positions.zEPos = -10.0f;
-    positions.xEDir = 0.0f; positions.yEDir = 0.0f; positions.zEDir = 1.0f;
-    positions.xEBPos = -400.0f; positions.yEBPos = -400.0f; positions.zEBPos = -400.0f; //Hide projectiles offscreen
-
-    positions.pHealth = 5; positions.eHealth = 5;
-
-    Ogre::Vector3 shooterPosition;
-    Ogre::Vector3 enemyPosition;
-    if(isHost || !isMultiplayer) {
-        shooterPosition = Ogre::Vector3(positions.xPPos, positions.yPPos, positions.zPPos);
-        enemyPosition = Ogre::Vector3(positions.xEPos, positions.yEPos, positions.zEPos);
-    }
-    else {
-        shooterPosition = Ogre::Vector3(positions.xEPos, positions.yEPos, positions.zEPos);
-        enemyPosition = Ogre::Vector3(positions.xPPos, positions.yPPos, positions.zPPos);
-    }
-
-    Shooter* playerShooter = new Shooter("PlayerShooter", mSceneMgr, simulator,
-        shooterPosition, Ogre::Vector3(1.5f, 5.0f, 1.5f),
-        "ShooterTexture", shooterMass, shooterRestitution, shooterFriction, shooterKinematic);
+    // // Player positional/orientation/bullet pos coords
+    // positions.xPPos = 0.0f; positions.yPPos = -100.0f; positions.zPPos = -50.0f;
+    // positions.xPDir = 0.0f; positions.yPDir = 0.0f; positions.zPDir = -1.0f;
+    // positions.xPBPos = 400.0f; positions.yPBPos = 400.0f; positions.zPBPos = 400.0f;    //Hide projectiles offscreen
+    // // // Enemy positional/orientation/ bullet pos coords;
+    // positions.xEPos = 0.0f; positions.yEPos = -100.0f; positions.zEPos = -10.0f;
+    // positions.xEDir = 0.0f; positions.yEDir = 0.0f; positions.zEDir = 1.0f;
+    // positions.xEBPos = -400.0f; positions.yEBPos = -400.0f; positions.zEBPos = -400.0f; //Hide projectiles offscreen
+    //
+    // positions.pHealth = 5; positions.eHealth = 5;
+    //
+    // Ogre::Vector3 shooterPosition;
+    // Ogre::Vector3 enemyPosition;
+    // if(isHost || !isMultiplayer) {
+    //     shooterPosition = Ogre::Vector3(positions.xPPos, positions.yPPos, positions.zPPos);
+    //     enemyPosition = Ogre::Vector3(positions.xEPos, positions.yEPos, positions.zEPos);
+    // }
+    // else {
+    //     shooterPosition = Ogre::Vector3(positions.xEPos, positions.yEPos, positions.zEPos);
+    //     enemyPosition = Ogre::Vector3(positions.xPPos, positions.yPPos, positions.zPPos);
+    // }
 
     Bird* bird1 = new Bird("Bird1", mSceneMgr, simulator,
-        Ogre::Vector3(0, 25.0f, -40), 2.0f,
-        "greenball", ballMass, ballRestitution, ballFriction, ballKinematic);
-    bird1->setTarget(playerShooter);
+        Ogre::Vector3(0, 10.0f, -300.0f), 2.0f,
+        "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic);
+    bird1->setTarget((Shooter*) simulator->getObject("PlayerShooter"));
 
     // EnemyShooter* enemyShooter = new EnemyShooter("EnemyShooter", mSceneMgr, simulator,
     //     Ogre::Vector3(0.0f, 0.0f, -50.0f), Ogre::Vector3(1.5f, 5.0f, 1.5f),//12.0f, 100.0f, 1.0f),
@@ -231,7 +232,7 @@ void TutorialApplication::joinGame() {
         playerShooter->setPosition(positions.xPPos, positions.yPPos, positions.zPPos);
 
         mCamera->setPosition(playerShooter->getOgrePosition());
-        mCamera->lookAt(0.0f, 10.0f, 0.0f);
+        mCamera->lookAt(0.0f, 0.0f, -1.0f);
 
         // Shooter* enemyShooter = (Shooter*) simulator->getObject("EnemyShooter");
         // enemyShooter->setPosition(positions.xEPos, positions.yEPos, positions.zEPos);
@@ -439,7 +440,7 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
     Shooter* pShooter = (Shooter*) simulator->getObject("PlayerShooter");
     Ogre::Vector3 position = pShooter->getOgrePosition();
     position.y += 2.5f;
-    mCamera->setPosition(position);// - 6 * mCamera->getDirection());
+    mCamera->setPosition(position - 50 * mCamera->getDirection());
 
     btQuaternion q = pShooter->getBody()->getOrientation();
     Ogre::Quaternion cQ = mCamera->getOrientation();

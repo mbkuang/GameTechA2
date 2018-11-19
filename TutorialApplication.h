@@ -73,7 +73,7 @@ protected:
     void startMulti();
     bool multiPlayerStarted;
 
-    void createObjects();
+    void createLevel1();
 
     struct Positions {
         // Player positional/orientation/bullet pos coords
