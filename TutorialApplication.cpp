@@ -65,6 +65,7 @@ void TutorialApplication::createScene(void)
     joinButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&TutorialApplication::joinGame, this));
 
     createObjects();
+    simulator->printList();
 }
 //---------------------------------------------------------------------------
 void TutorialApplication::createObjects() {
@@ -121,13 +122,13 @@ void TutorialApplication::createObjects() {
         "greenball", ballMass, ballRestitution, ballFriction, ballKinematic);
     bird1->setTarget(playerShooter);
 
-    EnemyShooter* enemyShooter = new EnemyShooter("EnemyShooter", mSceneMgr, simulator,
-        Ogre::Vector3(0.0f, 0.0f, -50.0f), Ogre::Vector3(1.5f, 5.0f, 1.5f),//12.0f, 100.0f, 1.0f),
-        "ShooterTexture", enemyShooterMass, shooterRestitution, shooterFriction, enemyShooterKinematic);
+    // EnemyShooter* enemyShooter = new EnemyShooter("EnemyShooter", mSceneMgr, simulator,
+    //     Ogre::Vector3(0.0f, 0.0f, -50.0f), Ogre::Vector3(1.5f, 5.0f, 1.5f),//12.0f, 100.0f, 1.0f),
+    //     "ShooterTexture", enemyShooterMass, shooterRestitution, shooterFriction, enemyShooterKinematic);
 
-    Laser* enemyLaser = new Laser("EnemyLaser", mSceneMgr, simulator,
-         Ogre::Vector3(-500, -500, -500), 2.0f,
-         "BallTexture", ballMass, ballRestitution, ballFriction, true);
+    // Laser* enemyLaser = new Laser("EnemyLaser", mSceneMgr, simulator,
+    //      Ogre::Vector3(-500, -500, -500), 2.0f,
+    //      "BallTexture", ballMass, ballRestitution, ballFriction, true);
 
     simulator->overlay->createScoreboard();
 }
@@ -232,8 +233,8 @@ void TutorialApplication::joinGame() {
         mCamera->setPosition(playerShooter->getOgrePosition());
         mCamera->lookAt(0.0f, 10.0f, 0.0f);
 
-        Shooter* enemyShooter = (Shooter*) simulator->getObject("EnemyShooter");
-        enemyShooter->setPosition(positions.xEPos, positions.yEPos, positions.zEPos);
+        // Shooter* enemyShooter = (Shooter*) simulator->getObject("EnemyShooter");
+        // enemyShooter->setPosition(positions.xEPos, positions.yEPos, positions.zEPos);
 
         isMultiplayer = true;
     }
@@ -308,13 +309,13 @@ void TutorialApplication::updatePositions() {
 
     }
     // Enemy positional/orientation/ bullet pos coords;
-    EnemyShooter* enemyShooter = (EnemyShooter*) simulator->getObject("EnemyShooter");
-    if (enemyShooter) {
-        Ogre::Vector3 ePos = enemyShooter->getOgrePosition();
-        Ogre::Vector3 eDir = enemyShooter->getOgreDirection() * Ogre::Vector3(0, 0, -1);
-        positions.xEPos = ePos.x; positions.yEPos = ePos.y; positions.zEPos = ePos.z;
-        positions.xEDir = eDir.x; positions.yEDir = eDir.y; positions.zEDir = eDir.z;
-    }
+    // EnemyShooter* enemyShooter = (EnemyShooter*) simulator->getObject("EnemyShooter");
+    // if (enemyShooter) {
+    //     Ogre::Vector3 ePos = enemyShooter->getOgrePosition();
+    //     Ogre::Vector3 eDir = enemyShooter->getOgreDirection() * Ogre::Vector3(0, 0, -1);
+    //     positions.xEPos = ePos.x; positions.yEPos = ePos.y; positions.zEPos = ePos.z;
+    //     positions.xEDir = eDir.x; positions.yEDir = eDir.y; positions.zEDir = eDir.z;
+    // }
 
     Player* enemy = simulator->getPlayer("CPU");
     positions.eHealth = enemy->getHP();
@@ -513,9 +514,9 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
                         btVector3 eDir = btVector3(positions.xEDir, positions.yEDir, positions.zEDir);
                         btVector3 eBulletPos = btVector3(positions.xEBPos, positions.yEBPos, positions.zEBPos);
 
-                        EnemyShooter* enemyShooter = (EnemyShooter*) simulator->getObject("EnemyShooter");
-                        enemyShooter->setNewPos(ePos);
-                        enemyShooter->setNewDir(eDir);
+                        // EnemyShooter* enemyShooter = (EnemyShooter*) simulator->getObject("EnemyShooter");
+                        // enemyShooter->setNewPos(ePos);
+                        // enemyShooter->setNewDir(eDir);
 
                         Laser* eLaser = (Laser*) simulator->getObject("EnemyLaser");
                         eLaser->setPosition(eBulletPos);
@@ -554,9 +555,9 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
                         btVector3 eDir = btVector3(positions.xEDir, positions.yEDir, positions.zEDir);
                         btVector3 eBulletPos = btVector3(positions.xEBPos, positions.yEBPos, positions.zEBPos);
 
-                        EnemyShooter* enemyShooter = (EnemyShooter*) simulator->getObject("EnemyShooter");
-                        enemyShooter->setNewPos(ePos);
-                        enemyShooter->setNewDir(eDir);
+                        // EnemyShooter* enemyShooter = (EnemyShooter*) simulator->getObject("EnemyShooter");
+                        // enemyShooter->setNewPos(ePos);
+                        // enemyShooter->setNewDir(eDir);
 
                         Laser* eLaser = (Laser*) simulator->getObject("EnemyLaser");
                         eLaser->setPosition(eBulletPos);
@@ -584,7 +585,7 @@ bool TutorialApplication::keyPressed(const OIS::KeyEvent& arg) {
         player->setVelocity(0,50,0);
 
     } else if (arg.key == OIS::KC_LSHIFT) {
-
+        simulator->destroyWorld();
     } else if(arg.key == OIS::KC_UP) {
         simulator->soundSystem->volumeUp();
     } else if(arg.key == OIS::KC_DOWN) {
@@ -597,6 +598,9 @@ bool TutorialApplication::keyPressed(const OIS::KeyEvent& arg) {
             network->messageServer(PROTOCOL_TCP, "pause", 7);
         else if(gameStarted && isHost)
             network->messageClients(PROTOCOL_TCP, "pause", 7);
+    } else if(arg.key == OIS::KC_L) {
+        simulator->printMap();
+        simulator->printList();
     }
     return true;
 }

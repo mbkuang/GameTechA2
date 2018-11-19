@@ -27,18 +27,14 @@ void Simulator::addObject (GameObject* o) {
 }
 
 bool Simulator::removeObject(GameObject*  o) {
-	// objList.pop_back();
 	for(std::deque<GameObject*>::iterator i = objList.begin(); i != objList.end(); i++) {
 		if((*i)->getName().compare(o->getName()) == 0) {
 			printf("Removed %s successfully\n", o->getName().c_str());
 			objList.erase(i);
-			i--;
+			return true;
 		}
 	}
-	objMap.erase(o->getName());
-	Ogre::SceneNode* n = o->getNode();
-	n = NULL;
-	return true;
+	return false;
 }
 
 void Simulator::printList() {
@@ -82,4 +78,21 @@ void Simulator::pause() {
 /* Checks if the game is paused or not */
 bool Simulator::paused() {
 	return isPaused;
+}
+
+void Simulator::destroyWorld() {
+	for(std::deque<GameObject*>::iterator i = objList.begin(); i != objList.end(); i++) {
+		if(!(*i)->getName().compare("PlayerShooter") == 0) {
+			printf("Removed %s successfully\n", (*i)->getName().c_str());
+			(*i)->~GameObject();
+			objList.erase(i);
+		}
+	}
+}
+
+void Simulator::printMap() {
+	printf("printing map \n");
+	for(std::map<Ogre::String, GameObject*>::iterator i = objMap.begin(); i != objMap.end(); i++) {
+		printf("%s\n", i->first.c_str());
+	}
 }
