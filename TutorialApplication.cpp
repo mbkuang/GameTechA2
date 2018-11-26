@@ -436,6 +436,8 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
 
     }
 
+    simulator->bulletTimer();
+
     // Update the mCamera and player's orientation.
     Shooter* pShooter = (Shooter*) simulator->getObject("PlayerShooter");
     Ogre::Vector3 position = pShooter->getOgrePosition();
