@@ -143,8 +143,8 @@ void TutorialApplication::createLevel1() {
     bird2->setTarget((Shooter*) simulator->getObject("PlayerShooter"));
 
     Door* door = new Door("Door", mSceneMgr, simulator,
-        Ogre::Vector3(-45.0f, 10.0f, -100.0f), Ogre::Vector3(100.0f, 100.0f, 10.0f),
-        "DoorTexture", ballMass, wallRestitution, wallFriction, ballKinematic);
+        Ogre::Vector3(-45.0f, -125.0f, -105.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
+        "DoorTexture", 10000, 0.98f, wallFriction, ballKinematic);
 
 }
 //---------------------------------------------------------------------------
@@ -158,7 +158,7 @@ void TutorialApplication::createLevel2() {
         "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
 
     Shooter* player = (Shooter*) simulator->getObject("PlayerShooter");
-    player->setPosition(0.0f, -50.0f, -50.0f);
+    player->setPosition(0.0f, -100.0f, -50.0f);
 
     Bird* bird1 = new Bird("Bird1", mSceneMgr, simulator,
         Ogre::Vector3(0, 10.0f, -300.0f), 2.0f,
@@ -167,12 +167,12 @@ void TutorialApplication::createLevel2() {
 
     Bird* bird2 = new Bird("Bird2", mSceneMgr, simulator,
         Ogre::Vector3(0, 10.0f, -300.0f), 2.0f,
-        "WallTexture", ballMass, ballRestitution, ballFriction, ballKinematic);
-    bird1->setTarget((Shooter*) simulator->getObject("PlayerShooter"));
+        "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic);
+    bird2->setTarget((Shooter*) simulator->getObject("PlayerShooter"));
 
     Door* door = new Door("Door", mSceneMgr, simulator,
-        Ogre::Vector3(100.0f, yFWall, -10.0f), Ogre::Vector3(100.0f, 100.0f, 10.0f),
-        "DoorTexture", ballMass, wallRestitution, wallFriction, ballKinematic);
+        Ogre::Vector3(-45.0f, -125.0f, -105.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
+        "DoorTexture", 10000, 0.98f, wallFriction, ballKinematic);
 }
 //---------------------------------------------------------------------------
 bool TutorialApplication::quit() {
@@ -481,7 +481,7 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
     Shooter* pShooter = (Shooter*) simulator->getObject("PlayerShooter");
     Ogre::Vector3 position = pShooter->getOgrePosition();
     position.y += 2.5f;
-    mCamera->setPosition(position - 50 * mCamera->getDirection());
+    mCamera->setPosition(position);
 
     btQuaternion q = pShooter->getBody()->getOrientation();
     Ogre::Quaternion cQ = mCamera->getOrientation();

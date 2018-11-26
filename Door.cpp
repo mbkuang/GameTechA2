@@ -46,8 +46,7 @@ void Door::update(float elapsedTime) {
         lastTime += elapsedTime;
         printf("Updating\n");
         simulator->getDynamicsWorld()->contactTest(body, *cCallBack);
-        if (context->hit && (context->velNorm > 2.0 || context->velNorm < -2.0)
-            && (lastTime > 0.5 || (context->lastBody != context->body && lastTime > 0.1))) {
+        if (context->hit) {
             printf("We got one\n");
             // Handle the hit
             GameObject* contact = context->theObject;
