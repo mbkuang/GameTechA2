@@ -21,17 +21,12 @@ http://www.ogre3d.org/wiki/
 #include "BaseApplication.h"
 #include <btBulletDynamicsCommon.h>
 #include "Simulator.h"
-#include "Ball.h"
 #include "Laser.h"
 #include "Wall.h"
-#include "Paddle.h"
 #include "Bird.h"
 #include "GameSettings.h"
-#include "AIManager.h"
 #include "Overlay.h"
 #include "Shooter.h"
-#include "EnemyShooter.h"
-#include "NetManager.h"
 
 //---------------------------------------------------------------------------
 
@@ -53,25 +48,6 @@ protected:
     virtual bool mouseReleased(const OIS::MouseEvent& me, OIS::MouseButtonID id);
 
     Simulator* simulator;
-    AIManager* aimanager;
-
-    /* Network Stuff */
-    NetManager* network;
-    bool isHost;
-    bool isMultiplayer;
-    const char* hostName;
-    int port_number;
-
-    bool gameStarted;
-
-    bool setupNetwork(bool);
-    void closeNetwork();
-    void hostGame();
-    void joinGame();
-    bool netStarted;
-    bool connectionMade;
-    void startMulti();
-    bool multiPlayerStarted;
 
     void createLevel1();
 
@@ -92,9 +68,6 @@ protected:
 private:
     bool processUnbufferedInput(const Ogre::FrameEvent& fe);
     void updatePositions();
-    std::string getPositionString();
-    void decodePositionString(std::string);
-    void checkMultiStart();
     bool quit();
     void newGame();
 

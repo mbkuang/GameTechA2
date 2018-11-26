@@ -42,12 +42,5 @@ Wall::~Wall() {
 
 // Specific game object update routine.
 void Wall::update(float elapsedTime) {
-    // lastTime += elapsedTime;
-    // simulator->getDynamicsWorld()->contactTest(body, *cCallBack);
-    // if (context->hit && (context->velNorm > 2.0 || context->velNorm < -2.0)
-    //     && (lastTime > 0.5 || (context->lastBody != context->body && lastTime > 0.1))) {
-    //     //Handle the hit
-    //     lastTime = 0.0f;
-    // }
-    // context->hit = false;
+    
 }

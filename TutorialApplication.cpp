@@ -22,16 +22,6 @@ http://www.ogre3d.org/wiki/
 TutorialApplication::TutorialApplication(void)
 {
     simulator = new Simulator();
-    aimanager = new AIManager(simulator);
-    network = new NetManager();
-
-    port_number = 51215;    // Default port
-    bool netStarted = false;
-    bool connectionMade = false;
-    bool multiPlayerStarted = false;
-    isMultiplayer = false;
-    gameStarted = false;
-
 }
 //---------------------------------------------------------------------------
 TutorialApplication::~TutorialApplication(void)
@@ -56,12 +46,6 @@ void TutorialApplication::createScene(void)
     mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
 
     simulator->overlay->createMainMenu();
-
-    CEGUI::Window *hostButton = simulator->overlay->multiMenu->getChildRecursive("HostButton");
-    hostButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&TutorialApplication::hostGame, this));
-
-    CEGUI::Window *joinButton = simulator->overlay->multiMenu->getChildRecursive("JoinButton");
-    joinButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&TutorialApplication::joinGame, this));
 
     Shooter* playerShooter = new Shooter("PlayerShooter", mSceneMgr, simulator,
         Ogre::Vector3(0.0f, -50.0f, -50.0f), Ogre::Vector3(1.5f, 5.0f, 1.5f),
@@ -96,53 +80,15 @@ void TutorialApplication::createLevel1() {
     Player* player1 = new Player("Player1", simulator);
     Player* cpuPlayer = new Player("CPU", simulator);
 
-    // // Player positional/orientation/bullet pos coords
-    // positions.xPPos = 0.0f; positions.yPPos = -100.0f; positions.zPPos = -50.0f;
-    // positions.xPDir = 0.0f; positions.yPDir = 0.0f; positions.zPDir = -1.0f;
-    // positions.xPBPos = 400.0f; positions.yPBPos = 400.0f; positions.zPBPos = 400.0f;    //Hide projectiles offscreen
-    // // // Enemy positional/orientation/ bullet pos coords;
-    // positions.xEPos = 0.0f; positions.yEPos = -100.0f; positions.zEPos = -10.0f;
-    // positions.xEDir = 0.0f; positions.yEDir = 0.0f; positions.zEDir = 1.0f;
-    // positions.xEBPos = -400.0f; positions.yEBPos = -400.0f; positions.zEBPos = -400.0f; //Hide projectiles offscreen
-    //
-    // positions.pHealth = 5; positions.eHealth = 5;
-    //
-    // Ogre::Vector3 shooterPosition;
-    // Ogre::Vector3 enemyPosition;
-    // if(isHost || !isMultiplayer) {
-    //     shooterPosition = Ogre::Vector3(positions.xPPos, positions.yPPos, positions.zPPos);
-    //     enemyPosition = Ogre::Vector3(positions.xEPos, positions.yEPos, positions.zEPos);
-    // }
-    // else {
-    //     shooterPosition = Ogre::Vector3(positions.xEPos, positions.yEPos, positions.zEPos);
-    //     enemyPosition = Ogre::Vector3(positions.xPPos, positions.yPPos, positions.zPPos);
-    // }
-
     Bird* bird1 = new Bird("Bird1", mSceneMgr, simulator,
         Ogre::Vector3(0, 10.0f, -300.0f), 2.0f,
         "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic);
     bird1->setTarget((Shooter*) simulator->getObject("PlayerShooter"));
 
-    // EnemyShooter* enemyShooter = new EnemyShooter("EnemyShooter", mSceneMgr, simulator,
-    //     Ogre::Vector3(0.0f, 0.0f, -50.0f), Ogre::Vector3(1.5f, 5.0f, 1.5f),//12.0f, 100.0f, 1.0f),
-    //     "ShooterTexture", enemyShooterMass, shooterRestitution, shooterFriction, enemyShooterKinematic);
-
-    // Laser* enemyLaser = new Laser("EnemyLaser", mSceneMgr, simulator,
-    //      Ogre::Vector3(-500, -500, -500), 2.0f,
-    //      "BallTexture", ballMass, ballRestitution, ballFriction, true);
-
     simulator->overlay->createScoreboard();
 }
 //---------------------------------------------------------------------------
 bool TutorialApplication::quit() {
-    if (isMultiplayer) {
-        if (isHost) {
-            network->stopClient(PROTOCOL_TCP);
-            network->stopServer(PROTOCOL_TCP);
-        } else {
-            network->dropClient(PROTOCOL_TCP, network->getIPnbo());
-        }
-    }
     mShutDown = true;
     return true;
 }
@@ -152,101 +98,11 @@ void TutorialApplication::newGame() {
     positions.eHealth = 5;
     simulator->getPlayer("Player1")->setHP(5);
     simulator->getPlayer("CPU")->setHP(5);
-    network->messageClients(PROTOCOL_TCP, "new", 3);
+    // network->messageClients(PROTOCOL_TCP, "new", 3);
     simulator->pause();
     simulator->overlay->gameOverMenu->hide();
 }
-//---------------------------------------------------------------------------
-bool TutorialApplication::setupNetwork(bool isHost) {
-    this->isHost = isHost;
-    bool success;
-    success = network->initNetManager();
-    netStarted = true;
-    if(isHost) {
-        network->addNetworkInfo(PROTOCOL_TCP, NULL, port_number);
-        network->acceptConnections();
-        success = network->startServer();
-    }
-    else {
-        network->addNetworkInfo(PROTOCOL_TCP, hostName, port_number);
-        success = network->startClient();
-    }
-    return success;
-}
-//---------------------------------------------------------------------------
-void TutorialApplication::closeNetwork() {
-    network->close();
-}
-//---------------------------------------------------------------------------
-void TutorialApplication::hostGame() {
-    bool success = setupNetwork(true);
-    CEGUI::Window *hostLabel = simulator->overlay->multiMenu->getChildRecursive("hostLabel");
-    hostLabel->setText("Host Name: " + network->getIPstring());
-    if(success) {
-        CEGUI::Window *hostButton = simulator->overlay->multiMenu->getChildRecursive("HostButton");
-        CEGUI::Window *joinButton = simulator->overlay->multiMenu->getChildRecursive("JoinButton");
-        CEGUI::Window *joinBox = simulator->overlay->multiMenu->getChildRecursive("joinBox");
-        joinBox->setDisabled(true);
-        joinButton->setDisabled(true);
-        hostButton->setDisabled(true);
 
-        CEGUI::Window *p1joined = simulator->overlay->multiMenu->getChildRecursive("p1joined");
-        p1joined->show();
-        isMultiplayer = true;
-    }
-    else
-        closeNetwork();
-
-}
-//---------------------------------------------------------------------------
-void TutorialApplication::joinGame() {
-    CEGUI::Window *joinBox = simulator->overlay->multiMenu->getChildRecursive("joinBox");
-    hostName = joinBox->getText().c_str();
-    bool success;
-    success = setupNetwork(false);
-    if(success) {
-        CEGUI::Window *hostButton = simulator->overlay->multiMenu->getChildRecursive("HostButton");
-        CEGUI::Window *joinButton = simulator->overlay->multiMenu->getChildRecursive("JoinButton");
-        CEGUI::Window *p1joined = simulator->overlay->multiMenu->getChildRecursive("p1joined");
-        CEGUI::Window *p2joined = simulator->overlay->multiMenu->getChildRecursive("p2joined");
-        CEGUI::Window *startButton = simulator->overlay->multiMenu->getChildRecursive("StartButton");
-        joinButton->setDisabled(true);
-        hostButton->setDisabled(true);
-        p1joined->show();
-        p2joined->show();
-        startButton->setText("Waiting for host");
-        network->messageServer(PROTOCOL_TCP, "p2joined", 8);
-
-        // Player positional/orientation/ bullet pos coords;
-        positions.xPPos = 0.0f; positions.yPPos = -100.0f; positions.zPPos = -10.0f;
-        positions.xPDir = 0.0f; positions.yPDir = 0.0f; positions.zPDir = 1.0f;
-        positions.xPBPos = -400.0f; positions.yPBPos = -400.0f; positions.zPBPos = -400.0f; //Hide projectiles offscreen
-        // Enemy positional/orientation/bullet pos coords
-        positions.xEPos = 0.0f; positions.yEPos = -100.0f; positions.zEPos = -50.0f;
-        positions.xEDir = 0.0f; positions.yEDir = 0.0f; positions.zEDir = -1.0f;
-        positions.xEBPos = 400.0f; positions.yEBPos = 400.0f; positions.zEBPos = 400.0f;    //Hide projectiles offscreen
-
-        positions.pHealth = 5; positions.eHealth = 5;
-
-        Shooter* playerShooter = (Shooter*) simulator->getObject("PlayerShooter");
-        playerShooter->setPosition(positions.xPPos, positions.yPPos, positions.zPPos);
-
-        mCamera->setPosition(playerShooter->getOgrePosition());
-        mCamera->lookAt(0.0f, 0.0f, -1.0f);
-
-        // Shooter* enemyShooter = (Shooter*) simulator->getObject("EnemyShooter");
-        // enemyShooter->setPosition(positions.xEPos, positions.yEPos, positions.zEPos);
-
-        isMultiplayer = true;
-    }
-    else
-        closeNetwork();
-}
-//---------------------------------------------------------------------------
-void TutorialApplication::startMulti() {
-    network->messageClients(PROTOCOL_TCP, "Start", 5);
-    multiPlayerStarted = true;
-}
 //---------------------------------------------------------------------------
 CEGUI::MouseButton convertButton(OIS::MouseButtonID buttonID) {
     switch (buttonID)
@@ -296,115 +152,20 @@ void TutorialApplication::createFrameListener(void)
 void TutorialApplication::updatePositions() {
     // Player positional/orientation/bullet pos coords
     Shooter* playerShooter = (Shooter*) simulator->getObject("PlayerShooter");
-    // Laser* pLaser = (Laser*) simulator->getObject("PlayerLaser");
 
     if (playerShooter) {
         Ogre::Vector3 pPos = playerShooter->getOgrePosition();
         Ogre::Vector3 pDir = playerShooter->getOgreDirection() * Ogre::Vector3(0, 0, -1);
-        // Ogre::Vector3 bPos = pLaser->getOgrePosition();
-        // Ogre::Vector3 bVel = pLaser->getOgreVelocity();
+
 
         positions.xPPos = pPos.x; positions.yPPos = pPos.y; positions.zPPos = pPos.z;
         positions.xPDir = pDir.x; positions.yPDir = pDir.y; positions.zPDir = pDir.z;
         // positions.xPBPos = bPos.x; positions.yPBPos = bPos.y; positions.zPBPos = bPos.z;
 
     }
-    // Enemy positional/orientation/ bullet pos coords;
-    // EnemyShooter* enemyShooter = (EnemyShooter*) simulator->getObject("EnemyShooter");
-    // if (enemyShooter) {
-    //     Ogre::Vector3 ePos = enemyShooter->getOgrePosition();
-    //     Ogre::Vector3 eDir = enemyShooter->getOgreDirection() * Ogre::Vector3(0, 0, -1);
-    //     positions.xEPos = ePos.x; positions.yEPos = ePos.y; positions.zEPos = ePos.z;
-    //     positions.xEDir = eDir.x; positions.yEDir = eDir.y; positions.zEDir = eDir.z;
-    // }
 
     Player* enemy = simulator->getPlayer("CPU");
     positions.eHealth = enemy->getHP();
-}
-//---------------------------------------------------------------------------
-std::string TutorialApplication::getPositionString() {
-    Ogre::stringstream ss;
-
-    if (positions.eHealth <= 0) {
-        std::string winstring = "win";
-        simulator->getPlayer("Player1")->incrementScore();
-        if (isHost) {
-            network->messageClients(PROTOCOL_TCP, winstring.c_str(), 3);
-        } else {
-            network->messageServer(PROTOCOL_TCP, winstring.c_str(), 3);
-        }
-        simulator->pause();
-        simulator->overlay->gameOverMenu->show();
-        CEGUI::Window *p1wins = simulator->overlay->gameOverMenu->getChildRecursive("p1wins");
-        CEGUI::Window *quitButton = simulator->overlay->gameOverMenu->getChildRecursive("quit");
-        CEGUI::Window *newGameButton = simulator->overlay->gameOverMenu->getChildRecursive("newGame");
-        quitButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&TutorialApplication::quit, this));
-        newGameButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&TutorialApplication::newGame, this));
-        p1wins->show();
-        newGameButton->setDisabled(true);
-    }
-
-    ss<<positions.xPPos<<","<<positions.yPPos<<","<<positions.zPPos<<","<<
-        positions.xPDir<<","<<positions.yPDir<<","<<positions.zPDir<<","<<
-        positions.xPBPos<<","<<positions.yPBPos<<","<<positions.zPBPos<<","<<
-        positions.eHealth;
-
-    ss << ",z";
-
-    return ss.str();
-}
-//---------------------------------------------------------------------------
-void TutorialApplication::decodePositionString(std::string positionString) {
-    char* ps = (char*) malloc(positionString.length()+1);
-    strcpy(ps, positionString.c_str());
-
-    positions.xEPos = std::strtof(strtok(ps, ","), NULL);
-    positions.yEPos = std::strtof(strtok(NULL, ","), NULL);
-    positions.zEPos = std::strtof(strtok(NULL, ","), NULL);
-    positions.xEDir = std::strtof(strtok(NULL, ","), NULL);
-    positions.yEDir = std::strtof(strtok(NULL, ","), NULL);
-    positions.zEDir = std::strtof(strtok(NULL, ","), NULL);
-    positions.xEBPos = std::strtof(strtok(NULL, ","), NULL);
-    positions.yEBPos = std::strtof(strtok(NULL, ","), NULL);
-    positions.zEBPos = std::strtof(strtok(NULL, ","), NULL);
-    positions.pHealth = std::strtod(strtok(NULL, ","), NULL);
-
-    free(ps);
-}
-//---------------------------------------------------------------------------
-void TutorialApplication::checkMultiStart() {
-    if (netStarted && !multiPlayerStarted) {
-        if(network->pollForActivity(1)) {
-            if(isHost) {
-                std::istringstream ss(network->tcpClientData[0]->output);
-                std::string s;
-                ss >> s;
-                if(!connectionMade) {
-                    if(s.compare("p2joined") == 0) {
-                        CEGUI::Window *p2joined = simulator->overlay->multiMenu->getChildRecursive("p2joined");
-                        p2joined->show();
-                        CEGUI::Window *startButton = simulator->overlay->multiMenu->getChildRecursive("StartButton");
-                        startButton->setDisabled(false);
-                        startButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&TutorialApplication::startMulti, this));
-                        connectionMade = true;
-                    }
-                }
-            } else {
-                std::istringstream ss(network->tcpServerData.output);
-                std::string s;
-                ss >> s;
-                if(s.compare("Start") == 0) {
-                    multiPlayerStarted = true;
-                }
-            }
-        }
-    }
-
-    if(multiPlayerStarted && !gameStarted) {
-        simulator->overlay->multiMenu->hide();
-        simulator->pause(); // Unpause simulation
-        gameStarted = true;
-    }
 }
 //---------------------------------------------------------------------------
 bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
@@ -465,113 +226,6 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
     // Update positional data.
     updatePositions();
 
-    if(isMultiplayer)
-        checkMultiStart();
-
-    if (gameStarted) {
-        std::string positionString = getPositionString();
-        if (multiPlayerStarted) {
-            if (isHost) {
-                network->messageClients(PROTOCOL_TCP, positionString.c_str(), positionString.length());
-            } else {
-                network->messageServer(PROTOCOL_TCP, positionString.c_str(), positionString.length());
-            }
-        }
-
-        if (network->pollForActivity(1)) {
-            if (isHost) {
-                std::istringstream ss(network->tcpClientData[0]->output);
-                std::string s = "";
-                ss >> s;
-                if(s.compare("pause") == 0) {
-                    simulator->overlay->pauseGame();
-                } else if (s.compare("win") == 0) {
-                    Player* player1 = simulator->getPlayer("Player1");
-                    positions.pHealth = 0;
-                    player1->setHP(positions.pHealth);
-                    simulator->overlay->updateScore();
-                    simulator->pause();
-                    simulator->overlay->gameOverMenu->show();
-                    CEGUI::Window *p2wins = simulator->overlay->gameOverMenu->getChildRecursive("p2wins");
-                    CEGUI::Window *quitButton = simulator->overlay->gameOverMenu->getChildRecursive("quit");
-                    CEGUI::Window *newGameButton = simulator->overlay->gameOverMenu->getChildRecursive("newGame");
-                    newGameButton->setDisabled(true);
-                    quitButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&TutorialApplication::quit, this));
-                    p2wins->show();
-                } else if (s.compare("new") == 0) {
-                    positions.pHealth = 5;
-                    positions.eHealth = 5;
-                    simulator->getPlayer("Player1")->setHP(5);
-                    simulator->getPlayer("CPU")->setHP(5);
-                    simulator->pause();
-                    simulator->overlay->gameOverMenu->hide();
-                }
-
-                if (s.length() > 0) {
-                    if (s.at(s.length()-1) == 'z') {
-                        // Update player position
-                        decodePositionString(s);
-                        btVector3 ePos = btVector3(positions.xEPos, positions.yEPos, positions.zEPos);
-                        btVector3 eDir = btVector3(positions.xEDir, positions.yEDir, positions.zEDir);
-                        btVector3 eBulletPos = btVector3(positions.xEBPos, positions.yEBPos, positions.zEBPos);
-
-                        // EnemyShooter* enemyShooter = (EnemyShooter*) simulator->getObject("EnemyShooter");
-                        // enemyShooter->setNewPos(ePos);
-                        // enemyShooter->setNewDir(eDir);
-
-                        Laser* eLaser = (Laser*) simulator->getObject("EnemyLaser");
-                        eLaser->setPosition(eBulletPos);
-
-                        Player* player1 = simulator->getPlayer("Player1");
-                        player1->setHP(positions.pHealth);
-                        simulator->overlay->updateScore();
-                    }
-                }
-            } else {
-                std::istringstream ss(network->tcpServerData.output);
-                std::string s = "";
-                ss >> s;
-                if(s.compare("pause") == 0) {
-                    simulator->overlay->pauseGame();
-                } else if (s.compare("win") == 0) {
-                    Player* player1 = simulator->getPlayer("Player1");
-                    positions.pHealth = 0;
-                    player1->setHP(positions.pHealth);
-                    simulator->overlay->updateScore();
-                    simulator->pause();
-                    simulator->overlay->gameOverMenu->show();
-                    CEGUI::Window *p2wins = simulator->overlay->gameOverMenu->getChildRecursive("p2wins");
-                    CEGUI::Window *quitButton = simulator->overlay->gameOverMenu->getChildRecursive("quit");
-                    CEGUI::Window *newGameButton = simulator->overlay->gameOverMenu->getChildRecursive("newGame");
-                    newGameButton->setDisabled(true);
-                    quitButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&TutorialApplication::quit, this));
-                    newGameButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&TutorialApplication::newGame, this));
-                    p2wins->show();
-                }
-                if (s.length() > 0) {
-                    if (s.at(s.length()-1) == 'z') {
-                        // Update player position
-                        decodePositionString(s);
-                        btVector3 ePos = btVector3(positions.xEPos, positions.yEPos, positions.zEPos);
-                        btVector3 eDir = btVector3(positions.xEDir, positions.yEDir, positions.zEDir);
-                        btVector3 eBulletPos = btVector3(positions.xEBPos, positions.yEBPos, positions.zEBPos);
-
-                        // EnemyShooter* enemyShooter = (EnemyShooter*) simulator->getObject("EnemyShooter");
-                        // enemyShooter->setNewPos(ePos);
-                        // enemyShooter->setNewDir(eDir);
-
-                        Laser* eLaser = (Laser*) simulator->getObject("EnemyLaser");
-                        eLaser->setPosition(eBulletPos);
-
-                        Player* player1 = simulator->getPlayer("Player1");
-                        player1->setHP(positions.pHealth);
-                        simulator->overlay->updateScore();
-                    }
-                }
-            }
-        }
-    }
-
     return ret;
 }
 //---------------------------------------------------------------------------
@@ -595,10 +249,6 @@ bool TutorialApplication::keyPressed(const OIS::KeyEvent& arg) {
         simulator->soundSystem->playSound("bg_music");
     } else if(arg.key == OIS::KC_M) {
         simulator->overlay->pauseGame();
-        if(gameStarted && !isHost)
-            network->messageServer(PROTOCOL_TCP, "pause", 7);
-        else if(gameStarted && isHost)
-            network->messageClients(PROTOCOL_TCP, "pause", 7);
     } else if(arg.key == OIS::KC_L) {
         simulator->printMap();
         simulator->printList();
