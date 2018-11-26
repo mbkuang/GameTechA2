@@ -8,16 +8,16 @@
             <Property name="Area" value="{{0.25,0},{0.10,0},{0.75,0},{0.30,0}}" />
             <Property name="Text" value="Training Mode" />
         </Window>
-        <Window type="TaharezLook/Button" name="multiplayerButton" >
+        <!-- <Window type="TaharezLook/Button" name="multiplayerButton" >
             <Property name="Area" value="{{0.25,0},{0.30,0},{0.75,0},{0.50,0}}" />
             <Property name="Text" value="Multiplayer" />
-        </Window>
+        </Window> -->
         <Window type="TaharezLook/Button" name="settingsButton" >
-            <Property name="Area" value="{{0.25,0},{0.50,0},{0.75,0},{0.70,0}}" />
+            <Property name="Area" value="{{0.25,0},{0.30,0},{0.75,0},{0.50,0}}" />
             <Property name="Text" value="Settings" />
         </Window>
         <Window type="TaharezLook/Button" name="quitButton" >
-            <Property name="Area" value="{{0.25,0},{0.70,0},{0.75,0},{0.90,0}}" />
+            <Property name="Area" value="{{0.25,0},{0.50,0},{0.75,0},{0.70,0}}" />
             <Property name="Text" value="Quit" />
         </Window>
     </Window>

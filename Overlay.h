@@ -24,7 +24,7 @@ public:
 	CEGUI::Window *settingsMenu;
 	CEGUI::Window *pauseMenu;
 	CEGUI::Window *musicMenu;
-	CEGUI::Window *multiMenu;
+	// CEGUI::Window *multiMenu;
 	CEGUI::Window *gameOverMenu;
 	CEGUI::Window *playerScore;
 	CEGUI::Window *cpuScore;
@@ -37,7 +37,7 @@ protected:
 	Simulator *simulator;
 
 	bool singlePlayer();
-	bool multiplayer();
+	// bool multiplayer();
 	bool settings();
 	bool quit();
 	bool back();
