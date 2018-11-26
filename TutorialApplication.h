@@ -26,6 +26,7 @@ http://www.ogre3d.org/wiki/
 #include "Wall.h"
 #include "Paddle.h"
 #include "Bird.h"
+#include "Door.h"
 #include "GameSettings.h"
 #include "AIManager.h"
 #include "Overlay.h"
@@ -73,7 +74,11 @@ protected:
     void startMulti();
     bool multiPlayerStarted;
 
+    // Level variables and functions
+    int level = 0;
+    void nextLevel();
     void createLevel1();
+    void createLevel2();
 
     struct Positions {
         // Player positional/orientation/bullet pos coords

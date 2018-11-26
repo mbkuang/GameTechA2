@@ -47,12 +47,6 @@ void TutorialApplication::createScene(void)
 
     mCamera->setPosition(Ogre::Vector3(0,0,100));
 
-    Ogre::Light* light = mSceneMgr->createLight("MainLight");
-    Ogre::SceneNode* lightNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
-    lightNode->setPosition(0, 25, 50);
-    light->setDiffuseColour(1.0,1.0,1.0);
-    lightNode->attachObject(light);
-
     mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
 
     simulator->overlay->createMainMenu();
@@ -66,35 +60,6 @@ void TutorialApplication::createScene(void)
     Shooter* playerShooter = new Shooter("PlayerShooter", mSceneMgr, simulator,
         Ogre::Vector3(0.0f, -50.0f, -50.0f), Ogre::Vector3(1.5f, 5.0f, 1.5f),
         "ShooterTexture", shooterMass, shooterRestitution, shooterFriction, shooterKinematic);
-
-    createLevel1();
-}
-//---------------------------------------------------------------------------
-void TutorialApplication::createLevel1() {
-    Wall* flooring1 = new Wall("Flooring1", mSceneMgr, simulator,
-        Ogre::Vector3(0.0f, yFWall, -50.0f), Ogre::Vector3(10, wallThickness, 100),
-        "WallTexture2Inverse", wallMass, wallRestitution, wallFriction, wallKinematic);
-    Wall* flooring2 = new Wall("Flooring2", mSceneMgr, simulator,
-        Ogre::Vector3(-45.0f, yFWall, -105.0f), Ogre::Vector3(100, wallThickness, 10),
-        "WallTexture2Inverse", wallMass, wallRestitution, wallFriction, wallKinematic);
-    // Wall* ceiling = new Wall("Ceiling", mSceneMgr, simulator,
-    //     Ogre::Vector3(0.0f, yCWall, 0.0f), Ogre::Vector3(wallWidth, wallThickness, wallLength),
-    //     "WallTexture2Inverse", wallMass, wallRestitution, wallFriction, wallKinematic);
-    // Wall* westWall = new Wall("WestWall", mSceneMgr, simulator,
-    //     Ogre::Vector3(xWWall, 0.0f, 0.0f), Ogre::Vector3(wallThickness, wallWidth - wallThickness, wallLength),
-    //     "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
-    // Wall* eastWall = new Wall("EastWall", mSceneMgr, simulator,
-    //     Ogre::Vector3(xEWall, 0.0f, 0.0f), Ogre::Vector3(wallThickness, wallWidth - wallThickness, wallLength),
-    //     "WallTextureInverse", wallMass, wallRestitution, wallFriction, wallKinematic);
-    // Wall* northWall = new Wall("NorthWall", mSceneMgr, simulator,
-    //     Ogre::Vector3(0.0f, 0.0f, zNWall), Ogre::Vector3(wallWidth, wallWidth, wallThickness),
-    //     "WallTextureInvisible", wallMass, wallRestitution, wallFriction, wallKinematic);
-    // Wall* southWall = new Wall("SouthWall", mSceneMgr, simulator,
-    //     Ogre::Vector3(0.0f, 0.0f, zSWall), Ogre::Vector3(wallWidth, wallWidth, wallThickness),
-    //     "WallTextureInvisible", wallMass, wallRestitution, wallFriction, wallKinematic);
-
-    Player* player1 = new Player("Player1", simulator);
-    Player* cpuPlayer = new Player("CPU", simulator);
 
     // // Player positional/orientation/bullet pos coords
     // positions.xPPos = 0.0f; positions.yPPos = -100.0f; positions.zPPos = -50.0f;
@@ -118,11 +83,6 @@ void TutorialApplication::createLevel1() {
     //     enemyPosition = Ogre::Vector3(positions.xPPos, positions.yPPos, positions.zPPos);
     // }
 
-    Bird* bird1 = new Bird("Bird1", mSceneMgr, simulator,
-        Ogre::Vector3(0, 10.0f, -300.0f), 2.0f,
-        "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic);
-    bird1->setTarget((Shooter*) simulator->getObject("PlayerShooter"));
-
     // EnemyShooter* enemyShooter = new EnemyShooter("EnemyShooter", mSceneMgr, simulator,
     //     Ogre::Vector3(0.0f, 0.0f, -50.0f), Ogre::Vector3(1.5f, 5.0f, 1.5f),//12.0f, 100.0f, 1.0f),
     //     "ShooterTexture", enemyShooterMass, shooterRestitution, shooterFriction, enemyShooterKinematic);
@@ -131,7 +91,88 @@ void TutorialApplication::createLevel1() {
     //      Ogre::Vector3(-500, -500, -500), 2.0f,
     //      "BallTexture", ballMass, ballRestitution, ballFriction, true);
 
+
+    Player* player1 = new Player("Player1", simulator);
+    Player* cpuPlayer = new Player("CPU", simulator);
+
     simulator->overlay->createScoreboard();
+
+    nextLevel();
+}
+//---------------------------------------------------------------------------
+void TutorialApplication::nextLevel() {
+    simulator->destroyWorld();
+    level ++;
+    switch(level) {
+        case 1:
+            createLevel1();
+            break;
+        case 2:
+            createLevel2();
+            break;
+        default:
+            break;
+    }
+}
+//---------------------------------------------------------------------------
+void TutorialApplication::createLevel1() {
+    Ogre::Light* light = mSceneMgr->createLight("MainLight");
+    Ogre::SceneNode* lightNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
+    lightNode->setPosition(0, 25, 50);
+    light->setDiffuseColour(1.0,1.0,1.0);
+    lightNode->attachObject(light);
+
+    Wall* flooring1 = new Wall("Flooring1", mSceneMgr, simulator,
+        Ogre::Vector3(0.0f, yFWall, -50.0f), Ogre::Vector3(10, wallThickness, 100),
+        "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
+    Wall* flooring2 = new Wall("Flooring2", mSceneMgr, simulator,
+        Ogre::Vector3(-45.0f, yFWall, -105.0f), Ogre::Vector3(100, wallThickness, 10),
+        "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
+
+    Shooter* player = (Shooter*) simulator->getObject("PlayerShooter");
+    player->setPosition(0.0f, 10.0f, -50.0f);
+
+    Bird* bird1 = new Bird("Bird1", mSceneMgr, simulator,
+        Ogre::Vector3(0, 10.0f, -300.0f), 2.0f,
+        "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic);
+    bird1->setTarget((Shooter*) simulator->getObject("PlayerShooter"));
+
+    Bird* bird2 = new Bird("Bird2", mSceneMgr, simulator,
+        Ogre::Vector3(0, 10.0f, 300.0f), 2.0f,
+        "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic);
+    bird2->setTarget((Shooter*) simulator->getObject("PlayerShooter"));
+
+    Door* door = new Door("Door", mSceneMgr, simulator,
+        Ogre::Vector3(-45.0f, 10.0f, -100.0f), Ogre::Vector3(100.0f, 100.0f, 10.0f),
+        "DoorTexture", ballMass, wallRestitution, wallFriction, ballKinematic);
+
+}
+//---------------------------------------------------------------------------
+void TutorialApplication::createLevel2() {
+    
+    Wall* flooring1 = new Wall("Flooring1", mSceneMgr, simulator,
+        Ogre::Vector3(0.0f, yFWall, -50.0f), Ogre::Vector3(10.0f, wallThickness, 100.0f),
+        "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
+    Wall* flooring2 = new Wall("Flooring2", mSceneMgr, simulator,
+        Ogre::Vector3(45.0f, yFWall, 105.0f), Ogre::Vector3(100.0f, wallThickness, 10.0f),
+        "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
+
+    Shooter* player = (Shooter*) simulator->getObject("PlayerShooter");
+    player->setPosition(0.0f, -50.0f, -50.0f);
+
+    Bird* bird1 = new Bird("Bird1", mSceneMgr, simulator,
+        Ogre::Vector3(0, 10.0f, -300.0f), 2.0f,
+        "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic);
+    bird1->setTarget((Shooter*) simulator->getObject("PlayerShooter"));
+
+    Bird* bird2 = new Bird("Bird2", mSceneMgr, simulator,
+        Ogre::Vector3(0, 10.0f, -300.0f), 2.0f,
+        "WallTexture", ballMass, ballRestitution, ballFriction, ballKinematic);
+    bird1->setTarget((Shooter*) simulator->getObject("PlayerShooter"));
+
+    Door* door = new Door("Door", mSceneMgr, simulator,
+        Ogre::Vector3(100.0f, yFWall, -10.0f), Ogre::Vector3(100.0f, 100.0f, 10.0f),
+        "DoorTexture", ballMass, wallRestitution, wallFriction, ballKinematic);
 }
 //---------------------------------------------------------------------------
 bool TutorialApplication::quit() {
@@ -569,6 +610,15 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
                     }
                 }
             }
+        }
+    }
+
+    Door* door = (Door*) simulator->getObject("Door");
+    if (door != NULL) {
+        if (door->tripped) {
+            printf("NOICE\n");
+            door->tripped = false;
+            nextLevel();
         }
     }
 

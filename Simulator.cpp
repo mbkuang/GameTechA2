@@ -83,9 +83,9 @@ bool Simulator::paused() {
 void Simulator::destroyWorld() {
 	for(std::deque<GameObject*>::iterator i = objList.begin(); i != objList.end(); i++) {
 		if(!(*i)->getName().compare("PlayerShooter") == 0) {
-			printf("Removed %s successfully\n", (*i)->getName().c_str());
 			(*i)->~GameObject();
 			objList.erase(i);
+            i--;
 		}
 	}
 }
