@@ -2,6 +2,7 @@
 #define __GameObject_h_
 
 #include <Ogre.h>
+#include <OgreParticleSystem.h>
 #include <btBulletDynamicsCommon.h>
 #include "OgreMotionState.h"
 #include "Simulator.h"

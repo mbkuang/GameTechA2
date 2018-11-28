@@ -17,10 +17,13 @@ protected:
     bool availability;
 
     Shooter* target;
+    Bird* leader;
+    btVector3 formation;
     int state;
     enum States {
         FLY = 0,
-        CHASE = 1
+        CHASE = 1,
+        SCATTER = 2
     };
     btVector3 flyVector;
     int maxSpd = 150;
@@ -28,23 +31,30 @@ protected:
     int minSpd = 80;
     int speed = 80;
 
+    Ogre::ParticleEmitter* emitter;
+
     enum TIMES {
         SECOND = 60 * 20,
         FLYTIME = SECOND * 20,
         CHASETIME = SECOND * 3,
-        CHASEFLYTIME = SECOND * 10
+        CHASEFLYTIME = SECOND * 10,
+        SCATTERTIME = SECOND * 2
     };
     int timer;
 
 public:
     Bird(Ogre::String name, Ogre::SceneManager* sceneMgr, Simulator* simulator,
     	Ogre::Vector3 position, float radius, Ogre::String material,
-    	float mass, float restitution, float friction, bool kinematic);
+    	float mass, float restitution, float friction, bool kinematic, Ogre::ParticleEmitter* particleEmit);
     ~Bird();
     void setTarget(Shooter* targe);
+    void setLeader(Bird* bird);
+    void setFormation(btVector3 form);
     void update(float elapsedTime);
+    int getState();
     void chaseState();
     void flyState();
+    void scatterState();
 
     void setVelocity(btVector3 vel);
 };
