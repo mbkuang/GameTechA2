@@ -103,6 +103,18 @@ void GameObject::setVelocity(btVector3 newVelocity) {
     }
 }
 
+void GameObject::addVelocity(float xVelocity, float yVelocity, float zVelocity) {
+    if (body != NULL) {
+        body->setLinearVelocity(this->getVelocity() + btVector3(xVelocity, yVelocity, zVelocity));
+    }
+}
+
+void GameObject::addVelocity(btVector3 newVelocity) {
+    if (body != NULL) {
+        body->setLinearVelocity(this->getVelocity() + newVelocity);
+    }
+}
+
 void GameObject::setPosition(float xPosition, float yPosition, float zPosition) {
     if (body != NULL) {
         btTransform transformation;

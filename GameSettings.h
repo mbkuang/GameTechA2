@@ -16,4 +16,7 @@ const bool shooterKinematic = false;
 const float enemyShooterMass = 0.0f;
 const bool enemyShooterKinematic = true;
 
+const float doorMass = 0.0f, doorRestitution = 0.0f, doorFriction = 0.0f;
+const bool doorKinematic = false;
+
 #endif

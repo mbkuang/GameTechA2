@@ -80,6 +80,7 @@ void Bird::update(float elapsedTime) {
             simulator->overlay->updateScore();
             state = FLY;
             timer = FLYTIME;
+            ps->setVelocity(this->getVelocity());
             return;
         } else if (contactName.compare("EnemyShooter") == 0) {
             cpu->setHP(cpu->getHP()-1);
