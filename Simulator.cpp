@@ -85,6 +85,7 @@ void Simulator::destroyWorld() {
 		if(!(*i)->getName().compare("PlayerShooter") == 0) {
 			(*i)->~GameObject();
 			objList.erase(i);
+			i--;
 		}
 	}
 }

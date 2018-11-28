@@ -123,6 +123,11 @@ void TutorialApplication::createLevel1() {
         "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic);
     bird1->setTarget((Shooter*) simulator->getObject("PlayerShooter"));
 
+    Bird* bird2 = new Bird("Bird2", mSceneMgr, simulator,
+        Ogre::Vector3(0, 50.0f, -300.0f), 2.0f,
+        "greenball", ballMass, ballRestitution, ballFriction, ballKinematic);
+    bird2->setTarget((Shooter*) simulator->getObject("PlayerShooter"));
+
     // EnemyShooter* enemyShooter = new EnemyShooter("EnemyShooter", mSceneMgr, simulator,
     //     Ogre::Vector3(0.0f, 0.0f, -50.0f), Ogre::Vector3(1.5f, 5.0f, 1.5f),//12.0f, 100.0f, 1.0f),
     //     "ShooterTexture", enemyShooterMass, shooterRestitution, shooterFriction, enemyShooterKinematic);
