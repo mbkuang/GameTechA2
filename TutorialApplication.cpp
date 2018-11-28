@@ -744,15 +744,15 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& fe)
     }
 
     moveDir.x = ((cDir.x * walk) + (cDirPerp.x * strafe)) * movementSpeed;
-    if (moveDir.x == 0) {moveDir.x = 0;}
+    // if (moveDir.x == 0) {moveDir.x = 0;}
     moveDir.z = ((cDir.z * walk) + (cDirPerp.z * strafe)) * movementSpeed;
 
     //float yVelocity = player->getVelocity().getY();
 
-    player->addVelocity(moveDir.x, 0.0/*yVelocity*/, moveDir.z);
+    player->setVelocity(moveDir.x, yVelocity/*0.0*/, moveDir.z);
 
-    btVector3 pVel = player->getVelocity();
-    if (pVel.length() > movementSpeed) {player->setVelocity(pVel.normalized()*movementSpeed);}
+    // btVector3 pVel = player->getVelocity();
+    // if (pVel.length() > movementSpeed) {player->setVelocity(pVel.normalized()*movementSpeed);}
 
     return true;
 }
