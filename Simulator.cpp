@@ -29,7 +29,7 @@ void Simulator::addObject (GameObject* o) {
 bool Simulator::removeObject(GameObject*  o) {
 	for(std::deque<GameObject*>::iterator i = objList.begin(); i != objList.end(); i++) {
 		if((*i)->getName().compare(o->getName()) == 0) {
-			printf("Removed %s successfully\n", o->getName().c_str());
+			// printf("Removed %s successfully\n", o->getName().c_str());
 			objList.erase(i);
 			return true;
 		}
@@ -94,5 +94,17 @@ void Simulator::printMap() {
 	printf("printing map \n");
 	for(std::map<Ogre::String, GameObject*>::iterator i = objMap.begin(); i != objMap.end(); i++) {
 		printf("%s\n", i->first.c_str());
+	}
+}
+
+void Simulator::bulletTimer() {
+	for(std::deque<GameObject*>::iterator i = objList.begin(); i != objList.end(); i++) {
+		if((*i)->getName().substr(0, 11).compare("PlayerLaser") == 0) {
+			if((*i)->increaseTimer()) {
+				(*i)->~GameObject();
+				objList.erase(i);
+				i--;
+			}
+		}
 	}
 }

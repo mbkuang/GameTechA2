@@ -1,5 +1,7 @@
 #include "GameObject.h"
 
+const int frps = 1200;  //Approximately 1200 framerender calls per second
+
 GameObject::GameObject(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim) {
     name = newName;
     sceneMgr = scnMgr;
@@ -21,11 +23,14 @@ GameObject::GameObject(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulat
 
     context = NULL;
     cCallBack = NULL;
+
+    timer = 0;
 }
 
 GameObject::~GameObject() {
-	printf("Calling destructor of %s\n", this->name.c_str());
     if (rootNode != NULL) {sceneMgr->destroySceneNode(rootNode);
+	//printf("Calling destructor\n");
+    sceneMgr->destroySceneNode(rootNode);
     sceneMgr->destroyEntity(this->getName());
     simulator->getDynamicsWorld()->removeRigidBody(this->body);}
     geom = NULL;
@@ -34,7 +39,7 @@ GameObject::~GameObject() {
     body = NULL;
     context = NULL;
     cCallBack = NULL;
-    simulator->printList();
+    //simulator->printList();
 }
 
 btRigidBody* GameObject::getBody() {
@@ -175,4 +180,11 @@ void GameObject::addToSimulator() {
     context = new CollisionContext();
     cCallBack = new ContactSensorCallback(*body, *context);
     simulator->addObject(this);
+}
+
+bool GameObject::increaseTimer() {
+    timer++;
+    if(timer > frps*3)
+        return true;
+    return false;
 }

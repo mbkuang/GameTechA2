@@ -37,24 +37,6 @@ Laser::Laser(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
     addToSimulator();
 }
 
-// Laser::~Laser() {
-//     printf("Calling destructor\n");
-//     simulator->removeObject(this);
-//     sceneMgr->destroySceneNode(rootNode);
-//     printf("Yay\n");
-//     sceneMgr->destroyEntity(this->getName());
-//     simulator->getDynamicsWorld()->removeRigidBody(this->body);
-//     printf("Yay x2\n");
-//     geom = NULL;
-//     motionState = NULL;
-//     shape = NULL;
-//     body = NULL;
-//     context = NULL;
-//     cCallBack = NULL;
-//     printf("hooray\n");
-//     simulator->printList();
-// }
-
 void Laser::setVelocity(btVector3 vel) {
     this->body->setLinearVelocity(vel);
 }
@@ -90,16 +72,6 @@ void Laser::update(float elapsedTime) {
         availability = true;
         simulator->soundSystem->playSound("deathSound");
         this->context->reset(); //Reset the callback
-        if(contactName.compare("PlayerShooter") == 0) {
-            p->setHP(p->getHP()-1);
-            simulator->overlay->updateScore();
-            return;
-        } else 
-        if(contactName.compare("EnemyShooter") == 0) {
-            cpu->setHP(cpu->getHP()-1);
-            simulator->overlay->updateScore();
-            return;
-        }
 
         lastTime = 0.0f;
 

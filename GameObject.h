@@ -32,6 +32,8 @@ protected:
     CollisionContext* context;
     ContactSensorCallback* cCallBack;
 
+    int timer;
+
 public:
     GameObject(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim);
     ~GameObject();
@@ -54,6 +56,9 @@ public:
     void move(Ogre::Real x, Ogre::Real y, Ogre::Real z);
     void updateTransform();
     void addToSimulator();
+
+    bool increaseTimer();
+
     virtual void update(float elapsedTime) {}
 };
 

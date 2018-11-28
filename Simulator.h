@@ -50,6 +50,8 @@ public:
 
     void printList();
 	void printMap();
+
+	void bulletTimer();
 };
 
 #endif
