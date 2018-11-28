@@ -149,7 +149,7 @@ void TutorialApplication::createLevel1() {
 }
 //---------------------------------------------------------------------------
 void TutorialApplication::createLevel2() {
-    
+
     Wall* flooring1 = new Wall("Flooring1", mSceneMgr, simulator,
         Ogre::Vector3(0.0f, yFWall, -50.0f), Ogre::Vector3(10.0f, wallThickness, 100.0f),
         "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
@@ -167,7 +167,7 @@ void TutorialApplication::createLevel2() {
 
     Bird* bird2 = new Bird("Bird2", mSceneMgr, simulator,
         Ogre::Vector3(0, 10.0f, -300.0f), 2.0f,
-        "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic);
+        "WallTexture", ballMass, ballRestitution, ballFriction, ballKinematic);
     bird2->setTarget((Shooter*) simulator->getObject("PlayerShooter"));
 
     Door* door = new Door("Door", mSceneMgr, simulator,
@@ -744,11 +744,15 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& fe)
     }
 
     moveDir.x = ((cDir.x * walk) + (cDirPerp.x * strafe)) * movementSpeed;
+    if (moveDir.x == 0) {moveDir.x = 0;}
     moveDir.z = ((cDir.z * walk) + (cDirPerp.z * strafe)) * movementSpeed;
 
-    float yVelocity = player->getVelocity().getY();
+    //float yVelocity = player->getVelocity().getY();
 
-    player->setVelocity(moveDir.x, yVelocity, moveDir.z);
+    player->addVelocity(moveDir.x, 0.0/*yVelocity*/, moveDir.z);
+
+    btVector3 pVel = player->getVelocity();
+    if (pVel.length() > movementSpeed) {player->setVelocity(pVel.normalized()*movementSpeed);}
 
     return true;
 }

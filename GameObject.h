@@ -45,6 +45,8 @@ public:
     Ogre::Vector3 getOgreVelocity();
     void setVelocity(float xVelocity, float yVelocity, float zVelocity);
     void setVelocity(btVector3 newVelocity);
+    void addVelocity(float xVelocity, float yVelocity, float zVelocity);
+    void addVelocity(btVector3 newVelocity);
     void setPosition(float xPosition, float yPosition, float zPosition);
     void setPosition(btVector3 newPosition);
     btQuaternion getDirection();
