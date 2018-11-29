@@ -28,6 +28,7 @@ http://www.ogre3d.org/wiki/
 #include "Paddle.h"
 #include "Bird.h"
 #include "Door.h"
+#include "Spawner.h"
 #include "GameSettings.h"
 #include "AIManager.h"
 #include "Overlay.h"

@@ -75,6 +75,7 @@ void Bird::update(float elapsedTime) {
         return;
 
     emitter->setPosition(this->getOgrePosition());
+    emitter->setDirection(this->getOgreVelocity());
 
     if (context->hit && (context->velNorm > 2.0 || context->velNorm < -2.0)
         && (lastTime > 0.5 || (context->lastBody != context->body && lastTime > 0.1)) && state == CHASE) {

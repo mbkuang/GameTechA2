@@ -173,7 +173,7 @@ void TutorialApplication::createLevel1() {
     bird3->setFormation(btVector3(0.0f,75.0f,0.0f));
 
     Door* door = new Door("Door", mSceneMgr, simulator,
-        Ogre::Vector3(-45.0f, -125.0f, -105.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
+        Ogre::Vector3(-45.0f, 0.0f, -105.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
         "DoorTexture", 10000, 0.98f, wallFriction, ballKinematic);
 
 }
