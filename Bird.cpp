@@ -163,7 +163,6 @@ void Bird::chaseState() {
         if (timer < 0) {
             timer = CHASEFLYTIME;
             state = FLY;
-            printf("%s will stop chasing\n", this->name.c_str());
         }
     }
     else if (speed < maxSpd) {speed ++;}
@@ -176,7 +175,6 @@ void Bird::flyState() {
 
     btVector3 vel = this->getVelocity();
     if (leader == NULL) {
-        printf("%s has no leader\n", this->name.c_str());
         flyVector = vel.lerp(vel + btVector3(1,0,-1), .1);
         if (flyVector.getY() < 0) {flyVector.setY(flyVector.getY() + .1);}
         flyVector = flyVector.normalized() * flySpd;
@@ -184,7 +182,6 @@ void Bird::flyState() {
 
         timer --;
         if (timer < 0) {
-            printf("%s will scatter\n", this->name.c_str());
             timer = SCATTERTIME;
             state = SCATTER;
             if (target != NULL) {
@@ -195,7 +192,6 @@ void Bird::flyState() {
             }
         }
     } else {
-        printf("%s trying to find leader\n", this->name.c_str());
         btVector3 lDist = (leader->getPosition() + formation) - this->getPosition();
         btVector3 lDir = lDist.normalized();
         flyVector = lDir * speed;
