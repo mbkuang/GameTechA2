@@ -2,7 +2,7 @@
 
 Spawner::Spawner(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
     Ogre::Vector3 position, Ogre::Vector3 scale, Ogre::String material,
-    float mass, float restitution, float friction, bool kinematic, float newType, float newRate) :
+    float mass, float restitution, float friction, bool kinematic, float newType, float newRate, Ogre::ParticleSystem* particleSys) :
     GameObject(newName, scnMgr, sim) {
     // Set variables.
     this->position = position;
@@ -17,6 +17,8 @@ Spawner::Spawner(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* si
     type = newType;
     rate = newRate;
     timer = newRate;
+
+    particleSystem = particleSys;
 
     // Set the entity.
     geom = sceneMgr->createEntity(name, "cube.mesh");
@@ -56,32 +58,40 @@ void Spawner::update(float elapsedTime) {
         Ogre::Vector3 eDir = pLocation - location;
         int avgVel = 50;
         GameObject* emitted;
+        Ogre::ParticleEmitter* emitter = NULL;
+        if (particleSystem != NULL) {
+            emitter = particleSystem->addEmitter("Point");
+            if (type != BIRD) {emitter->~ParticleEmitter();}
+        }
         switch(type) {
-            case 1:
+            case BIRD:
                 // Spawn a bird
-                ss << "eBird" << type;
+                ss << "EnemyBird" << simulator->getObjectNumber();
+                if (simulator->getObject(ss.str()) == NULL) {
 
-                // if (simulator->getObject(ss.str()) == NULL) {
-                //     //Ogre::ParticleEmitter* emitter = particleSystem->addEmitter("Point");
-                //     Bird* bird = new Bird(ss.str(), sceneMgr, simulator,
-                //         Ogre::Vector3(0, 10.0f, 300.0f), 2.0f,
-                //         "greenball", ballMass, ballRestitution, ballFriction, ballKinematic, emitter);
-                //     bird->setTarget((Shooter*) simulator->getObject("PlayerShooter"));
-                // }
+                    emitted = new Bird(ss.str(), sceneMgr, simulator,
+                        Ogre::Vector3(0, 10.0f, 300.0f), 2.0f,
+                        "greenball", ballMass, ballRestitution, ballFriction, ballKinematic, emitter);
+                    ((Bird*) emitted)->setTarget((Shooter*) simulator->getObject("PlayerShooter"));
+                }
                 break;
-            case 2:
+            case FROG:
                 // Spawn a FROG
                 break;
-            case 3:
+            case SHOOTER:
                 // Spawn a shooter
                 break;
-            case 4:
+            case LASER:
                 // Spawn a laser (shoot at the player)
-                ss << "eLaser" << type;
-                emitted = new Laser(ss.str(), sceneMgr, simulator,
-                Ogre::Vector3(location.x+eDir.x*1.5, location.y+eDir.y, location.z+eDir.z*1.5), 2.0f,
-                "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic);
-                emitted->setVelocity(btVector3(avgVel*eDir.x, avgVel*eDir.y, avgVel*eDir.z));
+                ss << "EnemyLaser" << simulator->getObjectNumber();
+
+                if (simulator->getObject(ss.str()) == NULL) {
+                    //Ogre::ParticleEmitter* emitter = particleSystem->addEmitter("Point");
+                    emitted = new Laser(ss.str(), sceneMgr, simulator,
+                        Ogre::Vector3(0, 10.0f, 300.0f), 2.0f,
+                        "greenball", ballMass, ballRestitution, ballFriction, ballKinematic);
+                    emitted->setVelocity(simulator->getObject("PlayerShooter")->getPosition() - emitted->getPosition());
+                }
                 break;
             default:
                 break;

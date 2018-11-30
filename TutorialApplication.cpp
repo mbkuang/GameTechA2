@@ -118,6 +118,8 @@ void TutorialApplication::createScene(void)
 //---------------------------------------------------------------------------
 void TutorialApplication::nextLevel() {
     simulator->destroyWorld();
+    Ogre::ParticleSystem* particleSystem = mSceneMgr->getParticleSystem("Trails");
+    particleSystem->removeAllEmitters();
     level ++;
     switch(level) {
         case 1:

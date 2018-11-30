@@ -17,6 +17,8 @@ private:
     float rate;
     float timer;
 
+    Ogre::ParticleSystem* particleSystem = NULL;
+
     enum Types {
         BIRD = 0,
         FROG = 1,
@@ -27,7 +29,7 @@ private:
 public:
     Spawner(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
         Ogre::Vector3 position, Ogre::Vector3 scale, Ogre::String material,
-        float mass, float restitution, float friction, bool kinematic, float newType, float newRate);
+        float mass, float restitution, float friction, bool kinematic, float newType, float newRate, Ogre::ParticleSystem* particleSys);
     ~Spawner();
     void update(float elapsedTime);
 };

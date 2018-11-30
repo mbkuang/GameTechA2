@@ -31,7 +31,7 @@ protected:
     int minSpd = 80;
     int speed = 80;
 
-    Ogre::ParticleEmitter* emitter;
+    Ogre::ParticleEmitter* emitter = NULL;
 
     enum TIMES {
         SECOND = 60 * 20,

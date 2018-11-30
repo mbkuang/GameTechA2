@@ -46,7 +46,9 @@ Bird::Bird(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
 }
 
 Bird::~Bird() {
-    emitter->~ParticleEmitter();
+    if (emitter != NULL) {
+        emitter->~ParticleEmitter();
+    }
 }
 
 void Bird::setTarget(Shooter* targe) {
@@ -74,8 +76,10 @@ void Bird::update(float elapsedTime) {
     if(objName.compare("EnemyBird") == 0)
         return;
 
-    emitter->setPosition(this->getOgrePosition());
-    emitter->setDirection(this->getOgreVelocity());
+    if (emitter != NULL) {
+        emitter->setPosition(this->getOgrePosition());
+        emitter->setDirection(this->getOgreVelocity());
+    }
 
     if (context->hit && (context->velNorm > 2.0 || context->velNorm < -2.0)
         && (lastTime > 0.5 || (context->lastBody != context->body && lastTime > 0.1)) && state == CHASE) {
