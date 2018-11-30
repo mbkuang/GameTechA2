@@ -80,12 +80,16 @@ bool Simulator::paused() {
 	return isPaused;
 }
 
+int Simulator::getObjectNumber() {
+    return objList.size();
+}
+
 void Simulator::destroyWorld() {
 	for(std::deque<GameObject*>::iterator i = objList.begin(); i != objList.end(); i++) {
 		if(!(*i)->getName().compare("PlayerShooter") == 0) {
 			(*i)->~GameObject();
 			objList.erase(i);
-			i--;
+            i--;
 		}
 	}
 }
