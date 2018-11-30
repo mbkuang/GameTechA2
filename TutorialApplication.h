@@ -19,6 +19,7 @@ http://www.ogre3d.org/wiki/
 #define __TutorialApplication_h_
 
 #include "BaseApplication.h"
+#include <OgreParticleSystem.h>
 #include <btBulletDynamicsCommon.h>
 #include "Simulator.h"
 #include "Ball.h"
@@ -27,6 +28,7 @@ http://www.ogre3d.org/wiki/
 #include "Paddle.h"
 #include "Bird.h"
 #include "Door.h"
+#include "Spawner.h"
 #include "GameSettings.h"
 #include "AIManager.h"
 #include "Overlay.h"

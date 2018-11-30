@@ -67,7 +67,7 @@ void Laser::update(float elapsedTime) {
         Player* p = simulator->getPlayer("Player1");
         Player* cpu = simulator->getPlayer("CPU");
         Shooter* ps = (Shooter*) simulator->getObject("PlayerShooter");
-       
+
         this->inertia = btVector3(0.0f, 0.0f, 0.0f);
         availability = true;
         simulator->soundSystem->playSound("deathSound");

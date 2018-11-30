@@ -38,11 +38,12 @@ public:
     GameObject* getObject(Ogre::String oName);
     void addPlayer(Player* p);
     Player* getPlayer(Ogre::String pName);
+    int getObjectNumber();
 	void destroyWorld();
 
     Sound *soundSystem;
     bool soundOn;
-    
+
     void pause();
     bool paused();
 

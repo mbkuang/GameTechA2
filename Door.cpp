@@ -44,10 +44,8 @@ Door::~Door() {
 void Door::update(float elapsedTime) {
     if (active) {
         lastTime += elapsedTime;
-        printf("Updating\n");
         simulator->getDynamicsWorld()->contactTest(body, *cCallBack);
         if (context->hit) {
-            printf("We got one\n");
             // Handle the hit
             GameObject* contact = context->theObject;
             Ogre::String contactName = contact->getName();
@@ -57,7 +55,6 @@ void Door::update(float elapsedTime) {
 
             if (contactName.compare("PlayerShooter") == 0) {
                 // Move to next room
-                printf("FOOKIN HELL\n");
                 tripped = true;
                 active = false;
                 return;
