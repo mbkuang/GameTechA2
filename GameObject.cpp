@@ -29,8 +29,6 @@ GameObject::GameObject(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulat
 
 GameObject::~GameObject() {
     if (rootNode != NULL) {sceneMgr->destroySceneNode(rootNode);
-	//printf("Calling destructor\n");
-    sceneMgr->destroySceneNode(rootNode);
     sceneMgr->destroyEntity(this->getName());
     simulator->getDynamicsWorld()->removeRigidBody(this->body);}
     geom = NULL;

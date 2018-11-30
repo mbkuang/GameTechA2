@@ -156,7 +156,11 @@ void Bird::chaseState() {
         if (speed > minSpd) {speed --;}
         else {speed = minSpd;}
         timer --;
-        if (timer < 0) {timer = CHASEFLYTIME; state = FLY;}
+        if (timer < 0) {
+            timer = CHASEFLYTIME;
+            state = FLY;
+            printf("%s will stop chasing\n", this->name.c_str());
+        }
     }
     else if (speed < maxSpd) {speed ++;}
     else {speed = maxSpd;}
@@ -164,8 +168,11 @@ void Bird::chaseState() {
 }
 
 void Bird::flyState() {
+    if (target == NULL) return;
+
     btVector3 vel = this->getVelocity();
     if (leader == NULL) {
+        printf("%s has no leader\n", this->name.c_str());
         flyVector = vel.lerp(vel + btVector3(1,0,-1), .1);
         if (flyVector.getY() < 0) {flyVector.setY(flyVector.getY() + .1);}
         flyVector = flyVector.normalized() * flySpd;
@@ -173,9 +180,9 @@ void Bird::flyState() {
 
         timer --;
         if (timer < 0) {
+            printf("%s will scatter\n", this->name.c_str());
             timer = SCATTERTIME;
             state = SCATTER;
-            printf("Gonna scatter now\n");
             if (target != NULL) {
                 btVector3 tDir = target->getPosition() - this->getPosition();
                 Ogre::Vector3 otDir = Ogre::Vector3(tDir.getX(), tDir.getY(), tDir.getZ());
@@ -184,6 +191,7 @@ void Bird::flyState() {
             }
         }
     } else {
+        printf("%s trying to find leader\n", this->name.c_str());
         btVector3 lDist = (leader->getPosition() + formation) - this->getPosition();
         btVector3 lDir = lDist.normalized();
         flyVector = lDir * speed;
@@ -209,6 +217,5 @@ void Bird::scatterState() {
     if (timer < 0) {
         timer = CHASETIME;
         state = CHASE;
-        printf("Gonna chase now\n");
     }
 }

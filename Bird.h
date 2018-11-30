@@ -16,8 +16,8 @@ protected:
 	Ogre::Entity* marker;
     bool availability;
 
-    Shooter* target;
-    Bird* leader;
+    Shooter* target = NULL;
+    Bird* leader = NULL;
     btVector3 formation;
     int state;
     enum States {
