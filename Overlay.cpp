@@ -50,6 +50,10 @@ void Overlay::createMainMenu() {
     gameOverMenu->hide();
     sheet->addChild(gameOverMenu);
 
+    newLevelMenu = wmgr.loadLayoutFromFile("newLevel.layout");
+    newLevelMenu->hide();
+    sheet->addChild(newLevelMenu);
+
     /* Main Menu Buttons */
     CEGUI::Window *singlePlayerButton = mainMenu->getChildRecursive("singlePlayerButton");
     singlePlayerButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::singlePlayer, this));
@@ -126,6 +130,11 @@ void Overlay::createMainMenu() {
     CEGUI::Window *p2wins = gameOverMenu->getChildRecursive("p2wins");
     p1wins->hide();
     p2wins->hide();
+
+    /* New Level Stuff */
+    CEGUI::Window *message = newLevelMenu->getChildRecursive("message");
+    CEGUI::Window *nextLevelButton = newLevelMenu->getChildRecursive("continue");
+    nextLevelButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::nextLevel, this));
 }
 
 /* Display the scoreboard */
@@ -279,4 +288,17 @@ void Overlay::mute() {
     Ogre::stringstream ss;
     ss << simulator->soundSystem->currentVolume;
     volumeLabel->setText("Current Volume: " + ss.str());
+}
+
+void Overlay::showWinMessage(int level) {
+    simulator->pause();
+    Ogre::stringstream ss;
+    ss << "Congratulations! You beat level " << level;
+    newLevelMenu->getChildRecursive("message")->setText(ss.str());
+    newLevelMenu->show();
+}
+
+void Overlay::nextLevel() {
+    newLevelMenu->hide();
+    simulator->pause();
 }

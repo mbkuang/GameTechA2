@@ -18,6 +18,7 @@ public:
     bool countdown();
     void createMainMenu();
     void pauseGame();
+    void showWinMessage(int);
 
     CEGUI::Window *sheet;
 	CEGUI::Window *mainMenu;
@@ -25,6 +26,7 @@ public:
 	CEGUI::Window *pauseMenu;
 	CEGUI::Window *musicMenu;
 	CEGUI::Window *multiMenu;
+	CEGUI::Window *newLevelMenu;
 	CEGUI::Window *gameOverMenu;
 	CEGUI::Window *playerScore;
 	CEGUI::Window *cpuScore;
@@ -47,6 +49,7 @@ protected:
 	void volumeUp();
 	void mute();
 	void showControls();
+	void nextLevel();
 
 	bool lastMenu;	//Keep track of what the last menu was before settings
 };

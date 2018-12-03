@@ -93,6 +93,7 @@ protected:
         float xEBPos, yEBPos, zEBPos;
 
         int pHealth, eHealth;
+
     };
 
     Positions positions;
@@ -106,6 +107,7 @@ private:
     void newGame();
 
     float old_x;
+    bool firstPerson;
 };
 
 //---------------------------------------------------------------------------

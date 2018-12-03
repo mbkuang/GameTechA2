@@ -31,7 +31,7 @@ TutorialApplication::TutorialApplication(void)
     bool multiPlayerStarted = false;
     isMultiplayer = false;
     gameStarted = false;
-
+    firstPerson = true;
 }
 //---------------------------------------------------------------------------
 TutorialApplication::~TutorialApplication(void)
@@ -519,7 +519,11 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
     Shooter* pShooter = (Shooter*) simulator->getObject("PlayerShooter");
     Ogre::Vector3 position = pShooter->getOgrePosition();
     position.y += 2.5f;
-    mCamera->setPosition(position);
+
+    if(!firstPerson)
+        mCamera->setPosition(position - 20 * mCamera->getDirection());
+    else
+        mCamera->setPosition(position);
 
     btQuaternion q = pShooter->getBody()->getOrientation();
     Ogre::Quaternion cQ = mCamera->getOrientation();
@@ -655,6 +659,7 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
     if (door != NULL) {
         if (door->tripped) {
             door->tripped = false;
+            simulator->overlay->showWinMessage(level);
             nextLevel();
         }
     }
@@ -743,6 +748,9 @@ bool TutorialApplication::mousePressed(const OIS::MouseEvent& arg, OIS::MouseBut
             positions.xPBPos = location.x+cDir.x;
             positions.yPBPos = location.y+cDir.y;
             positions.zPBPos = location.z+cDir.z;
+        }
+        else if (id == OIS::MB_Right) {
+            firstPerson = !firstPerson;
         }
     }
     return true;
