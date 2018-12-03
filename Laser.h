@@ -2,6 +2,7 @@
 #define __Laser_h_
 
 #include "GameObject.h"
+#include "Bird.h"
 #include "Shooter.h"
 #include <string>
 #include <sstream>

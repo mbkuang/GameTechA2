@@ -66,7 +66,7 @@ void Spawner::update(float elapsedTime) {
         switch(type) {
             case BIRD:
                 // Spawn a bird
-                ss << "EnemyBird" << simulator->getObjectNumber();
+                ss << "BirdEnemy" << simulator->getObjectNumber();
                 if (simulator->getObject(ss.str()) == NULL) {
 
                     emitted = new Bird(ss.str(), sceneMgr, simulator,

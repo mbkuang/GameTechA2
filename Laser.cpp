@@ -55,8 +55,6 @@ void Laser::update(float elapsedTime) {
     simulator->getDynamicsWorld()->contactTest(body, *cCallBack);
 
     Ogre::String objName = this->getName();
-    if(objName.compare("EnemyLaser") == 0)
-        return;
 
     if (context->hit && (context->velNorm > 2.0 || context->velNorm < -2.0)
         && (lastTime > 0.5 || (context->lastBody != context->body && lastTime > 0.1))) {
@@ -67,6 +65,25 @@ void Laser::update(float elapsedTime) {
         Player* p = simulator->getPlayer("Player1");
         Player* cpu = simulator->getPlayer("CPU");
         Shooter* ps = (Shooter*) simulator->getObject("PlayerShooter");
+
+        if(objName.compare("EnemyLaser") == 0) {
+            if(contactName.compare("PlayerShooter") == 0) {
+                // Player loses life
+            }
+        }
+        
+        // if(contactName.substr(0, 4).compare("Bird") == 0) {
+        //     printf("Yo you hit a bird nice one m8\n");
+        //     Bird *bird = (Bird*) simulator->getObject(contactName);
+        //     printf("Yo we grabbed a bird from the list \n");
+        //     if(bird != NULL) {
+        //         printf("That bird isn't null\n");
+        //         simulator->removeObject(bird);
+        //         bird->~Bird();
+        //         printf("The bird has been successfully destroyed\n");
+        //         printf("Removed bird from object list and map\n");
+        //     }
+        // }
 
         this->inertia = btVector3(0.0f, 0.0f, 0.0f);
         availability = true;

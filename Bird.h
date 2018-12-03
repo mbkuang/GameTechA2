@@ -17,7 +17,7 @@ protected:
     bool availability;
 
     Shooter* target = NULL;
-    Bird* leader = NULL;
+    Ogre::String leaderName = "Nobody";
     btVector3 formation;
     int state;
     enum States {
@@ -48,7 +48,7 @@ public:
     	float mass, float restitution, float friction, bool kinematic, Ogre::ParticleEmitter* particleEmit);
     ~Bird();
     void setTarget(Shooter* targe);
-    void setLeader(Bird* bird);
+    void setLeader(Ogre::String lName);
     void setFormation(btVector3 form);
     void update(float elapsedTime);
     int getState();

@@ -163,7 +163,7 @@ void TutorialApplication::createLevel1() {
         Ogre::Vector3(0, 10.0f, 300.0f), 2.0f,
         "greenball", ballMass, ballRestitution, ballFriction, ballKinematic, emitter2);
     bird2->setTarget((Shooter*) simulator->getObject("PlayerShooter"));
-    bird2->setLeader(bird1);
+    bird2->setLeader(bird1->getName());
     bird2->setFormation(btVector3(-75.0f,0.0f,0.0f));
 
     Ogre::ParticleEmitter* emitter3 = particleSystem->addEmitter("Point");
@@ -171,7 +171,7 @@ void TutorialApplication::createLevel1() {
         Ogre::Vector3(20.0f, 40.0f, -300.0f), 2.0f,
         "greenball", ballMass, ballRestitution, ballFriction, ballKinematic, emitter3);
     bird3->setTarget((Shooter*) simulator->getObject("PlayerShooter"));
-    bird3->setLeader(bird1);
+    bird3->setLeader(bird1->getName());
     bird3->setFormation(btVector3(0.0f,75.0f,0.0f));
 
     Door* door = new Door("Door", mSceneMgr, simulator,

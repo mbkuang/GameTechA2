@@ -55,8 +55,8 @@ void Bird::setTarget(Shooter* targe) {
     this->target = targe;
 }
 
-void Bird::setLeader(Bird* bird) {
-    this->leader = bird;
+void Bird::setLeader(Ogre::String lName) {
+    this->leaderName = lName;
 }
 
 void Bird::setFormation(btVector3 form) {
@@ -106,10 +106,18 @@ void Bird::update(float elapsedTime) {
             return;
         }
 
+        if(contactName.substr(0,11).compare("PlayerLaser") == 0 || 
+            contactName.substr(0,10).compare("EnemyLaser") == 0) {
+            simulator->removeObject(this);
+            this->~GameObject();
+            return;
+        }
+
         lastTime = 0.0f;
     }
     context->hit = false;
 
+    Bird* leader = (Bird*) simulator->getObject(leaderName);
     if (leader != NULL && state != CHASE && state != SCATTER) {
         int lState = leader->getState();
         if (lState != CHASE) {
@@ -174,6 +182,8 @@ void Bird::flyState() {
     if (target == NULL) return;
 
     btVector3 vel = this->getVelocity();
+
+    Bird* leader = (Bird*) simulator->getObject(leaderName);
     if (leader == NULL) {
         flyVector = vel.lerp(vel + btVector3(1,0,-1), .1);
         if (flyVector.getY() < 0) {flyVector.setY(flyVector.getY() + .1);}
