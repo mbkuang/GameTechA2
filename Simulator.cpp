@@ -29,8 +29,8 @@ void Simulator::addObject (GameObject* o) {
 bool Simulator::removeObject(GameObject*  o) {
 	for(std::deque<GameObject*>::iterator i = objList.begin(); i != objList.end(); i++) {
 		if((*i)->getName().compare(o->getName()) == 0) {
-			printf("Removed %s successfully\n", o->getName().c_str());
 			objList.erase(i);
+			objMap[o->getName().c_str()] = NULL;
 			return true;
 		}
 	}
@@ -49,7 +49,6 @@ void Simulator::stepSimulation(const Ogre::Real elapsedTime, int maxSubSteps, co
     dynamicsWorld->stepSimulation(elapsedTime, maxSubSteps, fixedTimestep);
 	for (unsigned int i = 0; i < objList.size(); i++) {
 		objList[i]->update(elapsedTime);
-
 	}
 }
 

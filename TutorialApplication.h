@@ -27,6 +27,9 @@ http://www.ogre3d.org/wiki/
 #include "GameSettings.h"
 #include "Overlay.h"
 #include "Shooter.h"
+#include "Node.h"
+#include "AIManager.h"
+#include "Frog.h"
 
 //---------------------------------------------------------------------------
 
@@ -72,6 +75,10 @@ private:
     void newGame();
 
     float old_x;
+    float time_passed;
+    AIManager* aiMgr;
+    Frog* frog1;
+    Frog* frog2;
 };
 
 //---------------------------------------------------------------------------

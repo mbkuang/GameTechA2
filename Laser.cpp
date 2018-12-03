@@ -81,30 +81,27 @@ void Laser::update(float elapsedTime) {
         //Handle the hit
         GameObject* contact = context->theObject;
         Ogre::String contactName = contact->getName();
+        
+        if (contactName.substr(0,4).compare("Frog") == 0) {
+            GameObject* rem = simulator->getObject(contactName);
+            if(rem != NULL) {
+                rem->~GameObject();
+                simulator->removeObject(rem);
+            }
+        }
 
         Player* p = simulator->getPlayer("Player1");
         Player* cpu = simulator->getPlayer("CPU");
         Shooter* ps = (Shooter*) simulator->getObject("PlayerShooter");
-       
+
         this->inertia = btVector3(0.0f, 0.0f, 0.0f);
         availability = true;
         simulator->soundSystem->playSound("deathSound");
         this->context->reset(); //Reset the callback
-        if(contactName.compare("PlayerShooter") == 0) {
-            p->setHP(p->getHP()-1);
-            simulator->overlay->updateScore();
-            return;
-        } else 
-        if(contactName.compare("EnemyShooter") == 0) {
-            cpu->setHP(cpu->getHP()-1);
-            simulator->overlay->updateScore();
-            return;
-        }
 
         lastTime = 0.0f;
 
         this->~GameObject();
         simulator->removeObject(this);
     }
-    // context->hit = false;
 }

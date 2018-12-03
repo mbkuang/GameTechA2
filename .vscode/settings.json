@@ -50,6 +50,7 @@
         "ostream": "cpp",
         "numeric": "cpp",
         "sstream": "cpp",
-        "streambuf": "cpp"
+        "streambuf": "cpp",
+        "string": "cpp"
     }
 }
