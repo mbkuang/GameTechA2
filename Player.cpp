@@ -2,15 +2,16 @@
 
 Player::Player(Ogre::String name, Simulator* sim) {
 	playerName = name;
-	score = 0;
+	score = 5;	// Score is lives
 	hp = 5;
 	sim->addPlayer(this);
 	fired = false;
 	numShots = 0;
 }
 
+// Actually decrements number of player's lives
 void Player::incrementScore() {
-	score++;
+	score--;
 }
 
 void Player::setScore(int newScore) {

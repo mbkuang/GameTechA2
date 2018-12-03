@@ -54,6 +54,10 @@ void Overlay::createMainMenu() {
     newLevelMenu->hide();
     sheet->addChild(newLevelMenu);
 
+    deathMenu = wmgr.loadLayoutFromFile("deathMenu.layout");
+    deathMenu->hide();
+    sheet->addChild(deathMenu);
+
     /* Main Menu Buttons */
     CEGUI::Window *singlePlayerButton = mainMenu->getChildRecursive("singlePlayerButton");
     singlePlayerButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::singlePlayer, this));
@@ -135,6 +139,10 @@ void Overlay::createMainMenu() {
     CEGUI::Window *message = newLevelMenu->getChildRecursive("message");
     CEGUI::Window *nextLevelButton = newLevelMenu->getChildRecursive("continue");
     nextLevelButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::nextLevel, this));
+
+    /* Death Stuff */
+    CEGUI::Window *continueButton = deathMenu->getChildRecursive("continue");
+    continueButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::nextLevel, this));
 }
 
 /* Display the scoreboard */
@@ -142,10 +150,6 @@ void Overlay::createScoreboard() {
 	CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
 	playerScore = wmgr.createWindow("TaharezLook/StaticText", "CEGUIDemo/StaticText");
     playerScore->setSize(CEGUI::USize(CEGUI::UDim(0.1, 0), CEGUI::UDim(0.1, 0)));
-
-    cpuScore = wmgr.createWindow("TaharezLook/StaticText", "CEGUIDemo/StaticText");
-    cpuScore->setSize(CEGUI::USize(CEGUI::UDim(0.1, 0), CEGUI::UDim(0.1, 0)));
-    cpuScore->setPosition(CEGUI::UVector2(CEGUI::UDim(0.9, 0), CEGUI::UDim(0, 0)));
 
     updateScore();
     CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(sheet);
@@ -157,32 +161,22 @@ void Overlay::updateScore() {
     Ogre::stringstream ss2;
 
     Player* p1 = simulator->getPlayer("Player1");
-    Player* cpu = simulator->getPlayer("CPU");
 
     int p1score = p1->getScore();
-    int cpuscore = cpu->getScore();
     int p1hp = p1->getHP();
-    int cpuhp = cpu->getHP();
 
-    if(p1score == 3 || cpuhp == 0) {
-        p1->setScore(0);
-        cpu->setScore(0);
-        //simulator->pause();
-    }
-    else if(cpuscore == 3 || p1hp == 0) {
-        p1->setScore(0);
-        cpu->setScore(0);
+    if(p1hp == 0) {
+        simulator->pause();
+        deathMenu->show();
+        p1->setHP(5);
+        p1->incrementScore(); //Decrement lives
     }
 
-    ss1 << "Player 1\nWins: "<<p1score<<"\nHP: "<<p1hp;
-    ss2 << "Enemy\nWins: "<<cpuscore <<"\nHP: "<<cpuhp;
+    ss1 << "Player 1\nLives: "<<p1score<<"\nHP: "<<p1hp;
 
     playerScore->setText("[colour='FFFF0000']"+ ss1.str());
-    cpuScore->setText("[colour='FFFF0000']"+ ss2.str());
     sheet->addChild(playerScore);
-    sheet->addChild(cpuScore);
     simulator->soundSystem->playSound("scoreSound");
-
 }
 
 /* Display the win/lose message for a certain amout of time  */
@@ -300,5 +294,6 @@ void Overlay::showWinMessage(int level) {
 
 void Overlay::nextLevel() {
     newLevelMenu->hide();
+    deathMenu->hide();
     simulator->pause();
 }

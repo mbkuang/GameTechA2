@@ -28,6 +28,7 @@ public:
 	CEGUI::Window *multiMenu;
 	CEGUI::Window *newLevelMenu;
 	CEGUI::Window *gameOverMenu;
+	CEGUI::Window *deathMenu;
 	CEGUI::Window *playerScore;
 	CEGUI::Window *cpuScore;
 	bool done;
