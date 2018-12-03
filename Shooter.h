@@ -16,6 +16,7 @@ private:
     bool fired;
     int numShots;
     Gun* gun;
+    bool jump;
 
 public:
     Shooter(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
@@ -27,7 +28,9 @@ public:
     void update(float elapsedTime);
     bool hasFired();
     void shot();
-    int getNumShots(); 
+    int getNumShots();
+    bool canJump();
+    void setJump(bool); 
 };
 
 #endif

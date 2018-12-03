@@ -43,6 +43,8 @@ Shooter::Shooter(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* si
 
     fired = false;
     numShots = 0;
+
+    jump = true;
 }
 
 Shooter::~Shooter() {
@@ -61,11 +63,21 @@ Ogre::Vector3 Shooter::getGunPosition() {
 
 // Specific game object update routine.
 void Shooter::update(float elapsedTime) {
+    lastTime += elapsedTime;
+    simulator->getDynamicsWorld()->contactTest(body, *cCallBack);
+
     btVector3 pos = this->getPosition();
     gun->setPosition(pos);
     gun->rotate(this->getOgreDirection());
     Ogre::Vector3 dir = this->getOgreDirection() * Ogre::Vector3(0.0f, 0.0f, -1.0f);
     gun->setPosition(pos + btVector3(dir.x * 1.5f, 2.5f, dir.z * 1.5f));
+
+    if (context->hit && (context->velNorm > 2.0 || context->velNorm < -2.0)
+        && (lastTime > 0.5 || (context->lastBody != context->body && lastTime > 0.1))) {
+        jump = true;
+        lastTime = 0.0f;
+    }
+    context->hit = false;
 }
 
 // Has the player already shot at the oponent?
@@ -83,4 +95,12 @@ void Shooter::shot() {
 
 int Shooter::getNumShots() {
     return numShots;
+}
+
+bool Shooter::canJump() {
+    return jump;
+}
+
+void Shooter::setJump(bool j) {
+    jump = j;
 }

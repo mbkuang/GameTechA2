@@ -670,7 +670,10 @@ bool TutorialApplication::keyPressed(const OIS::KeyEvent& arg) {
         quit();
     } else if (arg.key == OIS::KC_SPACE) {
         Shooter* player = (Shooter*) simulator->getObject("PlayerShooter");
-        player->setVelocity(0,50,0);
+        if(player->canJump()) {
+            player->setVelocity(0,50,0);
+            player->setJump(false);
+        }
 
     } else if (arg.key == OIS::KC_LSHIFT) {
         simulator->destroyWorld();
