@@ -63,6 +63,10 @@ void Bird::setFormation(btVector3 form) {
     this->formation = form;
 }
 
+btVector3 Bird::getDirection() {
+    return this->getVelocity().normalized();
+}
+
 void Bird::setVelocity(btVector3 vel) {
     this->body->setLinearVelocity(vel);
 }
@@ -95,8 +99,8 @@ void Bird::update(float elapsedTime) {
         if (contactName.compare("PlayerShooter") == 0) {
             p->setHP(p->getHP()-1);
             simulator->overlay->updateScore();
-            state = SCATTER;
-            timer = SCATTERTIME;
+            state = FLY;//SCATTER;
+            timer = FLYTIME;//SCATTERTIME;
             return;
         } else if (contactName.compare("EnemyShooter") == 0) {
             cpu->setHP(cpu->getHP()-1);
@@ -106,7 +110,7 @@ void Bird::update(float elapsedTime) {
             return;
         }
 
-        if(contactName.substr(0,11).compare("PlayerLaser") == 0 || 
+        if(contactName.substr(0,11).compare("PlayerLaser") == 0 ||
             contactName.substr(0,10).compare("EnemyLaser") == 0) {
             simulator->removeObject(this);
             this->~GameObject();
@@ -187,6 +191,7 @@ void Bird::flyState() {
     if (leader == NULL) {
         flyVector = vel.lerp(vel + btVector3(1,0,-1), .1);
         if (flyVector.getY() < 0) {flyVector.setY(flyVector.getY() + .1);}
+        else if (flyVector.getY() > 30) {flyVector.setY(flyVector.getY() - .1);}
         flyVector = flyVector.normalized() * flySpd;
         this->setVelocity(vel.lerp(flyVector, .05));
 
@@ -204,7 +209,9 @@ void Bird::flyState() {
     } else {
         btVector3 lDist = (leader->getPosition() + formation) - this->getPosition();
         btVector3 lDir = lDist.normalized();
-        flyVector = lDir * speed;
+        if (lDist.length() > 10) {
+            flyVector = lDir * speed;
+        }
         if (fabs(vel.angle(flyVector)) > .26) {
             if (speed > minSpd) {speed --;}
             else {speed = minSpd;}

@@ -50,6 +50,7 @@ public:
     void setTarget(Shooter* targe);
     void setLeader(Ogre::String lName);
     void setFormation(btVector3 form);
+    btVector3 getDirection();
     void update(float elapsedTime);
     int getState();
     void chaseState();
