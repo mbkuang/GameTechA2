@@ -16,6 +16,11 @@ class Frog : public GameObject {
         float timeSinceLastJump;
         float lastContactTime;
 
+        /* Jumping */
+        Ogre::Vector3 startPosition;
+        Ogre::Vector3 goalPosition;
+        float t;
+
     public:
         Frog(Ogre::String name, Ogre::SceneManager* sceneMgr, Simulator* simulator,
     	Ogre::Vector3 position, float radius, Ogre::String material, AIManager* aiMgr);
@@ -25,7 +30,8 @@ class Frog : public GameObject {
         void jump();
 
         void update(float elapsedTime);
-        
+
+        Ogre::Vector3 lerp(const Ogre::Vector3 A, const Ogre::Vector3 B, float t);   
 };
 
 #endif

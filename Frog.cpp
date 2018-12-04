@@ -41,10 +41,13 @@ Frog::Frog(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
     // Edit spawn node
     Node* spawn = aiMgr->findNodeClosest(position);
     spawn->occupy(true);
+
+    startPosition = position;
+    goalPosition = position;
 }
 
 Frog::~Frog() {
-    printf("Is this happening\n");
+    /* May not be neccesary? */
 }
 
 void Frog::jump() {
@@ -53,6 +56,11 @@ void Frog::jump() {
     Ogre::Vector3 player_position = aiMgr->getPlayerPosition();
     Node* goal  = aiMgr->findNodeClosest(player_position);
     Node* next  = aiMgr->findNextNode(start, goal);
+
+    // Ogre::Vector3 temp_pos = lerp(position, next->getPosition(), .5/1.5);
+    // printf("Start pos: %f, %f, %f\n", position.x, position.y, position.z);
+    // printf("Next pos: %f, %f, %f\n", temp_pos.x, temp_pos.y, temp_pos.z);
+    // printf("Goal pos: %f, %f, %f\n", next->getPosition().x, next->getPosition().y, next->getPosition().z);
 
     /* Check if node froggo is planning to jump to is occupied */
     if(next->isOccupied()) {
@@ -63,11 +71,15 @@ void Frog::jump() {
     start->occupy(false);
     next->occupy(true);
 
+    startPosition = position;
+    goalPosition = next->getPosition();
+
     // add an actual jump instead of a teleport
-    Ogre::Vector3 pos = next->getPosition();
-    position = pos;
-    rootNode->setPosition(pos.x, pos.y, pos.z);
-    updateTransform();
+    // Ogre::Vector3 pos = next->getPosition();
+    // position = pos;
+    // rootNode->setPosition(pos.x, pos.y, pos.z);
+    // updateTransform();
+
 }
 
 // Specific game object update routine.
@@ -106,7 +118,23 @@ void Frog::update(float elapsedTime) {
     /* Make froggo jump */
     timeSinceLastJump += elapsedTime;
     if(timeSinceLastJump > 1.5) { // should probably adjust this value to make frogs faster/ slower
+        position = goalPosition;
+        rootNode->setPosition(goalPosition);
+        updateTransform();
         jump();
         timeSinceLastJump = 0;
+    } else {
+        t = timeSinceLastJump / 1.5;
+        Ogre::Vector3 temp_pos = lerp(goalPosition, startPosition, t);
+        printf("Start pos: %f, %f, %f\n", startPosition.x, startPosition.y, startPosition.z);
+        printf("Goal pos: %f, %f, %f\n", goalPosition.x, goalPosition.y, goalPosition.z);
+        printf("updated position: %f, %f, %f\n", temp_pos.x, temp_pos.y, temp_pos.z);
+        position = temp_pos;
+        rootNode->setPosition(position);
+        updateTransform();
     }
+}
+
+Ogre::Vector3 Frog::lerp(const Ogre::Vector3 A, const Ogre::Vector3 B, float t) {
+    return A * t + B * (1.f - t);
 }

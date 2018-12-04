@@ -89,7 +89,7 @@ void TutorialApplication::createLevel1() {
     aiMgr->addNode(Ogre::Vector3(20.0f, -135.0f, 0.0f));
     aiMgr->addNode(Ogre::Vector3(0.0f, -135.0f, 0.0f));
     aiMgr->addNode(Ogre::Vector3(-20.0f, -135.0f, 0.0f));
-    aiMgr->addNode(Ogre::Vector3(-40.0f, -135.0f, 0.0f));
+    aiMgr->addNode(Ogre::Vector3(-40.0f, -115.0f, 0.0f));
     aiMgr->connectAllNodes();
     // aiMgr->printAllNodeConnections();
 
@@ -104,9 +104,9 @@ void TutorialApplication::createLevel1() {
         Ogre::Vector3(-40.0f, -135.0f, -100.0f), 2.0f,
         "BallTexture", aiMgr);
 
-    frog2 = new Frog("Frog2", mSceneMgr, simulator,
-        Ogre::Vector3(40.0f, -135.0f, -100.0f), 2.0f,
-        "BallTexture", aiMgr);
+    // frog2 = new Frog("Frog2", mSceneMgr, simulator,
+    //     Ogre::Vector3(40.0f, -135.0f, -100.0f), 2.0f,
+    //     "BallTexture", aiMgr);
 
     simulator->overlay->createScoreboard();
 }
