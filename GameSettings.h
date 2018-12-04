@@ -16,4 +16,6 @@ const bool shooterKinematic = false;
 const float enemyShooterMass = 0.0f;
 const bool enemyShooterKinematic = true;
 
+const float jumpPeriod = 4;
+
 #endif

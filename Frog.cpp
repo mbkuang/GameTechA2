@@ -81,8 +81,9 @@ void Frog::update(float elapsedTime) {
     Ogre::String objName = this->getName();
 
     if (context->hit && (context->velNorm > 2.0 || context->velNorm < -2.0)
-        && (lastContactTime > 5 || (context->lastBody != context->body && lastContactTime > 1))) {
+        && (lastContactTime > 0.5 || (context->lastBody != context->body && lastContactTime > 0.1))) {
         //Handle the hit
+        lastContactTime = 0.0f;
         GameObject* contact = context->theObject;
         Ogre::String contactName = contact->getName();
 
@@ -91,6 +92,7 @@ void Frog::update(float elapsedTime) {
         Shooter* ps = (Shooter*) simulator->getObject("PlayerShooter");
 
         simulator->soundSystem->playSound("deathSound");
+        
         if (contactName.compare("PlayerShooter") == 0) {
             p->setHP(p->getHP()-1);
             simulator->overlay->updateScore();
@@ -100,22 +102,33 @@ void Frog::update(float elapsedTime) {
             simulator->overlay->updateScore();
             return;
         }
-        lastContactTime = 0.0f;
     }
 
     context->hit = false;
 
     /* Make froggo jump */
     timeSinceLastJump += elapsedTime;
-    if(timeSinceLastJump > 4) { // should probably adjust this value to make frogs faster/ slower
+    if(timeSinceLastJump > jumpPeriod) { // should probably adjust this value to make frogs faster/ slower
         position = goalPosition;
         rootNode->setPosition(goalPosition);
         updateTransform();
         jump();
         timeSinceLastJump = 0;
-    } else if (timeSinceLastJump > 2) { // adjust value to adjust wait period
+    } else if (timeSinceLastJump > (jumpPeriod / 2) && startPosition != goalPosition) { // adjust value to adjust wait period
         /* Make frog travel to its next destination */
-        Ogre::Vector3 temp_pos = lerp(startPosition, goalPosition, (timeSinceLastJump - 2) / 2);
+        float t = (timeSinceLastJump - (jumpPeriod / 2)) / (jumpPeriod / 2);
+
+        /* Position between start and goal used to create jump arc */
+        Ogre::Vector3 intermediatePosition(
+            (startPosition.x + goalPosition.x) / 2, 
+            startPosition.y + 50, // jump height
+            (startPosition.z + goalPosition.z) / 2
+        );
+        
+        Ogre::Vector3 m1 = lerp(startPosition, intermediatePosition, t);
+        Ogre::Vector3 m2 = lerp(intermediatePosition, goalPosition, t);
+
+        Ogre::Vector3 temp_pos = lerp(m1, m2, t);
         position = temp_pos;
         rootNode->setPosition(position);
         updateTransform();

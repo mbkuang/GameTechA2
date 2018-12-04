@@ -1,6 +1,7 @@
 #ifndef __Frog_h_
 #define __Frog_h_
 
+#include "GameSettings.h"
 #include "GameObject.h"
 #include "Node.h"
 #include "AIManager.h"
