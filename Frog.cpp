@@ -57,11 +57,6 @@ void Frog::jump() {
     Node* goal  = aiMgr->findNodeClosest(player_position);
     Node* next  = aiMgr->findNextNode(start, goal);
 
-    // Ogre::Vector3 temp_pos = lerp(position, next->getPosition(), .5/1.5);
-    // printf("Start pos: %f, %f, %f\n", position.x, position.y, position.z);
-    // printf("Next pos: %f, %f, %f\n", temp_pos.x, temp_pos.y, temp_pos.z);
-    // printf("Goal pos: %f, %f, %f\n", next->getPosition().x, next->getPosition().y, next->getPosition().z);
-
     /* Check if node froggo is planning to jump to is occupied */
     if(next->isOccupied()) {
         next = start;
@@ -71,14 +66,9 @@ void Frog::jump() {
     start->occupy(false);
     next->occupy(true);
 
+    /* Set jump parameters */
     startPosition = position;
     goalPosition = next->getPosition();
-
-    // add an actual jump instead of a teleport
-    // Ogre::Vector3 pos = next->getPosition();
-    // position = pos;
-    // rootNode->setPosition(pos.x, pos.y, pos.z);
-    // updateTransform();
 
 }
 
@@ -91,7 +81,7 @@ void Frog::update(float elapsedTime) {
     Ogre::String objName = this->getName();
 
     if (context->hit && (context->velNorm > 2.0 || context->velNorm < -2.0)
-        && (lastContactTime > 0.5 || (context->lastBody != context->body && lastContactTime > 0.1))) {
+        && (lastContactTime > 5 || (context->lastBody != context->body && lastContactTime > 1))) {
         //Handle the hit
         GameObject* contact = context->theObject;
         Ogre::String contactName = contact->getName();
@@ -117,24 +107,23 @@ void Frog::update(float elapsedTime) {
 
     /* Make froggo jump */
     timeSinceLastJump += elapsedTime;
-    if(timeSinceLastJump > 1.5) { // should probably adjust this value to make frogs faster/ slower
+    if(timeSinceLastJump > 4) { // should probably adjust this value to make frogs faster/ slower
         position = goalPosition;
         rootNode->setPosition(goalPosition);
         updateTransform();
         jump();
         timeSinceLastJump = 0;
-    } else {
-        t = timeSinceLastJump / 1.5;
-        Ogre::Vector3 temp_pos = lerp(goalPosition, startPosition, t);
-        printf("Start pos: %f, %f, %f\n", startPosition.x, startPosition.y, startPosition.z);
-        printf("Goal pos: %f, %f, %f\n", goalPosition.x, goalPosition.y, goalPosition.z);
-        printf("updated position: %f, %f, %f\n", temp_pos.x, temp_pos.y, temp_pos.z);
+    } else if (timeSinceLastJump > 2) { // adjust value to adjust wait period
+        /* Make frog travel to its next destination */
+        Ogre::Vector3 temp_pos = lerp(startPosition, goalPosition, (timeSinceLastJump - 2) / 2);
         position = temp_pos;
         rootNode->setPosition(position);
         updateTransform();
+    } else { 
+        /* Interval between jumps, shooting? */
     }
 }
 
 Ogre::Vector3 Frog::lerp(const Ogre::Vector3 A, const Ogre::Vector3 B, float t) {
-    return A * t + B * (1.f - t);
+    return B * t + A * (1.f - t);
 }

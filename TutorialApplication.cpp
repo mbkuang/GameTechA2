@@ -104,9 +104,9 @@ void TutorialApplication::createLevel1() {
         Ogre::Vector3(-40.0f, -135.0f, -100.0f), 2.0f,
         "BallTexture", aiMgr);
 
-    // frog2 = new Frog("Frog2", mSceneMgr, simulator,
-    //     Ogre::Vector3(40.0f, -135.0f, -100.0f), 2.0f,
-    //     "BallTexture", aiMgr);
+    frog2 = new Frog("Frog2", mSceneMgr, simulator,
+        Ogre::Vector3(40.0f, -135.0f, -100.0f), 2.0f,
+        "BallTexture", aiMgr);
 
     simulator->overlay->createScoreboard();
 }

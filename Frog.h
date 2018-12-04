@@ -19,7 +19,6 @@ class Frog : public GameObject {
         /* Jumping */
         Ogre::Vector3 startPosition;
         Ogre::Vector3 goalPosition;
-        float t;
 
     public:
         Frog(Ogre::String name, Ogre::SceneManager* sceneMgr, Simulator* simulator,
