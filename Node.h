@@ -25,15 +25,16 @@ class Node : public GameObject {
         }
 
         Node(Ogre::String name, Ogre::SceneManager* sceneMgr, Simulator* simulator,
+            Ogre::Vector3 position, float radius, Ogre::String material);
 
-    	Ogre::Vector3 position, float radius, Ogre::String material);
+        ~Node();
 
         void setConnection(Node* n);
 
         void printConnections();
 
         Ogre::Vector3 getPosition();
-        
+
         std::vector<Node*> getNeighbors();
 
         void occupy(bool inUse);

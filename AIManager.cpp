@@ -10,9 +10,12 @@ AIManager::AIManager(Ogre::SceneManager* sceneMgr, Simulator* simulator, Ogre::S
 
 AIManager::~AIManager() {
     /* Delete all nodes in list */
-    for(int i = 0; i < _nodes.size(); i++) {
-        _nodes[i]->~Node();
-    }
+    // for(int i = 0; i < _nodes.size(); i++) {
+    //     Node* n = _nodes[i];
+    //     n->~Node();
+    //     _nodes.erase(i);
+    // }
+    destroyNodes();
 }
 
 void AIManager::addNode(Ogre::Vector3 position) {
@@ -21,6 +24,19 @@ void AIManager::addNode(Ogre::Vector3 position) {
     _nodes.push_back(new Node(ss.str(), scnMgr, simulator,
     	position, 2.0f, "greenball"));
     numNodes++;
+}
+
+void AIManager::destroyNodes() {
+    printf("Destroying Nodes\n");
+    while (_nodes.size() > 0) {
+        Node* n = _nodes[_nodes.size()-1];
+        if (n != NULL) {
+            n->~Node();
+            _nodes.pop_back();
+        }
+        numNodes --;
+    }
+    printf("Destroyed Nodes\n");
 }
 
 void AIManager::connectNodes(Node* node1, Node* node2) {

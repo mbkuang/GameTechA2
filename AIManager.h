@@ -25,10 +25,12 @@ class AIManager {
 
     public:
         AIManager(Ogre::SceneManager* sceneMgr, Simulator* simulator, Ogre::String material);
-        
+
         ~AIManager();
-        
+
         void addNode(Ogre::Vector3 position);
+
+        void destroyNodes();
 
         void connectNodes(Node* node1, Node* node2);
 
@@ -48,7 +50,7 @@ class AIManager {
 
         std::vector<Node*> reconstruct_path(std::unordered_map<Node*, Node*> came_from, Node* start, Node* goal);
 
-        void setPlayerPosition(Ogre::Vector3 pos); 
+        void setPlayerPosition(Ogre::Vector3 pos);
 
         Ogre::Vector3 getPlayerPosition();
 

@@ -83,7 +83,7 @@ void Shooter::update(float elapsedTime) {
         GameObject* contact = context->theObject;
         Ogre::String contactName = contact->getName();
 
-        if(contactName.compare("Door")) {
+        if(contactName.compare("Door") == 0) {
             door = true;
             printf("Hello\n");
         }

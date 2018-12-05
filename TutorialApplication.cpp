@@ -80,11 +80,18 @@ void TutorialApplication::restart() {
 }
 //---------------------------------------------------------------------------
 void TutorialApplication::nextLevel() {
+    simulator->pause();
+    printf("Going to next world\n");
     simulator->destroyWorld();
+    printf("Destroyed world\n");
     Ogre::ParticleSystem* particleSystem = mSceneMgr->getParticleSystem("Trails");
     particleSystem->removeAllEmitters();
+    printf("Destroying nodes\n");
+    aiMgr->destroyNodes();
+    printf("Got those  nodes\n");
     level ++;
     simulator->getPlayer("Player1")->setLevel(level);
+    simulator->pause();
     switch(level) {
         case 1:
             createLevel1();
@@ -165,41 +172,6 @@ void TutorialApplication::createLevel2() {
 }
 //---------------------------------------------------------------------------
 void TutorialApplication::createLevel3() {
-
-    Wall* flooring1 = new Wall("Flooring1", mSceneMgr, simulator,
-        Ogre::Vector3(0.0f, 0.0f, -50.0f), Ogre::Vector3(10.0f, wallThickness, 100.0f),
-        "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
-    Wall* flooring2 = new Wall("Flooring2", mSceneMgr, simulator,
-        Ogre::Vector3(45.0f, 0.0f, 105.0f), Ogre::Vector3(100.0f, wallThickness, 10.0f),
-        "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
-
-    Shooter* player = (Shooter*) simulator->getObject("PlayerShooter");
-    player->setPosition(0.0f, 10.0f, -50.0f);
-
-    Ogre::ParticleSystem* particleSystem = mSceneMgr->getParticleSystem("Trails");
-
-    Ogre::ParticleEmitter* emitter1 = particleSystem->addEmitter("Point");
-    Bird* bird1 = new Bird("Bird1", mSceneMgr, simulator,
-        Ogre::Vector3(0.0f, 10.0f, -300.0f), 2.0f,
-        "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic, emitter1);
-    bird1->setTarget((Shooter*) simulator->getObject("PlayerShooter"));
-
-    Ogre::ParticleEmitter* emitter2 = particleSystem->addEmitter("Point");
-    Bird* bird2 = new Bird("Bird2", mSceneMgr, simulator,
-        Ogre::Vector3(20.0f, 10.0f, -300.0f), 2.0f,
-        "WallTexture", ballMass, ballRestitution, ballFriction, ballKinematic, emitter2);
-    bird2->setTarget((Shooter*) simulator->getObject("PlayerShooter"));
-
-    Door* door = new Door("Door", mSceneMgr, simulator,
-        Ogre::Vector3(-45.0f, 10.0f, -105.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
-        "DoorTexture", 10000, 0.98f, wallFriction, ballKinematic);
-
-    Spawner* spawn = new Spawner("Spawner", mSceneMgr, simulator,
-        Ogre::Vector3(30.0f, 10.0f, -300.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
-        "ShooterTexture", wallMass, 0.98f, wallFriction, ballKinematic, 0, 10.0f, particleSystem);
-}
-//---------------------------------------------------------------------------
-void TutorialApplication::createLevel4() {
     /* AI Stuff */
     aiMgr = new AIManager(mSceneMgr, simulator, "greenball");
 
@@ -252,7 +224,6 @@ void TutorialApplication::createLevel4() {
     aiMgr->addNode(Ogre::Vector3(-25.0f,0.0f,25.0f));
     aiMgr->addNode(Ogre::Vector3(-25.0f,0.0f,-25.0f));
     aiMgr->connectAllNodes();
-    aiMgr->printAllNodeConnections();
 
     Wall* flooring1 = new Wall("Wall1", mSceneMgr, simulator,
         Ogre::Vector3(0.0f, -20.0f, 0.0f), Ogre::Vector3(100, wallThickness, 100),
@@ -280,6 +251,45 @@ void TutorialApplication::createLevel4() {
     frog2 = new Frog("Frog2", mSceneMgr, simulator,
         Ogre::Vector3(50.0f, 50.0f, 0.0f), 4.0f,
         "BallTexture", aiMgr);
+
+    Door* door = new Door("Door", mSceneMgr, simulator,
+        Ogre::Vector3(50.0f, 150.0f, 50.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
+        "DoorTexture", 10000, 0.98f, wallFriction, ballKinematic);
+}
+//---------------------------------------------------------------------------
+void TutorialApplication::createLevel4() {
+
+    Wall* flooring1 = new Wall("Flooring1", mSceneMgr, simulator,
+        Ogre::Vector3(0.0f, 0.0f, -50.0f), Ogre::Vector3(10.0f, wallThickness, 100.0f),
+        "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
+    Wall* flooring2 = new Wall("Flooring2", mSceneMgr, simulator,
+        Ogre::Vector3(45.0f, 0.0f, 105.0f), Ogre::Vector3(100.0f, wallThickness, 10.0f),
+        "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
+
+    Shooter* player = (Shooter*) simulator->getObject("PlayerShooter");
+    player->setPosition(0.0f, 10.0f, -50.0f);
+
+    Ogre::ParticleSystem* particleSystem = mSceneMgr->getParticleSystem("Trails");
+
+    Ogre::ParticleEmitter* emitter1 = particleSystem->addEmitter("Point");
+    Bird* bird1 = new Bird("Bird1", mSceneMgr, simulator,
+        Ogre::Vector3(0.0f, 10.0f, -300.0f), 2.0f,
+        "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic, emitter1);
+    bird1->setTarget((Shooter*) simulator->getObject("PlayerShooter"));
+
+    Ogre::ParticleEmitter* emitter2 = particleSystem->addEmitter("Point");
+    Bird* bird2 = new Bird("Bird2", mSceneMgr, simulator,
+        Ogre::Vector3(20.0f, 10.0f, -300.0f), 2.0f,
+        "WallTexture", ballMass, ballRestitution, ballFriction, ballKinematic, emitter2);
+    bird2->setTarget((Shooter*) simulator->getObject("PlayerShooter"));
+
+    Door* door = new Door("Door", mSceneMgr, simulator,
+        Ogre::Vector3(45.0f, 10.0f, 105.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
+        "DoorTexture", 10000, 0.98f, wallFriction, ballKinematic);
+
+    Spawner* spawn = new Spawner("Spawner", mSceneMgr, simulator,
+        Ogre::Vector3(30.0f, 10.0f, -300.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
+        "ShooterTexture", wallMass, 0.98f, wallFriction, ballKinematic, 0, 10.0f, particleSystem);
 }
 //---------------------------------------------------------------------------
 bool TutorialApplication::quit() {
