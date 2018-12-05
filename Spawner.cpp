@@ -2,7 +2,7 @@
 
 Spawner::Spawner(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
     Ogre::Vector3 position, Ogre::Vector3 scale, Ogre::String material,
-    float mass, float restitution, float friction, bool kinematic, float newType, float newRate, Ogre::ParticleSystem* particleSys) :
+    float mass, float restitution, float friction, bool kinematic, int newType, float newRate, Ogre::ParticleSystem* particleSys) :
     GameObject(newName, scnMgr, sim) {
     // Set variables.
     this->position = position;
@@ -58,6 +58,7 @@ void Spawner::update(float elapsedTime) {
         Ogre::Vector3 eDir = pLocation - location;
         int avgVel = 50;
         GameObject* emitted;
+        Ogre::Vector3 position = this->getOgrePosition();
         Ogre::ParticleEmitter* emitter = NULL;
         if (particleSystem != NULL) {
             emitter = particleSystem->addEmitter("Point");
@@ -70,7 +71,7 @@ void Spawner::update(float elapsedTime) {
                 if (simulator->getObject(ss.str()) == NULL) {
 
                     emitted = new Bird(ss.str(), sceneMgr, simulator,
-                        Ogre::Vector3(0, 10.0f, 300.0f), 2.0f,
+                        position, 2.0f,
                         "greenball", ballMass, ballRestitution, ballFriction, ballKinematic, emitter);
                     ((Bird*) emitted)->setTarget((Shooter*) simulator->getObject("PlayerShooter"));
                 }
@@ -88,7 +89,7 @@ void Spawner::update(float elapsedTime) {
                 if (simulator->getObject(ss.str()) == NULL) {
                     //Ogre::ParticleEmitter* emitter = particleSystem->addEmitter("Point");
                     emitted = new Laser(ss.str(), sceneMgr, simulator,
-                        Ogre::Vector3(0, 10.0f, 300.0f), 2.0f,
+                        position, 2.0f,
                         "greenball", ballMass, ballRestitution, ballFriction, ballKinematic);
                     emitted->setVelocity(simulator->getObject("PlayerShooter")->getPosition() - emitted->getPosition());
                 }

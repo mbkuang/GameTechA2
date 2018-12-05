@@ -35,9 +35,9 @@ protected:
 
     enum TIMES {
         SECOND = 60 * 20,
-        FLYTIME = SECOND * 20,
+        FLYTIME = SECOND * 10,
         CHASETIME = SECOND * 3,
-        CHASEFLYTIME = SECOND * 10,
+        CHASEFLYTIME = SECOND * 7,
         SCATTERTIME = SECOND * 2
     };
     int timer;

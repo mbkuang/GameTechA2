@@ -29,7 +29,7 @@ private:
 public:
     Spawner(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
         Ogre::Vector3 position, Ogre::Vector3 scale, Ogre::String material,
-        float mass, float restitution, float friction, bool kinematic, float newType, float newRate, Ogre::ParticleSystem* particleSys);
+        float mass, float restitution, float friction, bool kinematic, int newType, float newRate, Ogre::ParticleSystem* particleSys);
     ~Spawner();
     void update(float elapsedTime);
 };

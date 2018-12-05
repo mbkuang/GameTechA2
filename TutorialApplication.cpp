@@ -207,8 +207,12 @@ void TutorialApplication::createLevel2() {
     bird2->setTarget((Shooter*) simulator->getObject("PlayerShooter"));
 
     Door* door = new Door("Door", mSceneMgr, simulator,
-        Ogre::Vector3(-45.0f, -125.0f, -105.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
+        Ogre::Vector3(-45.0f, 10.0f, -105.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
         "DoorTexture", 10000, 0.98f, wallFriction, ballKinematic);
+
+    Spawner* spawn = new Spawner("Spawner", mSceneMgr, simulator,
+        Ogre::Vector3(30.0f, 10.0f, -300.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
+        "ShooterTexture", wallMass, 0.98f, wallFriction, ballKinematic, 0, 10.0f, particleSystem);
 }
 //---------------------------------------------------------------------------
 bool TutorialApplication::quit() {
