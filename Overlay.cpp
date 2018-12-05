@@ -5,6 +5,7 @@ Overlay::Overlay(Simulator* sim) {
     alarm = 0;
     done = false;
     lastMenu = true;
+    restarting = false;
 }
 
 void Overlay::initCEGUI() {
@@ -167,9 +168,23 @@ void Overlay::updateScore() {
 
     if(p1hp == 0) {
         simulator->pause();
+        Ogre::stringstream numLives;
+        numLives << "Lives Remaining: " << p1score-1;
+        deathMenu->getChildRecursive("lives")->setText(numLives.str());
         deathMenu->show();
         p1->setHP(5);
         p1->incrementScore(); //Decrement lives
+    } else if(p1score == 0) {
+        deathMenu->getChildRecursive("lives")->setText("Game Over... You are out of lives");
+        deathMenu->getChildRecursive("continue")->setText("Back to Main Menu");
+        deathMenu->getChildRecursive("continue")->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::toMainMenu, this));
+        p1->setHP(5);
+        p1->setScore(5);
+        simulator->pause();
+        simulator->destroyWorld();
+        p1->setLevel(0);
+        deathMenu->show();
+        restarting = true;
     }
 
     ss1 << "Player 1\nLives: "<<p1score<<"\nHP: "<<p1hp;
@@ -199,6 +214,7 @@ bool Overlay::singlePlayer() {
     pauseMenu->hide();
     simulator->pause();
     gameOverMenu->hide();
+    CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().hide();
     return true;
 }
 
@@ -215,6 +231,7 @@ bool Overlay::settings() {
     pauseMenu->hide();
     musicMenu->hide();
     settingsMenu->show();
+    CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().show();
     return true;
 }
 
@@ -226,6 +243,7 @@ bool Overlay::quit() {
 
 /* Go back to the previous menu */
 bool Overlay::back() {
+    CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().show();
     settingsMenu->hide();
     if(lastMenu || pauseMenu->isVisible()) {
         pauseMenu->hide();
@@ -238,10 +256,13 @@ bool Overlay::back() {
 
 /* Return to main menu */
 bool Overlay::toMainMenu() {
+    if(restarting)
+        simulator->pause();
     settingsMenu->hide();
     pauseMenu->hide();
     multiMenu->hide();
     mainMenu->show();
+    CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().show();
     return true;
 }
 
@@ -250,6 +271,7 @@ void Overlay::pauseGame() {
     lastMenu = false;
     simulator->pause();
     pauseMenu->show();
+    CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().show();
 }
 
 bool Overlay::showMusicMenu() {
@@ -257,6 +279,7 @@ bool Overlay::showMusicMenu() {
     settingsMenu->hide();
     mainMenu->hide();
     musicMenu->show();
+    CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().show();
     return true;
 }
 
@@ -296,4 +319,5 @@ void Overlay::nextLevel() {
     newLevelMenu->hide();
     deathMenu->hide();
     simulator->pause();
+    updateScore();
 }

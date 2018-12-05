@@ -53,6 +53,7 @@ protected:
 	void nextLevel();
 
 	bool lastMenu;	//Keep track of what the last menu was before settings
+	bool restarting;
 };
 
 #endif

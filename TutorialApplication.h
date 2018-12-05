@@ -81,6 +81,9 @@ protected:
     void nextLevel();
     void createLevel1();
     void createLevel2();
+    void createLevel3();
+
+    void restart();
 
     struct Positions {
         // Player positional/orientation/bullet pos coords

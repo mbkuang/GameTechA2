@@ -20,6 +20,8 @@ public:
 	bool hasFired();
 	void shot();
 	int getNumShots();
+	int getLevel();
+	void setLevel(int);
 
 protected:
 	Ogre::String playerName;
@@ -28,6 +30,7 @@ protected:
 	Simulator* simulator;
 	bool fired;
 	int numShots;
+	int level;
 };
 
 #endif

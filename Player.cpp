@@ -7,6 +7,7 @@ Player::Player(Ogre::String name, Simulator* sim) {
 	sim->addPlayer(this);
 	fired = false;
 	numShots = 0;
+	level = 0;
 }
 
 // Actually decrements number of player's lives
@@ -49,4 +50,12 @@ void Player::shot() {
 
 int Player::getNumShots() {
 	return numShots;
+}
+
+int Player::getLevel() {
+	return level;
+}
+
+void Player::setLevel(int l) {
+	level = l;
 }

@@ -45,6 +45,8 @@ Shooter::Shooter(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* si
     numShots = 0;
 
     jump = true;
+    startPosition = position;
+    fallenOff = false;
 }
 
 Shooter::~Shooter() {
@@ -103,4 +105,20 @@ bool Shooter::canJump() {
 
 void Shooter::setJump(bool j) {
     jump = j;
+}
+
+void Shooter::setStartPos(Ogre::Vector3 pos) {
+    startPosition = pos;
+}
+
+Ogre::Vector3 Shooter::getStartPos() {
+    return startPosition;
+}
+
+bool Shooter::hasFallenOff() {
+    return fallenOff;
+}
+
+void Shooter::setFallenOff(bool b) {
+    fallenOff = b;
 }

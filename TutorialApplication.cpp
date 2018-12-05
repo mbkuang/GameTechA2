@@ -107,12 +107,22 @@ void TutorialApplication::createScene(void)
     //      Ogre::Vector3(-500, -500, -500), 2.0f,
     //      "BallTexture", ballMass, ballRestitution, ballFriction, true);
 
+    Ogre::Light* light = mSceneMgr->createLight("MainLight");
+    Ogre::SceneNode* lightNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
+    lightNode->setPosition(0, 25, 50);
+    light->setDiffuseColour(1.0,1.0,1.0);
+    lightNode->attachObject(light);
 
     Player* player1 = new Player("Player1", simulator);
     Player* cpuPlayer = new Player("CPU", simulator);
 
     simulator->overlay->createScoreboard();
 
+}
+//---------------------------------------------------------------------------
+void TutorialApplication::restart() {
+    simulator->getPlayer("Player1")->setLevel(0);
+    level = 0;
     nextLevel();
 }
 //---------------------------------------------------------------------------
@@ -121,6 +131,7 @@ void TutorialApplication::nextLevel() {
     Ogre::ParticleSystem* particleSystem = mSceneMgr->getParticleSystem("Trails");
     particleSystem->removeAllEmitters();
     level ++;
+    simulator->getPlayer("Player1")->setLevel(level);
     switch(level) {
         case 1:
             createLevel1();
@@ -128,17 +139,34 @@ void TutorialApplication::nextLevel() {
         case 2:
             createLevel2();
             break;
+        case 3:
+            createLevel3();
+            break;
         default:
             break;
     }
 }
 //---------------------------------------------------------------------------
 void TutorialApplication::createLevel1() {
-    Ogre::Light* light = mSceneMgr->createLight("MainLight");
-    Ogre::SceneNode* lightNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
-    lightNode->setPosition(0, 25, 50);
-    light->setDiffuseColour(1.0,1.0,1.0);
-    lightNode->attachObject(light);
+
+    Wall* ground = new Wall("Ground", mSceneMgr, simulator,
+        Ogre::Vector3(0.0f, -10.0f, -50.0f), Ogre::Vector3(100, wallThickness, 100),
+        "Examples/GrassFloor", wallMass, wallRestitution, wallFriction, wallKinematic);
+
+    Wall* testWall = new Wall("TestWall", mSceneMgr, simulator,
+        Ogre::Vector3(-35.0f, 10.0f, -50.0f), Ogre::Vector3(30, wallThickness, 10),
+        "Examples/Rockwall", wallMass, wallRestitution, wallFriction, wallKinematic);
+
+    Shooter* player = (Shooter*) simulator->getObject("PlayerShooter");
+    player->setPosition(0.0f, 10.0f, -5.0f);
+    player->setStartPos(Ogre::Vector3(0.0f, 10.0f, -5.0f));
+
+    Door* door = new Door("Door", mSceneMgr, simulator,
+        Ogre::Vector3(0.0f, 0.0f, -95.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
+        "DoorTexture", 10000, 0.98f, wallFriction, ballKinematic);
+}
+//---------------------------------------------------------------------------
+void TutorialApplication::createLevel2() {
 
     Wall* flooring1 = new Wall("Flooring1", mSceneMgr, simulator,
         Ogre::Vector3(0.0f, -10.0f, -50.0f), Ogre::Vector3(10, wallThickness, 100),
@@ -180,7 +208,7 @@ void TutorialApplication::createLevel1() {
 
 }
 //---------------------------------------------------------------------------
-void TutorialApplication::createLevel2() {
+void TutorialApplication::createLevel3() {
 
     Wall* flooring1 = new Wall("Flooring1", mSceneMgr, simulator,
         Ogre::Vector3(0.0f, 0.0f, -50.0f), Ogre::Vector3(10.0f, wallThickness, 100.0f),
@@ -514,9 +542,25 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
     }
 
     simulator->bulletTimer();
+    Player* player = simulator->getPlayer("Player1");
+    Shooter* pShooter = (Shooter*) simulator->getObject("PlayerShooter");
+    Ogre::Vector3 startPosition = pShooter->getStartPos();
+    Ogre::Vector3 currentPos = (Ogre::Vector3) pShooter->getPosition();
+    if(currentPos.y - startPosition.y < -200) {
+        if (!pShooter->hasFallenOff()) {
+            pShooter->setPosition(startPosition.x, startPosition.y, startPosition.z);
+            player->incrementScore();
+            simulator->overlay->updateScore();
+            pShooter->setFallenOff(true);
+        }
+    } else {
+        pShooter->setFallenOff(false);
+    }
+
+    CEGUI::Window *restartButton = simulator->overlay->mainMenu->getChildRecursive("singlePlayerButton");
+    restartButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&TutorialApplication::restart, this));
 
     // Update the mCamera and player's orientation.
-    Shooter* pShooter = (Shooter*) simulator->getObject("PlayerShooter");
     Ogre::Vector3 position = pShooter->getOgrePosition();
     position.y += 2.5f;
 

@@ -5,6 +5,7 @@
 #include "GameObject.h"
 #include "GameSettings.h"
 #include "Gun.h"
+#include "Player.h"
 
 class Shooter : public GameObject {
 private:
@@ -17,6 +18,8 @@ private:
     int numShots;
     Gun* gun;
     bool jump;
+    Ogre::Vector3 startPosition;
+    bool fallenOff;
 
 public:
     Shooter(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
@@ -30,7 +33,11 @@ public:
     void shot();
     int getNumShots();
     bool canJump();
-    void setJump(bool); 
+    void setJump(bool);
+    void setStartPos(Ogre::Vector3);
+    Ogre::Vector3 getStartPos();
+    bool hasFallenOff();
+    void setFallenOff(bool);
 };
 
 #endif
