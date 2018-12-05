@@ -172,6 +172,7 @@ void Overlay::updateScore() {
         numLives << "Lives Remaining: " << p1score-1;
         deathMenu->getChildRecursive("lives")->setText(numLives.str());
         deathMenu->show();
+        CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().show();
         p1->setHP(5);
         p1->incrementScore(); //Decrement lives
     } else if(p1score == 0) {
@@ -313,6 +314,7 @@ void Overlay::showWinMessage(int level) {
     Ogre::stringstream ss;
     ss << "Congratulations! You beat level " << level;
     newLevelMenu->getChildRecursive("message")->setText(ss.str());
+    CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().show();
     newLevelMenu->show();
 }
 
@@ -321,4 +323,5 @@ void Overlay::nextLevel() {
     deathMenu->hide();
     simulator->pause();
     updateScore();
+    CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().hide();
 }

@@ -20,6 +20,7 @@ private:
     bool jump;
     Ogre::Vector3 startPosition;
     bool fallenOff;
+    bool door;
 
 public:
     Shooter(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
@@ -38,6 +39,8 @@ public:
     Ogre::Vector3 getStartPos();
     bool hasFallenOff();
     void setFallenOff(bool);
+    bool reachedDoor();
+    void setDoor(bool);
 };
 
 #endif

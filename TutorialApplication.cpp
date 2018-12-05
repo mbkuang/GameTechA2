@@ -554,6 +554,7 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
         if (!pShooter->hasFallenOff()) {
             pShooter->setPosition(startPosition.x, startPosition.y, startPosition.z);
             player->incrementScore();
+            player->setHP(5);
             simulator->overlay->updateScore();
             pShooter->setFallenOff(true);
         }
@@ -711,6 +712,12 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
             nextLevel();
         }
     }
+
+    // if(pShooter->reachedDoor()) {
+    //     pShooter->setDoor(false);
+    //     simulator->overlay->showWinMessage(level);
+    //     nextLevel();
+    // }
 
     return ret;
 }

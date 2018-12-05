@@ -47,6 +47,7 @@ Shooter::Shooter(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* si
     jump = true;
     startPosition = position;
     fallenOff = false;
+    door = false;
 }
 
 Shooter::~Shooter() {
@@ -78,6 +79,14 @@ void Shooter::update(float elapsedTime) {
         && (lastTime > 0.5 || (context->lastBody != context->body && lastTime > 0.1))) {
         jump = true;
         lastTime = 0.0f;
+
+        GameObject* contact = context->theObject;
+        Ogre::String contactName = contact->getName();
+
+        if(contactName.compare("Door")) {
+            door = true;
+            printf("Hello\n");
+        }
     }
     context->hit = false;
 }
@@ -121,4 +130,12 @@ bool Shooter::hasFallenOff() {
 
 void Shooter::setFallenOff(bool b) {
     fallenOff = b;
+}
+
+bool Shooter::reachedDoor() {
+    return door;
+}
+
+void Shooter::setDoor(bool d) {
+    door = d;
 }
