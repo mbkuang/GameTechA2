@@ -49,7 +49,7 @@ void TutorialApplication::createScene(void)
     simulator->overlay->createMainMenu();
 
     Shooter* playerShooter = new Shooter("PlayerShooter", mSceneMgr, simulator,
-        Ogre::Vector3(0.0f, -50.0f, -50.0f), Ogre::Vector3(1.5f, 5.0f, 1.5f),
+        Ogre::Vector3(0.0f, 40.0f, 0.0f), Ogre::Vector3(1.5f, 5.0f, 1.5f),
         "ShooterTexture", shooterMass, shooterRestitution, shooterFriction, shooterKinematic);
 
     createLevel1();
@@ -60,52 +60,81 @@ void TutorialApplication::createLevel1() {
     aiMgr = new AIManager(mSceneMgr, simulator, "greenball");
 
     /* Adding nodes to map */
-    aiMgr->addNode(Ogre::Vector3(40.0f, -135.0f, -100.0f));
-    aiMgr->addNode(Ogre::Vector3(20.0f, -135.0f, -100.0f));
-    aiMgr->addNode(Ogre::Vector3(0.0f, -135.0f, -100.0f));
-    aiMgr->addNode(Ogre::Vector3(-20.0f, -135.0f, -100.0f));
-    aiMgr->addNode(Ogre::Vector3(-40.0f, -135.0f, -100.0f));
-    aiMgr->addNode(Ogre::Vector3(40.0f, -135.0f, -80.0f));
-    aiMgr->addNode(Ogre::Vector3(20.0f, -135.0f, -80.0f));
-    aiMgr->addNode(Ogre::Vector3(0.0f, -135.0f, -80.0f));
-    aiMgr->addNode(Ogre::Vector3(-20.0f, -135.0f, -80.0f));
-    aiMgr->addNode(Ogre::Vector3(-40.0f, -135.0f, -80.0f));
-    aiMgr->addNode(Ogre::Vector3(40.0f, -135.0f, -60.0f));
-    aiMgr->addNode(Ogre::Vector3(20.0f, -135.0f, -60.0f));
-    aiMgr->addNode(Ogre::Vector3(0.0f, -135.0f, -60.0f));
-    aiMgr->addNode(Ogre::Vector3(-20.0f, -135.0f, -60.0f));
-    aiMgr->addNode(Ogre::Vector3(-40.0f, -135.0f, -60.0f));
-    aiMgr->addNode(Ogre::Vector3(40.0f, -135.0f, -40.0f));
-    aiMgr->addNode(Ogre::Vector3(20.0f, -135.0f, -40.0f));
-    aiMgr->addNode(Ogre::Vector3(0.0f, -135.0f, -40.0f));
-    aiMgr->addNode(Ogre::Vector3(-20.0f, -135.0f, -40.0f));
-    aiMgr->addNode(Ogre::Vector3(-40.0f, -135.0f, -40.0f));
-    aiMgr->addNode(Ogre::Vector3(40.0f, -135.0f, -20.0f));
-    aiMgr->addNode(Ogre::Vector3(20.0f, -135.0f, -20.0f));
-    aiMgr->addNode(Ogre::Vector3(0.0f, -135.0f, -20.0f));
-    aiMgr->addNode(Ogre::Vector3(-20.0f, -135.0f, -20.0f));
-    aiMgr->addNode(Ogre::Vector3(-40.0f, -135.0f, -20.0f));
-    aiMgr->addNode(Ogre::Vector3(40.0f, -135.0f, 0.0f));
-    aiMgr->addNode(Ogre::Vector3(20.0f, -135.0f, 0.0f));
-    aiMgr->addNode(Ogre::Vector3(0.0f, -135.0f, 0.0f));
-    aiMgr->addNode(Ogre::Vector3(-20.0f, -135.0f, 0.0f));
-    aiMgr->addNode(Ogre::Vector3(-40.0f, -115.0f, 0.0f));
-    aiMgr->connectAllNodes();
-    // aiMgr->printAllNodeConnections();
+    // aiMgr->addNode(Ogre::Vector3(40.0f, -135.0f, -100.0f));
+    // aiMgr->addNode(Ogre::Vector3(20.0f, -135.0f, -100.0f));
+    // aiMgr->addNode(Ogre::Vector3(0.0f, -135.0f, -100.0f));
+    // aiMgr->addNode(Ogre::Vector3(-20.0f, -135.0f, -100.0f));
+    // aiMgr->addNode(Ogre::Vector3(-40.0f, -135.0f, -100.0f));
+    // aiMgr->addNode(Ogre::Vector3(40.0f, -135.0f, -80.0f));
+    // aiMgr->addNode(Ogre::Vector3(20.0f, -135.0f, -80.0f));
+    // aiMgr->addNode(Ogre::Vector3(0.0f, -135.0f, -80.0f));
+    // aiMgr->addNode(Ogre::Vector3(-20.0f, -135.0f, -80.0f));
+    // aiMgr->addNode(Ogre::Vector3(-40.0f, -135.0f, -80.0f));
+    // aiMgr->addNode(Ogre::Vector3(40.0f, -135.0f, -60.0f));
+    // aiMgr->addNode(Ogre::Vector3(20.0f, -135.0f, -60.0f));
+    // aiMgr->addNode(Ogre::Vector3(0.0f, -135.0f, -60.0f));
+    // aiMgr->addNode(Ogre::Vector3(-20.0f, -135.0f, -60.0f));
+    // aiMgr->addNode(Ogre::Vector3(-40.0f, -135.0f, -60.0f));
+    // aiMgr->addNode(Ogre::Vector3(40.0f, -135.0f, -40.0f));
+    // aiMgr->addNode(Ogre::Vector3(20.0f, -135.0f, -40.0f));
+    // aiMgr->addNode(Ogre::Vector3(0.0f, -135.0f, -40.0f));
+    // aiMgr->addNode(Ogre::Vector3(-20.0f, -135.0f, -40.0f));
+    // aiMgr->addNode(Ogre::Vector3(-40.0f, -135.0f, -40.0f));
+    // aiMgr->addNode(Ogre::Vector3(40.0f, -135.0f, -20.0f));
+    // aiMgr->addNode(Ogre::Vector3(20.0f, -135.0f, -20.0f));
+    // aiMgr->addNode(Ogre::Vector3(0.0f, -135.0f, -20.0f));
+    // aiMgr->addNode(Ogre::Vector3(-20.0f, -135.0f, -20.0f));
+    // aiMgr->addNode(Ogre::Vector3(-40.0f, -135.0f, -20.0f));
+    // aiMgr->addNode(Ogre::Vector3(40.0f, -135.0f, 0.0f));
+    // aiMgr->addNode(Ogre::Vector3(20.0f, -135.0f, 0.0f));
+    // aiMgr->addNode(Ogre::Vector3(0.0f, -135.0f, 0.0f));
+    // aiMgr->addNode(Ogre::Vector3(-20.0f, -135.0f, 0.0f));
+    // aiMgr->addNode(Ogre::Vector3(-40.0f, -115.0f, 0.0f));
 
-    Wall* flooring1 = new Wall("Flooring1", mSceneMgr, simulator,
-        Ogre::Vector3(0.0f, yFWall, -50.0f), Ogre::Vector3(100, wallThickness, 100),
-        "WallTexture2Inverse", wallMass, wallRestitution, wallFriction, wallKinematic);
+    aiMgr->addNode(Ogre::Vector3(50.0f,50.0f,0.0f));
+    aiMgr->addNode(Ogre::Vector3(0.0f,50.0f,50.0f));
+    aiMgr->addNode(Ogre::Vector3(-50.0f,50.0f,0.0f));
+    aiMgr->addNode(Ogre::Vector3(0.0f,50.0f,-50.0f));
+    aiMgr->addNode(Ogre::Vector3(50.0f,50.0f,50.0f));
+    aiMgr->addNode(Ogre::Vector3(-50.0f,50.0f,50.0f));
+    aiMgr->addNode(Ogre::Vector3(-50.0f,50.0f,-50.0f));
+    aiMgr->addNode(Ogre::Vector3(50.0f,50.0f,-50.0f));
+    aiMgr->addNode(Ogre::Vector3(25.0f,0.0f,0.0f));
+    aiMgr->addNode(Ogre::Vector3(25.0f,0.0f,25.0f));
+    aiMgr->addNode(Ogre::Vector3(0.0f,0.0f,25.0f));
+    aiMgr->addNode(Ogre::Vector3(-25.0f,0.0f,0.0f));
+    aiMgr->addNode(Ogre::Vector3(0.0f,0.0f,-25.0f));
+    aiMgr->addNode(Ogre::Vector3(25.0f,0.0f,-25.0f));
+    aiMgr->addNode(Ogre::Vector3(-25.0f,0.0f,25.0f));
+    aiMgr->addNode(Ogre::Vector3(-25.0f,0.0f,-25.0f));
+    aiMgr->connectAllNodes();
+    aiMgr->printAllNodeConnections();
+
+    Wall* flooring1 = new Wall("Wall1", mSceneMgr, simulator,
+        Ogre::Vector3(0.0f, -20.0f, 0.0f), Ogre::Vector3(100, wallThickness, 100),
+        "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
+
+    Wall* wall2 = new Wall("Wall2", mSceneMgr, simulator,
+        Ogre::Vector3(0.0f, 40.0f, -60.0f), Ogre::Vector3(100, 100, wallThickness),
+        "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
+
+    Wall* wall3 = new Wall("Wall3", mSceneMgr, simulator,
+        Ogre::Vector3(0.0f, 40.0f, 60.0f), Ogre::Vector3(100, 100, wallThickness),
+        "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
+
+    Wall* wall4 = new Wall("Wall4", mSceneMgr, simulator,
+        Ogre::Vector3(60.0f, 40.0f, 0.0f), Ogre::Vector3(wallThickness, 100, 100),
+        "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
 
     Player* player1 = new Player("Player1", simulator);
     Player* cpuPlayer = new Player("CPU", simulator);
 
     frog1 = new Frog("Frog1", mSceneMgr, simulator,
-        Ogre::Vector3(-40.0f, -135.0f, -100.0f), 2.0f,
+        Ogre::Vector3(-50.0f, 50.0f, 0.0f), 4.0f,
         "BallTexture", aiMgr);
 
     frog2 = new Frog("Frog2", mSceneMgr, simulator,
-        Ogre::Vector3(40.0f, -135.0f, -100.0f), 2.0f,
+        Ogre::Vector3(50.0f, 50.0f, 0.0f), 4.0f,
         "BallTexture", aiMgr);
 
     simulator->overlay->createScoreboard();
@@ -289,7 +318,7 @@ bool TutorialApplication::mousePressed(const OIS::MouseEvent& arg, OIS::MouseBut
         if (id == OIS::MB_Left) {
             Shooter* player = (Shooter*) simulator->getObject("PlayerShooter");
             Ogre::Vector3 location = player->getGunPosition();
-            float avgVel = sqrt(640000/3);
+            float avgVel = laserSpeed;
             Ogre::Vector3 cDir = mCamera->getDirection();
 
             Ogre::stringstream ss;

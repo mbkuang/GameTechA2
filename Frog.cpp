@@ -17,7 +17,7 @@ Frog::Frog(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
 
 
     // Set the entity.
-    geom = sceneMgr->createEntity(name, "sphere.mesh");
+    geom = sceneMgr->createEntity(name, "cube.mesh");
     geom->setCastShadows(true);
     if (material != "") {
         geom->setMaterialName(material);
@@ -28,7 +28,7 @@ Frog::Frog(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
         ->createChildSceneNode(name, Ogre::Vector3(position.x, position.y, position.z));
     rootNode->attachObject(geom);
     rootNode->scale(radius * 0.01f, radius * 0.01f, radius * 0.01f);
-    rootNode->setPosition(position.x, position.y, position.z); 
+    rootNode->setPosition(position.x, position.y, position.z);
 
     // Set the rigid body.
     transform.setOrigin(btVector3(position.x, position.y, position.z));
@@ -92,7 +92,7 @@ void Frog::update(float elapsedTime) {
         Shooter* ps = (Shooter*) simulator->getObject("PlayerShooter");
 
         simulator->soundSystem->playSound("deathSound");
-        
+
         if (contactName.compare("PlayerShooter") == 0) {
             p->setHP(p->getHP()-1);
             simulator->overlay->updateScore();
@@ -114,17 +114,18 @@ void Frog::update(float elapsedTime) {
         updateTransform();
         jump();
         timeSinceLastJump = 0;
+        hasShot = true;
     } else if (timeSinceLastJump > (jumpPeriod / 2) && startPosition != goalPosition) { // adjust value to adjust wait period
         /* Make frog travel to its next destination */
         float t = (timeSinceLastJump - (jumpPeriod / 2)) / (jumpPeriod / 2);
 
         /* Position between start and goal used to create jump arc */
         Ogre::Vector3 intermediatePosition(
-            (startPosition.x + goalPosition.x) / 2, 
+            (startPosition.x + goalPosition.x) / 2,
             startPosition.y + 50, // jump height
             (startPosition.z + goalPosition.z) / 2
         );
-        
+
         Ogre::Vector3 m1 = lerp(startPosition, intermediatePosition, t);
         Ogre::Vector3 m2 = lerp(intermediatePosition, goalPosition, t);
 
@@ -132,8 +133,27 @@ void Frog::update(float elapsedTime) {
         position = temp_pos;
         rootNode->setPosition(position);
         updateTransform();
-    } else { 
+    } else {
         /* Interval between jumps, shooting? */
+        if (hasShot) {
+            if (timeSinceLastJump > 3 * jumpPeriod / 4) {
+                Ogre::Vector3 position = this->getOgrePosition();
+                Ogre::stringstream ss;
+                ss << "EnemyLaser" << simulator->getObjectNumber();
+
+                Shooter* pShooter = (Shooter*) simulator->getObject("PlayerShooter");
+                btVector3 lDir = btVector3(0,1,0);
+                if (pShooter != NULL) {
+                    lDir = (pShooter->getPosition() - this->getPosition()).normalized();
+                }
+                Laser* emitted = new Laser(ss.str(), sceneMgr, simulator,
+                    position, 2.0f,
+                    "greenball", ballMass, ballRestitution, ballFriction, ballKinematic);
+                emitted->setPosition(this->getPosition() + lDir * 5);
+                emitted->setVelocity(lDir * laserSpeed);
+                hasShot = false;
+            }
+        }
     }
 }
 

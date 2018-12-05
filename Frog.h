@@ -6,6 +6,7 @@
 #include "Node.h"
 #include "AIManager.h"
 #include "Shooter.h"
+#include "Laser.h"
 #include <math.h>       /* round */
 
 class Frog : public GameObject {
@@ -16,6 +17,8 @@ class Frog : public GameObject {
         AIManager* aiMgr;
         float timeSinceLastJump;
         float lastContactTime;
+
+        bool hasShot = true;
 
         /* Jumping */
         Ogre::Vector3 startPosition;
@@ -31,7 +34,7 @@ class Frog : public GameObject {
 
         void update(float elapsedTime);
 
-        Ogre::Vector3 lerp(const Ogre::Vector3 A, const Ogre::Vector3 B, float t);   
+        Ogre::Vector3 lerp(const Ogre::Vector3 A, const Ogre::Vector3 B, float t);
 };
 
 #endif

@@ -36,13 +36,14 @@ public:
 	void stepSimulation(const Ogre::Real elapsedTime, int maxSubSteps = 1, const Ogre::Real fixedTimestep = 1.0f/60.0f);
     btDiscreteDynamicsWorld* getDynamicsWorld();
     GameObject* getObject(Ogre::String oName);
+    int getObjectNumber();
     void addPlayer(Player* p);
     Player* getPlayer(Ogre::String pName);
 	void destroyWorld();
 
     Sound *soundSystem;
     bool soundOn;
-    
+
     void pause();
     bool paused();
 

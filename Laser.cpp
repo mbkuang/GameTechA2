@@ -73,20 +73,20 @@ void Laser::update(float elapsedTime) {
     simulator->getDynamicsWorld()->contactTest(body, *cCallBack);
 
     Ogre::String objName = this->getName();
-    if(objName.compare("EnemyLaser") == 0)
-        return;
+
 
     if (context->hit && (context->velNorm > 2.0 || context->velNorm < -2.0)
         && (lastTime > 0.5 || (context->lastBody != context->body && lastTime > 0.1))) {
         //Handle the hit
         GameObject* contact = context->theObject;
         Ogre::String contactName = contact->getName();
-        
-        if (contactName.substr(0,4).compare("Frog") == 0) {
-            GameObject* rem = simulator->getObject(contactName);
-            if(rem != NULL) {
-                rem->~GameObject();
-                simulator->removeObject(rem);
+        if(!objName.substr(0,5).compare("Enemy") == 0) {
+            if (contactName.substr(0,4).compare("Frog") == 0) {
+                GameObject* rem = simulator->getObject(contactName);
+                if(rem != NULL) {
+                    rem->~GameObject();
+                    simulator->removeObject(rem);
+                }
             }
         }
 

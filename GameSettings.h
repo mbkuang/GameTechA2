@@ -16,6 +16,8 @@ const bool shooterKinematic = false;
 const float enemyShooterMass = 0.0f;
 const bool enemyShooterKinematic = true;
 
-const float jumpPeriod = 4;
+const float jumpPeriod = 1;
+
+const float laserSpeed = 462.0f;
 
 #endif

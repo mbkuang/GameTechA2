@@ -33,8 +33,8 @@ void AIManager::connectAllNodes() {
             Ogre::Vector3 i_pos = _nodes[i]->getPosition();
         for(int j = 0; j < _nodes.size(); j++) {
             Ogre::Vector3 j_pos = _nodes[j]->getPosition();
-
-            if(_nodes[i] != _nodes[j] && abs(i_pos.x - j_pos.x) <= 20 && abs(i_pos.z - j_pos.z) <= 20 && abs(i_pos.z - j_pos.z) <= 20) {
+            Ogre::Vector3 dist = i_pos - j_pos;
+            if(dist.length() < 56) {//_nodes[i] != _nodes[j] && abs(i_pos.x - j_pos.x) <= 20 && abs(i_pos.z - j_pos.z) <= 20 && abs(i_pos.z - j_pos.z) <= 20) {
                 connectNodes(_nodes[i], _nodes[j]);
             }
         }
@@ -67,7 +67,7 @@ void AIManager::a_star_search(std::unordered_map<Node*, Node*>& came_from, Node*
     /* Use the A* algorithm to find organize the given map */
     std::unordered_map<Node*, double> cost_so_far;
 
-    std::priority_queue<std::pair<double, Node*>> frontier; 
+    std::priority_queue<std::pair<double, Node*>> frontier;
     std::vector<Node*> neighbors;
     frontier.push(std::make_pair(0, start));
 
@@ -88,7 +88,7 @@ void AIManager::a_star_search(std::unordered_map<Node*, Node*>& came_from, Node*
             if (cost_so_far.find(next) == cost_so_far.end()
                 || new_cost < cost_so_far[next]) {
                 cost_so_far[next] = new_cost;
-                double priority = new_cost 
+                double priority = new_cost
                     + manhattan_heuristic(next->getPosition(), goal->getPosition()); // might need to edit
                 frontier.push(std::make_pair(priority, next));
                 came_from[next] = current;

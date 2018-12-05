@@ -60,6 +60,10 @@ GameObject* Simulator::getObject(Ogre::String oName) {
     return objMap[oName];
 }
 
+int Simulator::getObjectNumber() {
+    return objList.size();
+}
+
 void Simulator::addPlayer(Player* p) {
 	players[p->getName()] = p;
 }
