@@ -1,0 +1,16 @@
+material GrayTexture
+{
+	technique
+	{
+		pass
+		{
+            ambient 0.75 0.75 0.75
+            diffuse 0.75 0.75 0.75
+
+			texture_unit
+			{
+				texture GrayTexture.jpg
+			}
+		}
+	}
+}
