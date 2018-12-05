@@ -61,6 +61,15 @@ void Laser::update(float elapsedTime) {
         //Handle the hit
         GameObject* contact = context->theObject;
         Ogre::String contactName = contact->getName();
+        if(!objName.substr(0,5).compare("Enemy") == 0) {
+            if (contactName.substr(0,4).compare("Frog") == 0) {
+                GameObject* rem = simulator->getObject(contactName);
+                if(rem != NULL) {
+                    rem->~GameObject();
+                    simulator->removeObject(rem);
+                }
+            }
+        }
 
         Player* p = simulator->getPlayer("Player1");
         Player* cpu = simulator->getPlayer("CPU");
@@ -71,7 +80,7 @@ void Laser::update(float elapsedTime) {
                 // Player loses life
             }
         }
-        
+
         // if(contactName.substr(0, 4).compare("Bird") == 0) {
         //     printf("Yo you hit a bird nice one m8\n");
         //     Bird *bird = (Bird*) simulator->getObject(contactName);
@@ -95,5 +104,4 @@ void Laser::update(float elapsedTime) {
         this->~GameObject();
         simulator->removeObject(this);
     }
-    // context->hit = false;
 }

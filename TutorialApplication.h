@@ -22,19 +22,17 @@ http://www.ogre3d.org/wiki/
 #include <OgreParticleSystem.h>
 #include <btBulletDynamicsCommon.h>
 #include "Simulator.h"
-#include "Ball.h"
 #include "Laser.h"
 #include "Wall.h"
-#include "Paddle.h"
 #include "Bird.h"
 #include "Door.h"
 #include "Spawner.h"
 #include "GameSettings.h"
-#include "AIManager.h"
 #include "Overlay.h"
 #include "Shooter.h"
-#include "EnemyShooter.h"
-#include "NetManager.h"
+#include "Node.h"
+#include "AIManager.h"
+#include "Frog.h"
 
 //---------------------------------------------------------------------------
 
@@ -56,25 +54,6 @@ protected:
     virtual bool mouseReleased(const OIS::MouseEvent& me, OIS::MouseButtonID id);
 
     Simulator* simulator;
-    AIManager* aimanager;
-
-    /* Network Stuff */
-    NetManager* network;
-    bool isHost;
-    bool isMultiplayer;
-    const char* hostName;
-    int port_number;
-
-    bool gameStarted;
-
-    bool setupNetwork(bool);
-    void closeNetwork();
-    void hostGame();
-    void joinGame();
-    bool netStarted;
-    bool connectionMade;
-    void startMulti();
-    bool multiPlayerStarted;
 
     // Level variables and functions
     int level = 0;
@@ -82,6 +61,8 @@ protected:
     void createLevel1();
     void createLevel2();
     void createLevel3();
+    void createLevel4();
+    void createLevel5();
 
     void restart();
 
@@ -103,14 +84,15 @@ protected:
 private:
     bool processUnbufferedInput(const Ogre::FrameEvent& fe);
     void updatePositions();
-    std::string getPositionString();
-    void decodePositionString(std::string);
-    void checkMultiStart();
     bool quit();
     void newGame();
 
     float old_x;
     bool firstPerson;
+    float time_passed;
+    AIManager* aiMgr;
+    Frog* frog1;
+    Frog* frog2;
 };
 
 //---------------------------------------------------------------------------

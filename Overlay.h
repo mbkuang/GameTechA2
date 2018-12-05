@@ -40,7 +40,7 @@ protected:
 	Simulator *simulator;
 
 	bool singlePlayer();
-	bool multiplayer();
+	// bool multiplayer();
 	bool settings();
 	bool quit();
 	bool back();

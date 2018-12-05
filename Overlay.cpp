@@ -43,9 +43,9 @@ void Overlay::createMainMenu() {
     musicMenu->hide();
     sheet->addChild(musicMenu);
 
-    multiMenu = wmgr.loadLayoutFromFile("multiplayer.layout");
-    multiMenu->hide();
-    sheet->addChild(multiMenu);
+    // multiMenu = wmgr.loadLayoutFromFile("multiplayer.layout");
+    // multiMenu->hide();
+    // sheet->addChild(multiMenu);
 
     gameOverMenu = wmgr.loadLayoutFromFile("gameOver.layout");
     gameOverMenu->hide();
@@ -63,8 +63,8 @@ void Overlay::createMainMenu() {
     CEGUI::Window *singlePlayerButton = mainMenu->getChildRecursive("singlePlayerButton");
     singlePlayerButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::singlePlayer, this));
 
-    CEGUI::Window *multiplayerButton = mainMenu->getChildRecursive("multiplayerButton");
-    multiplayerButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::multiplayer, this));
+    // CEGUI::Window *multiplayerButton = mainMenu->getChildRecursive("multiplayerButton");
+    // multiplayerButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::multiplayer, this));
 
     CEGUI::Window *settingsButton = mainMenu->getChildRecursive("settingsButton");
     settingsButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::settings, this));
@@ -74,17 +74,17 @@ void Overlay::createMainMenu() {
 
     /* MultiPlayer Stuff */
 
-    CEGUI::Window *startMulti = multiMenu->getChildRecursive("StartButton");
-    startMulti->setDisabled(true);
+    // CEGUI::Window *startMulti = multiMenu->getChildRecursive("StartButton");
+    // startMulti->setDisabled(true);
 
-    CEGUI::Window *multiBack = multiMenu->getChildRecursive("BackButton");
-    multiBack->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::toMainMenu, this));
+    // CEGUI::Window *multiBack = multiMenu->getChildRecursive("BackButton");
+    // multiBack->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::toMainMenu, this));
 
-    CEGUI::Window *p1joined = multiMenu->getChildRecursive("p1joined");
-    p1joined->hide();
+    // CEGUI::Window *p1joined = multiMenu->getChildRecursive("p1joined");
+    // p1joined->hide();
 
-    CEGUI::Window *p2joined = multiMenu->getChildRecursive("p2joined");
-    p2joined->hide();
+    // CEGUI::Window *p2joined = multiMenu->getChildRecursive("p2joined");
+    // p2joined->hide();
 
     /* Settings Buttons */
     CEGUI::Window *musicSettings = settingsMenu->getChildRecursive("Setting1");
@@ -221,11 +221,11 @@ bool Overlay::singlePlayer() {
 }
 
 /* Display the menu for multiplayer mode */
-bool Overlay::multiplayer() {
-    mainMenu->hide();
-    multiMenu->show();
-    return true;
-}
+// bool Overlay::multiplayer() {
+//     mainMenu->hide();
+//     multiMenu->show();
+//     return true;
+// }
 
 /* Display the settings menu */
 bool Overlay::settings() {
@@ -262,7 +262,7 @@ bool Overlay::toMainMenu() {
         simulator->pause();
     settingsMenu->hide();
     pauseMenu->hide();
-    multiMenu->hide();
+    // multiMenu->hide();
     mainMenu->show();
     CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().show();
     return true;
