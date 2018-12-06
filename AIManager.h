@@ -22,6 +22,7 @@ class AIManager {
         Ogre::String material;
         int numNodes;
         Ogre::Vector3 player_position;
+        float connectionDistance;
 
     public:
         AIManager(Ogre::SceneManager* sceneMgr, Simulator* simulator, Ogre::String material);

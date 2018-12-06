@@ -6,15 +6,10 @@ AIManager::AIManager(Ogre::SceneManager* sceneMgr, Simulator* simulator, Ogre::S
     this->material = material;
     this->numNodes = 0;
     this->player_position = Ogre::Vector3(-40.0f, -140.0f, 0.0f);
+    this->connectionDistance = 56;
 }
 
 AIManager::~AIManager() {
-    /* Delete all nodes in list */
-    // for(int i = 0; i < _nodes.size(); i++) {
-    //     Node* n = _nodes[i];
-    //     n->~Node();
-    //     _nodes.erase(i);
-    // }
     destroyNodes();
 }
 
@@ -27,7 +22,7 @@ void AIManager::addNode(Ogre::Vector3 position) {
 }
 
 void AIManager::destroyNodes() {
-    printf("Destroying Nodes\n");
+    // printf("Destroying Nodes\n");
     while (_nodes.size() > 0) {
         Node* n = _nodes[_nodes.size()-1];
         if (n != NULL) {
@@ -36,7 +31,7 @@ void AIManager::destroyNodes() {
         }
         numNodes --;
     }
-    printf("Destroyed Nodes\n");
+    // printf("Destroyed Nodes\n");
 }
 
 void AIManager::connectNodes(Node* node1, Node* node2) {
@@ -50,7 +45,7 @@ void AIManager::connectAllNodes() {
         for(int j = 0; j < _nodes.size(); j++) {
             Ogre::Vector3 j_pos = _nodes[j]->getPosition();
             Ogre::Vector3 dist = i_pos - j_pos;
-            if(dist.length() < 56) {//_nodes[i] != _nodes[j] && abs(i_pos.x - j_pos.x) <= 20 && abs(i_pos.z - j_pos.z) <= 20 && abs(i_pos.z - j_pos.z) <= 20) {
+            if(dist.length() < connectionDistance) {
                 connectNodes(_nodes[i], _nodes[j]);
             }
         }

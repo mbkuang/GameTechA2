@@ -81,14 +81,14 @@ void TutorialApplication::restart() {
 //---------------------------------------------------------------------------
 void TutorialApplication::nextLevel() {
     simulator->pause();
-    printf("Going to next world\n");
+    // printf("Going to next world\n");
     simulator->destroyWorld();
-    printf("Destroyed world\n");
+    // printf("Destroyed world\n");
     Ogre::ParticleSystem* particleSystem = mSceneMgr->getParticleSystem("Trails");
     particleSystem->removeAllEmitters();
-    printf("Destroying nodes\n");
+    // printf("Destroying nodes\n");
     aiMgr->destroyNodes();
-    printf("Got those  nodes\n");
+    // printf("Got those  nodes\n");
     level ++;
     simulator->getPlayer("Player1")->setLevel(level);
     simulator->pause();
@@ -207,22 +207,23 @@ void TutorialApplication::createLevel3() {
     // aiMgr->addNode(Ogre::Vector3(-20.0f, -135.0f, 0.0f));
     // aiMgr->addNode(Ogre::Vector3(-40.0f, -115.0f, 0.0f));
 
-    aiMgr->addNode(Ogre::Vector3(50.0f,50.0f,0.0f));
-    aiMgr->addNode(Ogre::Vector3(0.0f,50.0f,50.0f));
-    aiMgr->addNode(Ogre::Vector3(-50.0f,50.0f,0.0f));
-    aiMgr->addNode(Ogre::Vector3(0.0f,50.0f,-50.0f));
-    aiMgr->addNode(Ogre::Vector3(50.0f,50.0f,50.0f));
-    aiMgr->addNode(Ogre::Vector3(-50.0f,50.0f,50.0f));
-    aiMgr->addNode(Ogre::Vector3(-50.0f,50.0f,-50.0f));
-    aiMgr->addNode(Ogre::Vector3(50.0f,50.0f,-50.0f));
-    aiMgr->addNode(Ogre::Vector3(25.0f,0.0f,0.0f));
-    aiMgr->addNode(Ogre::Vector3(25.0f,0.0f,25.0f));
-    aiMgr->addNode(Ogre::Vector3(0.0f,0.0f,25.0f));
-    aiMgr->addNode(Ogre::Vector3(-25.0f,0.0f,0.0f));
-    aiMgr->addNode(Ogre::Vector3(0.0f,0.0f,-25.0f));
-    aiMgr->addNode(Ogre::Vector3(25.0f,0.0f,-25.0f));
-    aiMgr->addNode(Ogre::Vector3(-25.0f,0.0f,25.0f));
-    aiMgr->addNode(Ogre::Vector3(-25.0f,0.0f,-25.0f));
+    /* If nodes are too far away bad things happen */
+    aiMgr->addNode(Ogre::Vector3(50.0f,40.0f,0.0f));
+    aiMgr->addNode(Ogre::Vector3(0.0f,40.0f,50.0f));
+    aiMgr->addNode(Ogre::Vector3(-50.0f,40.0f,0.0f));
+    aiMgr->addNode(Ogre::Vector3(0.0f,40.0f,-50.0f));
+    aiMgr->addNode(Ogre::Vector3(50.0f,40.0f,50.0f));
+    aiMgr->addNode(Ogre::Vector3(-50.0f,40.0f,50.0f));
+    aiMgr->addNode(Ogre::Vector3(-50.0f,40.0f,-50.0f));
+    aiMgr->addNode(Ogre::Vector3(50.0f,40.0f,-50.0f));
+    aiMgr->addNode(Ogre::Vector3(25.0f,-8.0f,0.0f));
+    aiMgr->addNode(Ogre::Vector3(25.0f,-8.0f,25.0f));
+    aiMgr->addNode(Ogre::Vector3(0.0f,-8.0f,25.0f));
+    aiMgr->addNode(Ogre::Vector3(-25.0f, -8.0f,0.0f));
+    aiMgr->addNode(Ogre::Vector3(0.0f,-8.0f,-25.0f));
+    aiMgr->addNode(Ogre::Vector3(25.0f, -8.0f,-25.0f));
+    aiMgr->addNode(Ogre::Vector3(-25.0f, -8.0f,25.0f));
+    aiMgr->addNode(Ogre::Vector3(-25.0f,-8.0f,-25.0f));
     aiMgr->connectAllNodes();
 
     Wall* flooring1 = new Wall("Wall1", mSceneMgr, simulator,
@@ -245,11 +246,11 @@ void TutorialApplication::createLevel3() {
     Player* cpuPlayer = new Player("CPU", simulator);
 
     frog1 = new Frog("Frog1", mSceneMgr, simulator,
-        Ogre::Vector3(-50.0f, 50.0f, 0.0f), 4.0f,
+        Ogre::Vector3(25.0f,-8.0f,0.0f), 4.0f,
         "BallTexture", aiMgr);
 
     frog2 = new Frog("Frog2", mSceneMgr, simulator,
-        Ogre::Vector3(50.0f, 50.0f, 0.0f), 4.0f,
+        Ogre::Vector3(-25.0f,-8.0f,-25.0f), 4.0f,
         "BallTexture", aiMgr);
 
     Door* door = new Door("Door", mSceneMgr, simulator,
