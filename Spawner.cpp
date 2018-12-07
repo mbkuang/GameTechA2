@@ -48,13 +48,17 @@ Spawner::~Spawner() {
 
 // Specific game object update routine.
 void Spawner::update(float elapsedTime) {
+
     timer -= elapsedTime;
     if (timer <= 0) {
+        printf("Attempting to spawn laser\n");
         // Spawn whatever we're spawning
         timer = rate;
         Ogre::stringstream ss;
         Ogre::Vector3 location = this->getOgrePosition();
         Shooter* pShooter = (Shooter*) simulator->getObject("PlayerShooter");
+        if (pShooter == NULL) {return;}
+
         Ogre::Vector3 pLocation = pShooter->getOgrePosition();
         Ogre::Vector3 eDir = pLocation - location;
         int avgVel = 50;
@@ -65,15 +69,17 @@ void Spawner::update(float elapsedTime) {
             emitter = particleSystem->addEmitter("Point");
             if (type != BIRD) {emitter->~ParticleEmitter();}
         }
+        btVector3 lDir = btVector3(0,1,0);
         switch(type) {
             case BIRD:
                 // Spawn a bird
-                ss << "BirdEnemy" << simulator->getObjectNumber();
+                ss << "BirdEnemy" << simulator->getObjectNumber("BirdEnemy");
+                printf("Created %s\n", ss.str().c_str());
                 if (simulator->getObject(ss.str()) == NULL) {
 
                     emitted = new Bird(ss.str(), sceneMgr, simulator,
                         position, 2.0f,
-                        "greenball", ballMass, ballRestitution, ballFriction, ballKinematic, emitter);
+                        "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic, emitter);
                     ((Bird*) emitted)->setTarget(pShooter);
                 }
                 break;
@@ -85,15 +91,24 @@ void Spawner::update(float elapsedTime) {
                 break;
             case LASER:
                 // Spawn a laser (shoot at the player)
-                ss << "EnemyLaser" << simulator->getObjectNumber();
-
-                if (simulator->getObject(ss.str()) == NULL) {
-                    //Ogre::ParticleEmitter* emitter = particleSystem->addEmitter("Point");
-                    emitted = new Laser(ss.str(), sceneMgr, simulator,
-                        position, 2.0f,
-                        "greenball", ballMass, ballRestitution, ballFriction, ballKinematic);
-                    emitted->setVelocity((pShooter->getPosition() - emitted->getPosition()).normalized() * laserSpeed);
-                }
+                // printf("Attempting to create laser\n");
+                // ss << "EnemyLaser" << simulator->getObjectNumber("EnemyLaser");
+                // printf("Created %s\n", ss.str().c_str());
+                //
+                // if (simulator->getObject(ss.str()) == NULL) {
+                //     //Ogre::ParticleEmitter* emitter = particleSystem->addEmitter("Point");
+                //
+                //     if (pShooter != NULL) {
+                //         lDir = (pShooter->getPosition() - this->getPosition()).normalized();
+                //     }
+                //     emitted = new Laser(ss.str(), sceneMgr, simulator,
+                //         position, 2.0f,
+                //         "greenball", ballMass, ballRestitution, ballFriction, ballKinematic);
+                //     emitted->setPosition(this->getPosition() + lDir * 10);
+                //     emitted->setVelocity(lDir * laserSpeed);
+                //     printf("Enemy laser successfully created\n");
+                // }
+                // printf("print here\n");
                 break;
             default:
                 break;

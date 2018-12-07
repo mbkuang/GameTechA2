@@ -48,6 +48,8 @@ void Simulator::printList() {
 void Simulator::stepSimulation(const Ogre::Real elapsedTime, int maxSubSteps, const Ogre::Real fixedTimestep) {
     dynamicsWorld->stepSimulation(elapsedTime, maxSubSteps, fixedTimestep);
 	for (unsigned int i = 0; i < objList.size(); i++) {
+        // printf("Wow\n");
+        // printf("Updating %s\n", objList[i]->getName().c_str());
 		objList[i]->update(elapsedTime);
 	}
 }
@@ -62,6 +64,16 @@ GameObject* Simulator::getObject(Ogre::String oName) {
 
 int Simulator::getObjectNumber() {
     return objList.size();
+}
+
+int Simulator::getObjectNumber(Ogre::String oName) {
+    int totalCount = 0;
+    for (unsigned int i = 0; i < objList.size(); i++) {
+        if (objList[i]->getName().substr(0,oName.length()).compare(oName) == 0) {
+            totalCount ++;
+        }
+    }
+    return totalCount;
 }
 
 void Simulator::addPlayer(Player* p) {
