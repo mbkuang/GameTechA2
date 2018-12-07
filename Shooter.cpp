@@ -84,7 +84,6 @@ void Shooter::update(float elapsedTime) {
 
         if(contactName.compare("Door") == 0) {
             door = true;
-            printf("Hello\n");
         }
     }
     context->hit = false;

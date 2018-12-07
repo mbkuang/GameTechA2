@@ -97,7 +97,7 @@ void BaseApplication::createCamera(void)
     mCamera->setPosition(Ogre::Vector3(0,0,45));
     // Look back along -Z
     mCamera->lookAt(Ogre::Vector3(0,0,-45));
-    mCamera->setNearClipDistance(5);
+    mCamera->setNearClipDistance(1);
 }
 //---------------------------------------------------------------------------
 void BaseApplication::createFrameListener(void)

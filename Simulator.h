@@ -37,6 +37,7 @@ public:
     btDiscreteDynamicsWorld* getDynamicsWorld();
     GameObject* getObject(Ogre::String oName);
     int getObjectNumber();
+    int getObjectNumber(Ogre::String oName);
     void addPlayer(Player* p);
     Player* getPlayer(Ogre::String pName);
 	void destroyWorld();
