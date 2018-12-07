@@ -34,7 +34,7 @@ TutorialApplication::~TutorialApplication(void)
 void TutorialApplication::createScene(void)
 {
     // Create your scene here :)
-    mSceneMgr->setSkyBox(true, "Examples/SpaceSkyBox");
+    mSceneMgr->setSkyBox(true, "Examples/StormySkyBox");
 
     simulator->overlay->initCEGUI();
 
@@ -107,6 +107,7 @@ void TutorialApplication::nextLevel() {
             createLevel4();
             break;
         default:
+            simulator->pause();
             break;
     }
 }
@@ -127,7 +128,7 @@ void TutorialApplication::createLevel1() {
 
     Door* door = new Door("Door", mSceneMgr, simulator,
         Ogre::Vector3(0.0f, 0.0f, -95.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
-        "DoorTexture", 10000, 0.98f, wallFriction, ballKinematic);
+        "DoorTexture", 10000, 0.98f, wallFriction, doorKinematic);
 }
 //---------------------------------------------------------------------------
 void TutorialApplication::createLevel2() {
@@ -244,7 +245,6 @@ void TutorialApplication::createLevel3() {
         "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
 
     Player* player1 = new Player("Player1", simulator);
-    Player* cpuPlayer = new Player("CPU", simulator);
 
     frog1 = new Frog("Frog1", mSceneMgr, simulator,
         Ogre::Vector3(25.0f,-8.0f,0.0f), 4.0f,

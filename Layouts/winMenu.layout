@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<GUILayout version="4" >
+    <Window type="TaharezLook/FrameWindow" name="winMenu" >
+        <Property name="Area" value="{{0.25,0},{0.25,0},{0.75,0},{0.75,0}}" />
+        <Property name="Text" value="Congratulations! You beat the game!" />
+        <Window type="TaharezLook/Label" name="lives" >
+            <Property name="Area" value="{{0.1,0},{0.25,0},{0.9,0},{0.45,0}}" />
+            <Property name="Text" value="num lives" />
+        </Window>
+        <Window type="TaharezLook/Button" name="continue" >
+            <Property name="Area" value="{{0.25,0},{0.45,0},{0.75,0},{0.65,0}}" />
+            <Property name="Text" value="Click here to continue" />
+        </Window>
+    </Window>
+</GUILayout>

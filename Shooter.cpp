@@ -75,8 +75,7 @@ void Shooter::update(float elapsedTime) {
     Ogre::Vector3 dir = this->getOgreDirection() * Ogre::Vector3(0.0f, 0.0f, -1.0f);
     gun->setPosition(pos + btVector3(dir.x * 1.5f, 2.5f, dir.z * 1.5f));
 
-    if (context->hit && (context->velNorm > 2.0 || context->velNorm < -2.0)
-        && (lastTime > 0.5 || (context->lastBody != context->body && lastTime > 0.1))) {
+    if (context->hit) {
         jump = true;
         lastTime = 0.0f;
 
