@@ -42,6 +42,7 @@ class AIManager {
         void printAllNodeConnections();
 
         Node* findNodeClosest(Ogre::Vector3 position);
+        Node* findNodeClosestPlayer(Ogre::Vector3 position, Node* nodeAt);
 
         float distance(Ogre::Vector3 a, Ogre::Vector3 b);
 

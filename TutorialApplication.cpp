@@ -34,6 +34,7 @@ TutorialApplication::~TutorialApplication(void)
 void TutorialApplication::createScene(void)
 {
     // Create your scene here :)
+    mSceneMgr->setSkyBox(true, "Examples/SpaceSkyBox");
 
     simulator->overlay->initCEGUI();
 
@@ -208,14 +209,14 @@ void TutorialApplication::createLevel3() {
     // aiMgr->addNode(Ogre::Vector3(-40.0f, -115.0f, 0.0f));
 
     /* If nodes are too far away bad things happen */
-    aiMgr->addNode(Ogre::Vector3(50.0f,40.0f,0.0f));
-    aiMgr->addNode(Ogre::Vector3(0.0f,40.0f,50.0f));
-    aiMgr->addNode(Ogre::Vector3(-50.0f,40.0f,0.0f));
-    aiMgr->addNode(Ogre::Vector3(0.0f,40.0f,-50.0f));
-    aiMgr->addNode(Ogre::Vector3(50.0f,40.0f,50.0f));
-    aiMgr->addNode(Ogre::Vector3(-50.0f,40.0f,50.0f));
-    aiMgr->addNode(Ogre::Vector3(-50.0f,40.0f,-50.0f));
-    aiMgr->addNode(Ogre::Vector3(50.0f,40.0f,-50.0f));
+    aiMgr->addNode(Ogre::Vector3(50.0f,50.0f,0.0f));
+    aiMgr->addNode(Ogre::Vector3(0.0f,50.0f,50.0f));
+    aiMgr->addNode(Ogre::Vector3(-50.0f,50.0f,0.0f));
+    aiMgr->addNode(Ogre::Vector3(0.0f,50.0f,-50.0f));
+    aiMgr->addNode(Ogre::Vector3(50.0f,50.0f,50.0f));
+    aiMgr->addNode(Ogre::Vector3(-50.0f,50.0f,50.0f));
+    aiMgr->addNode(Ogre::Vector3(-50.0f,50.0f,-50.0f));
+    aiMgr->addNode(Ogre::Vector3(50.0f,50.0f,-50.0f));
     aiMgr->addNode(Ogre::Vector3(25.0f,-8.0f,0.0f));
     aiMgr->addNode(Ogre::Vector3(25.0f,-8.0f,25.0f));
     aiMgr->addNode(Ogre::Vector3(0.0f,-8.0f,25.0f));

@@ -54,7 +54,7 @@ void Frog::jump() {
     /* Move frog to next node in it's path */
     Node* start = aiMgr->findNodeClosest(position);
     Ogre::Vector3 player_position = aiMgr->getPlayerPosition();
-    Node* goal  = aiMgr->findNodeClosest(player_position);
+    Node* goal  = aiMgr->findNodeClosestPlayer(player_position, start);
     Node* next  = aiMgr->findNextNode(start, goal);
 
     /* Check if node froggo is planning to jump to is occupied */
@@ -69,7 +69,6 @@ void Frog::jump() {
     /* Set jump parameters */
     startPosition = position;
     goalPosition = next->getPosition();
-
 }
 
 // Specific game object update routine.

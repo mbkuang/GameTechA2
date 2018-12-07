@@ -6,7 +6,7 @@ AIManager::AIManager(Ogre::SceneManager* sceneMgr, Simulator* simulator, Ogre::S
     this->material = material;
     this->numNodes = 0;
     this->player_position = Ogre::Vector3(-40.0f, -140.0f, 0.0f);
-    this->connectionDistance = 56;
+    this->connectionDistance = 66;
 }
 
 AIManager::~AIManager() {
@@ -62,6 +62,7 @@ Node* AIManager::findNextNode(Node* start, Node* goal) {
     /* Return the next node an enemy should go to */
     std::unordered_map<Node*, Node*> came_from;
     a_star_search(came_from, start, goal);
+
     std::vector<Node*> path = reconstruct_path(came_from, start, goal);
 
     /* Print path , sanity check */
@@ -85,11 +86,13 @@ void AIManager::a_star_search(std::unordered_map<Node*, Node*>& came_from, Node*
     came_from[start] = start;
     cost_so_far[start] = 0;
 
+    int count = 0;
+
     while (!frontier.empty()) {
         Node* current = frontier.top().second;
         frontier.pop();
 
-        if (current == goal) {
+        if (current == goal || count == 100) {
             break;
         }
 
@@ -105,6 +108,7 @@ void AIManager::a_star_search(std::unordered_map<Node*, Node*>& came_from, Node*
                 came_from[next] = current;
             }
         }
+        count++;
   }
 }
 
@@ -113,9 +117,12 @@ std::vector<Node*> AIManager::reconstruct_path(std::unordered_map<Node*, Node*> 
     Node* current = goal;
     std::vector<Node*> path;
 
-    while(current != start) {
+    int count = 0;
+
+    while(current != start && count != 100) {
         path.push_back(current);
         current = came_from[current];
+        count++;
     }
     path.push_back(start);
     std::reverse(path.begin(),path.end());
@@ -131,6 +138,22 @@ Node* AIManager::findNodeClosest(Ogre::Vector3 position) {
 
     for(int i = 0; i < _nodes.size(); i++) {
         if((dist = distance(position, _nodes[i]->getPosition())) < min_dist) {
+            min_dist = dist;
+            ret = _nodes[i];
+        }
+    }
+
+    return ret;
+}
+
+Node* AIManager::findNodeClosestPlayer(Ogre::Vector3 position, Node* nodeAt) {
+    /* Find node closest to a given position */
+    Node* ret = NULL;
+    float min_dist = std::numeric_limits<float>::max();
+    float dist;
+
+    for(int i = 0; i < _nodes.size(); i++) {
+        if((dist = distance(position, _nodes[i]->getPosition())) < min_dist && ( !(_nodes[i]->isOccupied()) || (nodeAt == _nodes[i] ) ) ) {
             min_dist = dist;
             ret = _nodes[i];
         }
