@@ -6,6 +6,8 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+#include "GameSettings.h"
+
 
 class Node : public GameObject {
     protected:

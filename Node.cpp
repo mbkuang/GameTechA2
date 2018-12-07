@@ -12,7 +12,9 @@ Node::Node(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
     // Set the entity.
     geom = sceneMgr->createEntity(name, "sphere.mesh");
     geom->setCastShadows(true);
-    if (material != "") {
+    if (!debug) {
+        geom->setMaterialName("PaddleTexture");
+    } else if (material != "") {
         geom->setMaterialName(material);
     }
 

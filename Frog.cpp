@@ -14,6 +14,8 @@ Frog::Frog(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
     this->friction =  0.0f; // ball friction
     this->timeSinceLastJump = 0.0f;
     this->lastContactTime = 0.0f;
+    this->shots = 0;
+    this->timeSinceLastShot = 0;
 
 
     // Set the entity.
@@ -107,13 +109,13 @@ void Frog::update(float elapsedTime) {
 
     /* Make froggo jump */
     timeSinceLastJump += elapsedTime;
+    timeSinceLastShot += elapsedTime;
     if(timeSinceLastJump > jumpPeriod) { // should probably adjust this value to make frogs faster/ slower
         position = goalPosition;
         rootNode->setPosition(goalPosition);
         updateTransform();
         jump();
         timeSinceLastJump = 0;
-        hasShot = true;
     } else if (timeSinceLastJump > (jumpPeriod / 2) && startPosition != goalPosition) { // adjust value to adjust wait period
         /* Make frog travel to its next destination */
         float t = (timeSinceLastJump - (jumpPeriod / 2)) / (jumpPeriod / 2);
@@ -134,24 +136,22 @@ void Frog::update(float elapsedTime) {
         updateTransform();
     } else {
         /* Interval between jumps, shooting? */
-        if (hasShot) {
-            if (timeSinceLastJump > 3 * jumpPeriod / 4) {
-                Ogre::Vector3 position = this->getOgrePosition();
-                Ogre::stringstream ss;
-                ss << "EnemyLaser" << simulator->getObjectNumber("EnemyLaser") << "_" << this->name;
+        if(timeSinceLastShot > .5) {
+            Ogre::Vector3 position = this->getOgrePosition();
+            Ogre::stringstream ss;
+            ss << "EnemyLaser" << ++shots << "_" << this->getName();
 
-                Shooter* pShooter = (Shooter*) simulator->getObject("PlayerShooter");
-                btVector3 lDir = btVector3(0,1,0);
-                if (pShooter != NULL) {
-                    lDir = (pShooter->getPosition() - this->getPosition()).normalized();
-                }
-                Laser* emitted = new Laser(ss.str(), sceneMgr, simulator,
-                    position, 2.0f,
-                    "greenball", ballMass, ballRestitution, ballFriction, ballKinematic);
-                emitted->setPosition(this->getPosition() + lDir * 5);
-                emitted->setVelocity(lDir * laserSpeed);
-                hasShot = false;
+            Shooter* pShooter = (Shooter*) simulator->getObject("PlayerShooter");
+            btVector3 lDir = btVector3(0,1,0);
+            if (pShooter != NULL) {
+                lDir = (pShooter->getPosition() - this->getPosition()).normalized();
             }
+            Laser* emitted = new Laser(ss.str(), sceneMgr, simulator,
+                position, 2.0f,
+                "greenball", ballMass, ballRestitution, ballFriction, ballKinematic);
+            emitted->setPosition(this->getPosition() + lDir * 5);
+            emitted->setVelocity(lDir * laserSpeed);
+            timeSinceLastShot = 0;
         }
     }
 }

@@ -18,11 +18,12 @@ class Frog : public GameObject {
         float timeSinceLastJump;
         float lastContactTime;
 
-        bool hasShot = true;
-
         /* Jumping */
         Ogre::Vector3 startPosition;
         Ogre::Vector3 goalPosition;
+
+        int shots;
+        float timeSinceLastShot;
 
     public:
         Frog(Ogre::String name, Ogre::SceneManager* sceneMgr, Simulator* simulator,

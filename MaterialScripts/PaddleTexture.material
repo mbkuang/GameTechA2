@@ -9,8 +9,8 @@ material PaddleTexture
 				texture PaddleTexture.png
 			}
 
-            ambient 0.75 0.75 1 .7
-            diffuse .7 .7 1 .7
+            ambient 0.75 0.75 1 0
+            diffuse .7 .7 1 0
             specular 1 1 1 1 20
 
 			scene_blend alpha_blend
