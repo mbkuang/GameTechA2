@@ -24,7 +24,6 @@ const int MAX_LEVEL = 4;
 TutorialApplication::TutorialApplication(void)
 {
     simulator = new Simulator();
-    aiMgr = new AIManager(mSceneMgr, simulator, "greenball");
     time_passed = 0;
     firstPerson = true;
 }
@@ -38,6 +37,7 @@ void TutorialApplication::createScene(void)
 {
     // Create your scene here :)
     mSceneMgr->setSkyBox(true, "Examples/StormySkyBox");
+    aiMgr = new AIManager(mSceneMgr, simulator, "greenball");
 
     simulator->overlay->initCEGUI();
 
@@ -62,7 +62,7 @@ void TutorialApplication::createScene(void)
         Ogre::Vector3(0.0f, 40.0f, 0.0f), Ogre::Vector3(1.5f, 5.0f, 1.5f),
         "ShooterTexture", shooterMass, shooterRestitution, shooterFriction, shooterKinematic);
 
-    createLevel1();
+    // createLevel1();
 
     Ogre::Light* light = mSceneMgr->createLight("MainLight");
     Ogre::SceneNode* lightNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
@@ -77,9 +77,12 @@ void TutorialApplication::createScene(void)
 
     simulator->overlay->createScoreboard();
 
+    nextLevel();
+
 }
 //---------------------------------------------------------------------------
 void TutorialApplication::restart() {
+    printf("Called restart.\n");
     simulator->getPlayer("Player1")->setLevel(0);
     level = 0;
     nextLevel();
@@ -94,9 +97,12 @@ void TutorialApplication::nextLevel() {
     particleSystem->removeAllEmitters();
     // printf("Destroying nodes\n");
     if (aiMgr != NULL) {
+        printf("Gonna kill them nodes\n");
         aiMgr->destroyNodes();
+        printf("Gottem\n");
         // printf("Got those  nodes\n");
-        aiMgr->~AIManager();
+        // aiMgr->~AIManager();
+        // printf("We killed the ai manager\n");
     }
     level ++;
     simulator->getPlayer("Player1")->setLevel(level);
@@ -241,15 +247,18 @@ void TutorialApplication::createLevel2() {
 
     Spawner* spawn1 = new Spawner("Spawner1", mSceneMgr, simulator,
         Ogre::Vector3(30.0f, 10.0f, -300.0f), Ogre::Vector3(5.0f, 5.0f, 5.0f),
-        "ShooterTexture", wallMass, 0.98f, wallFriction, ballKinematic, 0, 5.0f, particleSystem);
+        "ShooterTexture", wallMass, 0.98f, wallFriction, ballKinematic, 0,
+        5.0f, particleSystem, aiMgr);
 
     Spawner* spawn2 = new Spawner("Spawner2", mSceneMgr, simulator,
         Ogre::Vector3(-30.0f, 10.0f, -600.0f), Ogre::Vector3(5.0f, 5.0f, 5.0f),
-        "ShooterTexture", wallMass, 0.98f, wallFriction, ballKinematic, 0, 5.0f, particleSystem);
+        "ShooterTexture", wallMass, 0.98f, wallFriction, ballKinematic, 0,
+        5.0f, particleSystem, aiMgr);
 
     Spawner* spawn3 = new Spawner("Spawner3", mSceneMgr, simulator,
         Ogre::Vector3(-20.0f, 10.0f, -100.0f), Ogre::Vector3(5.0f, 5.0f, 5.0f),
-        "ShooterTexture", wallMass, 0.98f, wallFriction, ballKinematic, 3, 1.0f, particleSystem);
+        "ShooterTexture", wallMass, 0.98f, wallFriction, ballKinematic, 3,
+        1.0f, particleSystem, aiMgr);
 
     Door* door = new Door("Door", mSceneMgr, simulator,
         Ogre::Vector3(-50.0f, 10.0f, -970.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
@@ -260,7 +269,7 @@ void TutorialApplication::createLevel2() {
 void TutorialApplication::createLevel3() {
     /* AI Stuff */
 
-    aiMgr = new AIManager(mSceneMgr, simulator, "greenball");
+    // aiMgr = new AIManager(mSceneMgr, simulator, "greenball");
 
     Wall* wall1 = new Wall("Wall1", mSceneMgr, simulator,
         Ogre::Vector3(0.0f, -12.5f, 0.0f), Ogre::Vector3(500, wallThickness, 500),
@@ -297,6 +306,7 @@ void TutorialApplication::createLevel3() {
     /* Adding nodes to map */
 
     /* If nodes are too far away bad things happen */
+    printf("We are now adding to AIGL:SIDG\n");
     aiMgr->addNode(Ogre::Vector3(50.0f,50.0f,0.0f));
     aiMgr->addNode(Ogre::Vector3(0.0f,50.0f,50.0f));
     aiMgr->addNode(Ogre::Vector3(-50.0f,50.0f,0.0f));
@@ -313,7 +323,9 @@ void TutorialApplication::createLevel3() {
     aiMgr->addNode(Ogre::Vector3(25.0f,0.0f,-25.0f));
     aiMgr->addNode(Ogre::Vector3(-25.0f,0.0f,25.0f));
     aiMgr->addNode(Ogre::Vector3(-25.0f,0.0f,-25.0f));
+    printf("We added to aimaanag\n");
     aiMgr->connectAllNodes();
+    printf("We connected the nodddddddddd\n");
 
     Player* player1 = new Player("Player1", simulator);
 
@@ -362,7 +374,8 @@ void TutorialApplication::createLevel4() {
 
     Spawner* spawn = new Spawner("Spawner", mSceneMgr, simulator,
         Ogre::Vector3(30.0f, 10.0f, -300.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
-        "ShooterTexture", wallMass, 0.98f, wallFriction, ballKinematic, 0, 10.0f, particleSystem);
+        "ShooterTexture", wallMass, 0.98f, wallFriction, ballKinematic, 0,
+        10.0f, particleSystem, aiMgr);
 }
 //---------------------------------------------------------------------------
 bool TutorialApplication::quit() {

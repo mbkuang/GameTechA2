@@ -2,7 +2,7 @@
 
 Spawner::Spawner(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
     Ogre::Vector3 position, Ogre::Vector3 scale, Ogre::String material,
-    float mass, float restitution, float friction, bool kinematic, int newType, float newRate, Ogre::ParticleSystem* particleSys) :
+    float mass, float restitution, float friction, bool kinematic, int newType, float newRate, Ogre::ParticleSystem* particleSys, AIManager* aiManager) :
     GameObject(newName, scnMgr, sim) {
     // Set variables.
     this->position = position;
@@ -17,6 +17,8 @@ Spawner::Spawner(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* si
     type = newType;
     rate = newRate;
     timer = newRate;
+
+    aiMgr = aiManager;
 
     particleSystem = particleSys;
 
@@ -62,6 +64,7 @@ void Spawner::update(float elapsedTime) {
         Ogre::Vector3 eDir = pLocation - location;
         int avgVel = 50;
         GameObject* emitted;
+        int numEmitted = 0;
         Ogre::Vector3 position = this->getOgrePosition();
         Ogre::ParticleEmitter* emitter = NULL;
         if (particleSystem != NULL) {
@@ -71,36 +74,52 @@ void Spawner::update(float elapsedTime) {
         switch(type) {
             case BIRD:
                 // Spawn a bird
-                ss << "BirdEnemy" << simulator->getObjectNumber("BirdEnemy");
-                if (simulator->getObject(ss.str()) == NULL) {
+                numEmitted = simulator->getObjectNumber("BirdEnemy");
+                if (numEmitted < 10) {
+                    ss << "BirdEnemy" << simulator->getObjectNumber("BirdEnemy");
+                    if (simulator->getObject(ss.str()) == NULL) {
 
-                    emitted = new Bird(ss.str(), sceneMgr, simulator,
-                        position, 2.0f,
-                        "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic, emitter);
-                    ((Bird*) emitted)->setTarget(pShooter);
+                        emitted = new Bird(ss.str(), sceneMgr, simulator,
+                            position, 2.0f,
+                            "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic, emitter);
+                        ((Bird*) emitted)->setTarget(pShooter);
+                    }
                 }
                 break;
             case FROG:
                 // Spawn a FROG
+                numEmitted = simulator->getObjectNumber("FrogEnemy");
+                if (numEmitted < 10) {
+                    ss << "FrogEnemy" << simulator->getObjectNumber("FrogEnemy");
+                    if (simulator->getObject(ss.str()) == NULL) {
+
+                        emitted = new Frog(ss.str(), sceneMgr, simulator,
+                            position, 4.0f,
+                            "BallTexture", aiMgr);
+                    }
+                }
                 break;
             case SHOOTER:
                 // Spawn a shooter
                 break;
             case LASER:
                 // Spawn a laser (shoot at the player)
-                ss << "EnemyLaser" << simulator->getObjectNumber("EnemyLaser");
+                numEmitted = simulator->getObjectNumber("EnemyLaser");
+                if (numEmitted < 10) {
+                    ss << "EnemyLaser" << simulator->getObjectNumber("EnemyLaser");
 
-                if (simulator->getObject(ss.str()) == NULL) {
-                    //Ogre::ParticleEmitter* emitter = particleSystem->addEmitter("Point");
+                    if (simulator->getObject(ss.str()) == NULL) {
+                        //Ogre::ParticleEmitter* emitter = particleSystem->addEmitter("Point");
 
-                    if (pShooter != NULL) {
-                        lDir = (pShooter->getPosition() - this->getPosition()).normalized();
+                        if (pShooter != NULL) {
+                            lDir = (pShooter->getPosition() - this->getPosition()).normalized();
+                        }
+                        emitted = new Laser(ss.str(), sceneMgr, simulator,
+                            position, 2.0f,
+                            "greenball", ballMass, ballRestitution, ballFriction, ballKinematic);
+                        emitted->setPosition(this->getPosition() + lDir * 10);
+                        emitted->setVelocity(lDir * laserSpeed);
                     }
-                    emitted = new Laser(ss.str(), sceneMgr, simulator,
-                        position, 2.0f,
-                        "greenball", ballMass, ballRestitution, ballFriction, ballKinematic);
-                    emitted->setPosition(this->getPosition() + lDir * 10);
-                    emitted->setVelocity(lDir * laserSpeed);
                 }
                 break;
             default:
