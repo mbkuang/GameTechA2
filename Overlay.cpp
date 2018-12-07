@@ -59,6 +59,10 @@ void Overlay::createMainMenu() {
     deathMenu->hide();
     sheet->addChild(deathMenu);
 
+    winMenu = wmgr.loadLayoutFromFile("winMenu.layout");
+    winMenu->hide();
+    sheet->addChild(winMenu);
+
     /* Main Menu Buttons */
     CEGUI::Window *singlePlayerButton = mainMenu->getChildRecursive("singlePlayerButton");
     singlePlayerButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::singlePlayer, this));
@@ -144,6 +148,10 @@ void Overlay::createMainMenu() {
     /* Death Stuff */
     CEGUI::Window *continueButton = deathMenu->getChildRecursive("continue");
     continueButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::nextLevel, this));
+
+    /* Win Stuff */
+    CEGUI::Window *winButton = winMenu->getChildRecursive("continue");
+    winButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::leaveWinScreen, this));
 }
 
 /* Display the scoreboard */
@@ -328,4 +336,10 @@ void Overlay::nextLevel() {
     simulator->pause();
     updateScore();
     CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().hide();
+}
+
+void Overlay::leaveWinScreen() {
+    winMenu->hide();
+    mainMenu->show();
+    CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().show();
 }

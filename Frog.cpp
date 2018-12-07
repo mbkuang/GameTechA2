@@ -138,7 +138,7 @@ void Frog::update(float elapsedTime) {
             if (timeSinceLastJump > 3 * jumpPeriod / 4) {
                 Ogre::Vector3 position = this->getOgrePosition();
                 Ogre::stringstream ss;
-                ss << "EnemyLaser" << simulator->getObjectNumber("EnemyLaser");
+                ss << "EnemyLaser" << simulator->getObjectNumber("EnemyLaser") << "_" << this->name;
 
                 Shooter* pShooter = (Shooter*) simulator->getObject("PlayerShooter");
                 btVector3 lDir = btVector3(0,1,0);

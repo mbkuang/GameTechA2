@@ -18,6 +18,8 @@ http://www.ogre3d.org/wiki/
 #include "TutorialApplication.h"
 #include <cmath>
 
+const int MAX_LEVEL = 4;
+
 //---------------------------------------------------------------------------
 TutorialApplication::TutorialApplication(void)
 {
@@ -110,6 +112,8 @@ void TutorialApplication::nextLevel() {
             break;
         default:
             simulator->pause();
+            simulator->overlay->winMenu->show();
+            CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().show();
             break;
     }
 }
@@ -521,7 +525,8 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
 
     if(pShooter->reachedDoor()) {
         pShooter->setDoor(false);
-        simulator->overlay->showWinMessage(level);
+        if(level != MAX_LEVEL)
+            simulator->overlay->showWinMessage(level);
         nextLevel();
     }
 
