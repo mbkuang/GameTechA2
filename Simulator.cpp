@@ -114,10 +114,14 @@ void Simulator::printMap() {
 
 void Simulator::bulletTimer() {
 	for(std::deque<GameObject*>::iterator i = objList.begin(); i != objList.end(); i++) {
-		if((*i)->getName().substr(0, 11).compare("PlayerLaser") == 0) {
-			if((*i)->increaseTimer()) {
-				(*i)->~GameObject();
+        GameObject* obj = *i;
+        Ogre::String name = obj->getName();
+		if(name.substr(0, 11).compare("PlayerLaser") == 0 ||
+            name.substr(0, 10).compare("EnemyLaser") == 0) {
+			if(obj->increaseTimer()) {
+				obj->~GameObject();
 				objList.erase(i);
+                objMap[name.c_str()] = NULL;
 				i--;
 			}
 		}

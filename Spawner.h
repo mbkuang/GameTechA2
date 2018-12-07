@@ -3,7 +3,9 @@
 
 #include "GameObject.h"
 #include "Bird.h"
+#include "Frog.h"
 #include "Laser.h"
+#include "AIManager.h"
 #include <OgreParticleSystem.h>
 
 class Spawner : public GameObject {
@@ -16,8 +18,10 @@ private:
     int type;
     float rate;
     float timer;
+    int count = 0;
 
     Ogre::ParticleSystem* particleSystem = NULL;
+    AIManager* aiMgr;
 
     enum Types {
         BIRD = 0,
@@ -29,7 +33,8 @@ private:
 public:
     Spawner(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
         Ogre::Vector3 position, Ogre::Vector3 scale, Ogre::String material,
-        float mass, float restitution, float friction, bool kinematic, int newType, float newRate, Ogre::ParticleSystem* particleSys);
+        float mass, float restitution, float friction, bool kinematic, int newType,
+        float newRate, Ogre::ParticleSystem* particleSys, AIManager* aiManager);
     ~Spawner();
     void update(float elapsedTime);
 };

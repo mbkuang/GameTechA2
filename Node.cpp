@@ -8,11 +8,12 @@ Node::Node(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
     this->radius = radius;
     this->material = material;
     this->occupied = false;
+    this->sceneMgr = scnMgr;
 
     // Set the entity.
-    geom = sceneMgr->createEntity(name, "sphere.mesh");
+    geom = this->sceneMgr->createEntity(this->name, "sphere.mesh");
     geom->setCastShadows(true);
-    if (!debug) {
+    if (debug) {
         geom->setMaterialName("greenball");//"PaddleTexture");
     } else if (material != "") {
         geom->setMaterialName(material);
