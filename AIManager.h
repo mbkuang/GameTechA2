@@ -1,33 +1,61 @@
 #ifndef __AIManager_h_
 #define __AIManager_h_
 
+#include "Node.h"
 #include <Ogre.h>
 #include "Simulator.h"
-#include "Paddle.h"
-#include "Ball.h"
-#include "GameSettings.h"
-
-class Simulator;
-class Paddle;
-class Ball;
+#include <vector>
+#include <unordered_map>
+#include <queue>
+#include <utility>      // std::pair, std::make_pair
+#include <cmath>
+#include <string>
+#include <sstream>
+#include <iostream>
+#include <algorithm>    // std::reverse
 
 class AIManager {
-protected:
-	Ogre::SceneManager* sceneMgr;
-    Simulator* simulator;
-    Paddle* paddle;
-    Paddle* ePaddle;
-    Ball* ball;
-    float movementSpeed;
-    int level;
-public:
-    AIManager(Simulator* sim);
-    AIManager(Ogre::SceneManager* scnMgr, Simulator* sim, Paddle* pad, Paddle* ePad, Ball* nBall);
-    ~AIManager();
-    void update(Ogre::SceneManager* scnMgr, Simulator* sim, Paddle* pad, Paddle* ePad, Ball* nBall);
-    void advance();
-    void move(const Ogre::FrameEvent& fe);
-    void shoot();
+    protected:
+        std::vector<Node*> _nodes;
+        Ogre::SceneManager* scnMgr;
+        Simulator* simulator;
+        Ogre::String material;
+        int numNodes;
+        Ogre::Vector3 player_position;
+        float connectionDistance;
+
+    public:
+        AIManager(Ogre::SceneManager* sceneMgr, Simulator* simulator, Ogre::String material);
+
+        ~AIManager();
+
+        void addNode(Ogre::Vector3 position);
+
+        void destroyNodes();
+
+        void connectNodes(Node* node1, Node* node2);
+
+        Node* findNextNode(Node* start, Node* goal);
+
+        void connectAllNodes();
+
+        void printAllNodeConnections();
+
+        Node* findNodeClosest(Ogre::Vector3 position);
+
+        float distance(Ogre::Vector3 a, Ogre::Vector3 b);
+
+        float manhattan_heuristic(Ogre::Vector3 a, Ogre::Vector3 b);
+
+        void a_star_search(std::unordered_map<Node*, Node*>& came_from, Node* start, Node* goal);
+
+        std::vector<Node*> reconstruct_path(std::unordered_map<Node*, Node*> came_from, Node* start, Node* goal);
+
+        void setPlayerPosition(Ogre::Vector3 pos);
+
+        Ogre::Vector3 getPlayerPosition();
+
+
 };
 
 #endif

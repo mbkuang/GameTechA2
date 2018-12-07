@@ -19,4 +19,8 @@ const bool enemyShooterKinematic = true;
 const float doorMass = 0.0f, doorRestitution = 0.0f, doorFriction = 0.0f;
 const bool doorKinematic = false;
 
+const float jumpPeriod = 1;
+
+const float laserSpeed = 462.0f;
+
 #endif

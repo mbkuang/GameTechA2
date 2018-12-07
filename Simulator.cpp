@@ -49,7 +49,6 @@ void Simulator::stepSimulation(const Ogre::Real elapsedTime, int maxSubSteps, co
     dynamicsWorld->stepSimulation(elapsedTime, maxSubSteps, fixedTimestep);
 	for (unsigned int i = 0; i < objList.size(); i++) {
 		objList[i]->update(elapsedTime);
-
 	}
 }
 
@@ -59,6 +58,10 @@ btDiscreteDynamicsWorld* Simulator::getDynamicsWorld() {
 
 GameObject* Simulator::getObject(Ogre::String oName) {
     return objMap[oName];
+}
+
+int Simulator::getObjectNumber() {
+    return objList.size();
 }
 
 void Simulator::addPlayer(Player* p) {
@@ -78,10 +81,6 @@ void Simulator::pause() {
 /* Checks if the game is paused or not */
 bool Simulator::paused() {
 	return isPaused;
-}
-
-int Simulator::getObjectNumber() {
-    return objList.size();
 }
 
 void Simulator::destroyWorld() {

@@ -54,7 +54,8 @@ void Spawner::update(float elapsedTime) {
         timer = rate;
         Ogre::stringstream ss;
         Ogre::Vector3 location = this->getOgrePosition();
-        Ogre::Vector3 pLocation = simulator->getObject("PlayerShooter")->getOgrePosition();
+        Shooter* pShooter = (Shooter*) simulator->getObject("PlayerShooter");
+        Ogre::Vector3 pLocation = pShooter->getOgrePosition();
         Ogre::Vector3 eDir = pLocation - location;
         int avgVel = 50;
         GameObject* emitted;
@@ -73,7 +74,7 @@ void Spawner::update(float elapsedTime) {
                     emitted = new Bird(ss.str(), sceneMgr, simulator,
                         position, 2.0f,
                         "greenball", ballMass, ballRestitution, ballFriction, ballKinematic, emitter);
-                    ((Bird*) emitted)->setTarget((Shooter*) simulator->getObject("PlayerShooter"));
+                    ((Bird*) emitted)->setTarget(pShooter);
                 }
                 break;
             case FROG:
@@ -91,7 +92,7 @@ void Spawner::update(float elapsedTime) {
                     emitted = new Laser(ss.str(), sceneMgr, simulator,
                         position, 2.0f,
                         "greenball", ballMass, ballRestitution, ballFriction, ballKinematic);
-                    emitted->setVelocity(simulator->getObject("PlayerShooter")->getPosition() - emitted->getPosition());
+                    emitted->setVelocity((pShooter->getPosition() - emitted->getPosition()).normalized() * laserSpeed);
                 }
                 break;
             default:
