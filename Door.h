@@ -17,9 +17,6 @@ public:
         float mass, float restitution, float friction, bool kinematic);
     ~Door();
 
-    bool tripped = false;
-    bool active = true;
-
     void update(float elapsedTime);
 };
 

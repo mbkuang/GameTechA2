@@ -433,20 +433,20 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
     /* Find player position */
     aiMgr->setPlayerPosition(position);
 
-    Door* door = (Door*) simulator->getObject("Door");
-    if (door != NULL) {
-        if (door->tripped) {
-            door->tripped = false;
-            simulator->overlay->showWinMessage(level);
-            nextLevel();
-        }
-    }
-
-    // if(pShooter->reachedDoor()) {
-    //     pShooter->setDoor(false);
-    //     simulator->overlay->showWinMessage(level);
-    //     nextLevel();
+    // Door* door = (Door*) simulator->getObject("Door");
+    // if (door != NULL) {
+    //     if (door->tripped) {
+    //         door->tripped = false;
+    //         simulator->overlay->showWinMessage(level);
+    //         nextLevel();
+    //     }
     // }
+
+    if(pShooter->reachedDoor()) {
+        pShooter->setDoor(false);
+        simulator->overlay->showWinMessage(level);
+        nextLevel();
+    }
 
     return ret;
 }
