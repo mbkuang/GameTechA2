@@ -66,8 +66,7 @@ void Spawner::update(float elapsedTime) {
         Ogre::Vector3 position = this->getOgrePosition();
         Ogre::ParticleEmitter* emitter = NULL;
         if (particleSystem != NULL) {
-            emitter = particleSystem->addEmitter("Point");
-            // if (type != BIRD) {emitter->~ParticleEmitter();}
+            if (type == BIRD) {emitter = particleSystem->addEmitter("Point");}
         }
         btVector3 lDir = btVector3(0,1,0);
         switch(type) {
@@ -92,10 +91,10 @@ void Spawner::update(float elapsedTime) {
             case LASER:
                 // Spawn a laser (shoot at the player)
                 ss << "EnemyLaser" << simulator->getObjectNumber("EnemyLaser");
-                
+
                 if (simulator->getObject(ss.str()) == NULL) {
                     //Ogre::ParticleEmitter* emitter = particleSystem->addEmitter("Point");
-                
+
                     if (pShooter != NULL) {
                         lDir = (pShooter->getPosition() - this->getPosition()).normalized();
                     }
