@@ -69,6 +69,8 @@ void TutorialApplication::createScene(void)
     Player* player1 = new Player("Player1", simulator);
     Player* cpuPlayer = new Player("CPU", simulator);
 
+    mSceneMgr->setSkyBox(true, "Examples/StormySkyBox");
+
     simulator->overlay->createScoreboard();
 
 }
@@ -229,15 +231,15 @@ void TutorialApplication::createLevel2() {
 
     Spawner* spawn1 = new Spawner("Spawner1", mSceneMgr, simulator,
         Ogre::Vector3(30.0f, 10.0f, -300.0f), Ogre::Vector3(5.0f, 5.0f, 5.0f),
-        "ShooterTexture", wallMass, 0.98f, wallFriction, ballKinematic, 3, 5.0f, particleSystem);
+        "ShooterTexture", wallMass, 0.98f, wallFriction, ballKinematic, 0, 5.0f, particleSystem);
 
-    // Spawner* spawn2 = new Spawner("Spawner2", mSceneMgr, simulator,
-    //     Ogre::Vector3(-30.0f, 10.0f, -600.0f), Ogre::Vector3(5.0f, 5.0f, 5.0f),
-    //     "ShooterTexture", wallMass, 0.98f, wallFriction, ballKinematic, 0, 5.0f, particleSystem);
+    Spawner* spawn2 = new Spawner("Spawner2", mSceneMgr, simulator,
+        Ogre::Vector3(-30.0f, 10.0f, -600.0f), Ogre::Vector3(5.0f, 5.0f, 5.0f),
+        "ShooterTexture", wallMass, 0.98f, wallFriction, ballKinematic, 0, 5.0f, particleSystem);
 
-    // Spawner* spawn3 = new Spawner("Spawner3", mSceneMgr, simulator,
-    //     Ogre::Vector3(-20.0f, 10.0f, -100.0f), Ogre::Vector3(5.0f, 5.0f, 5.0f),
-    //     "ShooterTexture", wallMass, 0.98f, wallFriction, ballKinematic, 3, 1.0f, particleSystem);
+    Spawner* spawn3 = new Spawner("Spawner3", mSceneMgr, simulator,
+        Ogre::Vector3(-20.0f, 10.0f, -100.0f), Ogre::Vector3(5.0f, 5.0f, 5.0f),
+        "ShooterTexture", wallMass, 0.98f, wallFriction, ballKinematic, 3, 1.0f, particleSystem);
 
     Door* door = new Door("Door", mSceneMgr, simulator,
         Ogre::Vector3(-50.0f, 10.0f, -970.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),

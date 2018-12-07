@@ -67,7 +67,7 @@ void Spawner::update(float elapsedTime) {
         Ogre::ParticleEmitter* emitter = NULL;
         if (particleSystem != NULL) {
             emitter = particleSystem->addEmitter("Point");
-            if (type != BIRD) {emitter->~ParticleEmitter();}
+            // if (type != BIRD) {emitter->~ParticleEmitter();}
         }
         btVector3 lDir = btVector3(0,1,0);
         switch(type) {
@@ -91,24 +91,20 @@ void Spawner::update(float elapsedTime) {
                 break;
             case LASER:
                 // Spawn a laser (shoot at the player)
-                // printf("Attempting to create laser\n");
-                // ss << "EnemyLaser" << simulator->getObjectNumber("EnemyLaser");
-                // printf("Created %s\n", ss.str().c_str());
-                //
-                // if (simulator->getObject(ss.str()) == NULL) {
-                //     //Ogre::ParticleEmitter* emitter = particleSystem->addEmitter("Point");
-                //
-                //     if (pShooter != NULL) {
-                //         lDir = (pShooter->getPosition() - this->getPosition()).normalized();
-                //     }
-                //     emitted = new Laser(ss.str(), sceneMgr, simulator,
-                //         position, 2.0f,
-                //         "greenball", ballMass, ballRestitution, ballFriction, ballKinematic);
-                //     emitted->setPosition(this->getPosition() + lDir * 10);
-                //     emitted->setVelocity(lDir * laserSpeed);
-                //     printf("Enemy laser successfully created\n");
-                // }
-                // printf("print here\n");
+                ss << "EnemyLaser" << simulator->getObjectNumber("EnemyLaser");
+                
+                if (simulator->getObject(ss.str()) == NULL) {
+                    //Ogre::ParticleEmitter* emitter = particleSystem->addEmitter("Point");
+                
+                    if (pShooter != NULL) {
+                        lDir = (pShooter->getPosition() - this->getPosition()).normalized();
+                    }
+                    emitted = new Laser(ss.str(), sceneMgr, simulator,
+                        position, 2.0f,
+                        "greenball", ballMass, ballRestitution, ballFriction, ballKinematic);
+                    emitted->setPosition(this->getPosition() + lDir * 10);
+                    emitted->setVelocity(lDir * laserSpeed);
+                }
                 break;
             default:
                 break;
