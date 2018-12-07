@@ -24,6 +24,7 @@ Node::Node(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
     rootNode->attachObject(geom);
     rootNode->scale(radius * 0.01f, radius * 0.01f, radius * 0.01f);
     rootNode->setPosition(position.x, position.y, position.z);
+
 }
 
 Node::~Node() {

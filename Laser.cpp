@@ -71,12 +71,13 @@ void Laser::update(float elapsedTime) {
         }
 
         Player* p = simulator->getPlayer("Player1");
-        Player* cpu = simulator->getPlayer("CPU");
         Shooter* ps = (Shooter*) simulator->getObject("PlayerShooter");
 
-        if(objName.compare("EnemyLaser") == 0) {
+        if(objName.substr(0,10).compare("EnemyLaser") == 0) {
             if(contactName.compare("PlayerShooter") == 0) {
                 // Player loses life
+                p->setHP(p->getHP()-1);
+                simulator->overlay->updateScore();
             }
         }
 

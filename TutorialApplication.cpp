@@ -77,6 +77,8 @@ void TutorialApplication::createScene(void)
 
     simulator->overlay->createScoreboard();
 
+    CEGUI::Window *restartButton = simulator->overlay->mainMenu->getChildRecursive("singlePlayerButton");
+    restartButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&TutorialApplication::restart, this));
 }
 //---------------------------------------------------------------------------
 void TutorialApplication::restart() {
@@ -469,9 +471,6 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
     } else {
         pShooter->setFallenOff(false);
     }
-
-    CEGUI::Window *restartButton = simulator->overlay->mainMenu->getChildRecursive("singlePlayerButton");
-    restartButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&TutorialApplication::restart, this));
 
     // Update the mCamera and player's orientation.
     Ogre::Vector3 position = pShooter->getOgrePosition();
