@@ -42,26 +42,5 @@ Door::~Door() {
 
 // Specific game object update routine.
 void Door::update(float elapsedTime) {
-    if (active) {
-        lastTime += elapsedTime;
-        simulator->getDynamicsWorld()->contactTest(body, *cCallBack);
-        if (context->hit) {
-            // Handle the hit
-            GameObject* contact = context->theObject;
-            Ogre::String contactName = contact->getName();
 
-            Player* p = simulator->getPlayer("Player1");
-            Shooter* ps = (Shooter*) simulator->getObject("PlayerShooter");
-
-            if (contactName.compare("PlayerShooter") == 0) {
-                // Move to next room
-                tripped = true;
-                active = false;
-                return;
-            }
-
-            lastTime = 0.0f;
-        }
-        context->hit = false;
-    }
 }
