@@ -56,8 +56,7 @@ void Laser::update(float elapsedTime) {
 
     Ogre::String objName = this->getName();
 
-    if (context->hit && (context->velNorm > 2.0 || context->velNorm < -2.0)
-        && (lastTime > 0.5 || (context->lastBody != context->body && lastTime > 0.1))) {
+    if (context->hit) {
         //Handle the hit
         GameObject* contact = context->theObject;
         Ogre::String contactName = contact->getName();
