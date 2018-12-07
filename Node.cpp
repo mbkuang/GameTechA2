@@ -13,7 +13,7 @@ Node::Node(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
     geom = sceneMgr->createEntity(name, "sphere.mesh");
     geom->setCastShadows(true);
     if (!debug) {
-        geom->setMaterialName("PaddleTexture");
+        geom->setMaterialName("greenball");//"PaddleTexture");
     } else if (material != "") {
         geom->setMaterialName(material);
     }
@@ -27,7 +27,7 @@ Node::Node(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
 }
 
 Node::~Node() {
-    
+
 }
 
 void Node::setConnection(Node* n) {
