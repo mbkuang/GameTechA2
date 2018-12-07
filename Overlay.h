@@ -7,6 +7,7 @@
 #include "Simulator.h"
 
 class Simulator;
+class Shooter;
 
 class Overlay {
 public:

@@ -111,3 +111,10 @@ void Simulator::bulletTimer() {
 		}
 	}
 }
+
+void Simulator::resetShooter() {
+	// Reset the player to the start of the level
+    Shooter* pShooter = (Shooter*) simulator->getObject("PlayerShooter");
+    Ogre::Vector3 startPosition = pShooter->getStartPos();
+    pShooter->setPosition(startPosition.x, startPosition.y, startPosition.z);
+}

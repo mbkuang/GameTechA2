@@ -167,7 +167,6 @@ void Overlay::updateScore() {
     int p1hp = p1->getHP();
 
     if(p1hp == 0) {
-        printf("Pausing because hp is zero\n");
         Ogre::stringstream numLives;
         numLives << "Lives Remaining: " << p1score-1;
         deathMenu->getChildRecursive("lives")->setText(numLives.str());
@@ -177,6 +176,7 @@ void Overlay::updateScore() {
             CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().show();
             deathMenu->show();
             simulator->pause();
+            simulator->resetShooter();
         }
     } else if(p1score == 0) {
         deathMenu->getChildRecursive("lives")->setText("Game Over... You are out of lives");
@@ -185,7 +185,6 @@ void Overlay::updateScore() {
         p1->setHP(5);
         p1->setScore(5);
         simulator->pause();
-        printf("Pausing because lives is zero\n");
         simulator->destroyWorld();
         p1->setLevel(0);
         deathMenu->show();
@@ -328,7 +327,6 @@ void Overlay::nextLevel() {
     newLevelMenu->hide();
     deathMenu->hide();
     simulator->pause();
-    printf("Pausing here \n");
     updateScore();
     CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().hide();
 }

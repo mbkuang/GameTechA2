@@ -127,6 +127,7 @@ void TutorialApplication::createLevel1() {
     Door* door = new Door("Door", mSceneMgr, simulator,
         Ogre::Vector3(0.0f, 0.0f, -95.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
         "DoorTexture", 10000, 0.98f, wallFriction, ballKinematic);
+
 }
 //---------------------------------------------------------------------------
 void TutorialApplication::createLevel2() {
@@ -168,6 +169,10 @@ void TutorialApplication::createLevel2() {
     Door* door = new Door("Door", mSceneMgr, simulator,
         Ogre::Vector3(-45.0f, 0.0f, -105.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
         "DoorTexture", 10000, 0.98f, wallFriction, ballKinematic);
+
+    Shooter* enemyShooter = new Shooter("EnemyShooter1", mSceneMgr, simulator,
+        Ogre::Vector3(-45.0f, 20.0f, -105.0f), Ogre::Vector3(1.5f, 5.0f, 1.5f),
+        "ShooterTexture", shooterMass, shooterRestitution, shooterFriction, shooterKinematic);
 
 }
 //---------------------------------------------------------------------------

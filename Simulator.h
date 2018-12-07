@@ -53,6 +53,7 @@ public:
 	void printMap();
 
 	void bulletTimer();
+	void resetShooter();
 };
 
 #endif
