@@ -22,6 +22,8 @@ private:
     bool fallenOff;
     bool door;
 
+    Ogre::Vector3 lookDir;
+
 public:
     Shooter(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
         Ogre::Vector3 position, Ogre::Vector3 scale, Ogre::String material,
@@ -37,6 +39,9 @@ public:
     void setJump(bool);
     void setStartPos(Ogre::Vector3);
     Ogre::Vector3 getStartPos();
+    void setLookDir(Ogre::Vector3 newDir);
+    Ogre::Vector3 getOgreLookDir();
+    btVector3 getLookDir();
     bool hasFallenOff();
     void setFallenOff(bool);
     bool reachedDoor();

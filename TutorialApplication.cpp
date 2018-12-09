@@ -573,6 +573,9 @@ bool TutorialApplication::mouseMoved(const OIS::MouseEvent& arg) {
     mCamera->yaw(Ogre::Degree(-arg.state.X.rel * cRotSpd));
     mCamera->pitch(Ogre::Degree(-arg.state.Y.rel * cRotSpd));
 
+    Shooter* pShooter = (Shooter*) simulator->getObject("PlayerShooter");
+    if (pShooter != NULL) {pShooter->setLookDir(mCamera->getDirection());}
+
     return true;
 }
 //---------------------------------------------------------------------------

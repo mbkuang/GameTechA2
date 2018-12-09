@@ -165,9 +165,20 @@ int Bird::getState() {
 void Bird::chaseState() {
     if (target == NULL) return;
 
+    // Get bird's velocity, what it wants its velocity to be, and where the player is looking
     btVector3 vel = this->getVelocity();
     flyVector = target->getPosition() - this->getPosition();
+    btVector3 pLookDir = target->getLookDir().normalized() * -1;
+    float vLength = flyVector.length();
+    flyVector = flyVector.normalized();
+
+    // If the player isn't looking at us, we can charge him, otherwise evade
+    if (fabs(pLookDir.angle(flyVector)) < .1) {
+       flyVector.setY(flyVector.getY() + sqrt(vLength));
+    }
+
     flyVector = flyVector.normalized() * speed;
+
     if (fabs(vel.angle(flyVector)) > .26) {
         if (speed > minSpd) {speed --;}
         else {speed = minSpd;}
@@ -179,6 +190,7 @@ void Bird::chaseState() {
     }
     else if (speed < maxSpd) {speed ++;}
     else {speed = maxSpd;}
+
     this->setVelocity(this->getVelocity().lerp(flyVector, .001).normalized()*speed);
 }
 

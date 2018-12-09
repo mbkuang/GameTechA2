@@ -122,6 +122,19 @@ Ogre::Vector3 Shooter::getStartPos() {
     return startPosition;
 }
 
+void Shooter::setLookDir(Ogre::Vector3 newDir) {
+    this->lookDir = newDir;
+}
+
+Ogre::Vector3 Shooter::getOgreLookDir() {
+    return this->lookDir;
+}
+
+btVector3 Shooter::getLookDir() {
+    btVector3 result = btVector3(lookDir.x, lookDir.y, lookDir.z);
+    return result;
+}
+
 bool Shooter::hasFallenOff() {
     return fallenOff;
 }
