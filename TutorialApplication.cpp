@@ -137,6 +137,7 @@ void TutorialApplication::createLevel1() {
     Shooter* player = (Shooter*) simulator->getObject("PlayerShooter");
     player->setPosition(0.0f, 10.0f, -5.0f);
     player->setStartPos(Ogre::Vector3(0.0f, 10.0f, -5.0f));
+    player->setWeaponType(0);
 
     Door* door = new Door("Door", mSceneMgr, simulator,
         Ogre::Vector3(0.0f, 0.0f, -95.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),

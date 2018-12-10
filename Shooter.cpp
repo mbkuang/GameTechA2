@@ -133,10 +133,7 @@ bool Shooter::hasFired() {
 
 // Either the player just shot or the shot collided with something
 void Shooter::shot() {
-    // fired = !fired;
-    // if(fired) {
     numShots++;
-    //}
 }
 
 int Shooter::getNumShots() {
@@ -145,6 +142,10 @@ int Shooter::getNumShots() {
 
 int Shooter::getWeaponType() {
     return weapon;
+}
+
+void Shooter::setWeaponType(int w) {
+    weapon = w;
 }
 
 bool Shooter::canJump() {

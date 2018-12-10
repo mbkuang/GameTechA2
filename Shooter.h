@@ -49,6 +49,7 @@ public:
     void shot();
     int getNumShots();
     int getWeaponType();
+    void setWeaponType(int);
 
     bool canJump();
     void setJump(bool);
