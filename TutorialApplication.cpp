@@ -84,7 +84,6 @@ void TutorialApplication::createScene(void)
 }
 //---------------------------------------------------------------------------
 void TutorialApplication::restart() {
-    printf("Called restart.\n");
     simulator->getPlayer("Player1")->setLevel(0);
     level = 0;
     nextLevel();
@@ -502,16 +501,8 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
     /* Find player position */
     aiMgr->setPlayerPosition(position);
 
-    // Door* door = (Door*) simulator->getObject("Door");
-    // if (door != NULL) {
-    //     if (door->tripped) {
-    //         door->tripped = false;
-    //         simulator->overlay->showWinMessage(level);
-    //         nextLevel();
-    //     }
-    // }
-
     if(pShooter->reachedDoor()) {
+        simulator->soundSystem->playSound("scoreSound");
         pShooter->setDoor(false);
         if(level != MAX_LEVEL)
             simulator->overlay->showWinMessage(level);
@@ -532,6 +523,7 @@ bool TutorialApplication::keyPressed(const OIS::KeyEvent& arg) {
         if(player->canJump()) {
             player->setVelocity(0,50,0);
             player->setJump(false);
+            simulator->soundSystem->playSound("jumpSound");
         }
 
     } else if (arg.key == OIS::KC_LSHIFT) {
@@ -598,6 +590,8 @@ bool TutorialApplication::mousePressed(const OIS::MouseEvent& arg, OIS::MouseBut
             positions.xPBPos = location.x+cDir.x;
             positions.yPBPos = location.y+cDir.y;
             positions.zPBPos = location.z+cDir.z;
+
+            simulator->soundSystem->playSound("laserSound");
         }
         else if (id == OIS::MB_Right) {
             firstPerson = !firstPerson;

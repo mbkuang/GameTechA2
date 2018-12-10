@@ -8,6 +8,7 @@ Player::Player(Ogre::String name, Simulator* sim) {
 	fired = false;
 	numShots = 0;
 	level = 0;
+	killCount = 0;
 }
 
 // Actually decrements number of player's lives
@@ -58,4 +59,13 @@ int Player::getLevel() {
 
 void Player::setLevel(int l) {
 	level = l;
+	killCount = 0;
+}
+
+int Player::getKC() {
+	return killCount;
+}
+
+void Player::incrementKC() {
+	killCount++;
 }

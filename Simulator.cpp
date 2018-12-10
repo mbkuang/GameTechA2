@@ -87,7 +87,7 @@ Player* Simulator::getPlayer(Ogre::String pName) {
 /* Pauses or un-pauses the game */
 void Simulator::pause() {
 	isPaused = !isPaused;
-	soundSystem->playSound("bg_music");
+	//soundSystem->playSound("bg_music");
 }
 
 /* Checks if the game is paused or not */

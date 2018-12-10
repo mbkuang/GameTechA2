@@ -30,7 +30,7 @@ void Sound::playSound(Ogre::String soundType) {
     	else
         	Mix_PauseMusic();
 	}
-	else if(soundType.compare("paddleSound") == 0) {
+	else if(soundType.compare("jumpSound") == 0) {
 		Mix_PlayChannel(-1, paddleSound, 0);
 	}
 	else if(soundType.compare("wallSound") == 0) {
@@ -42,8 +42,10 @@ void Sound::playSound(Ogre::String soundType) {
 	else if(soundType.compare("deathSound") == 0) {
 		Mix_PlayChannel(-1, deathSound, 0);
 	}
-	else
+	else if(soundType.compare("scoreSound") == 0)
 		Mix_PlayChannel(-1, scoreSound, 0);
+	else
+		return;
 }
 
 void Sound::volumeDown() {

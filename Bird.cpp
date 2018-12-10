@@ -110,8 +110,13 @@ void Bird::update(float elapsedTime) {
             return;
         }
 
-        if(contactName.substr(0,11).compare("PlayerLaser") == 0 ||
+        bool isPlayerLaser = contactName.substr(0,11).compare("PlayerLaser") == 0;
+        if( isPlayerLaser ||
             contactName.substr(0,10).compare("EnemyLaser") == 0) {
+            if(isPlayerLaser) {
+                simulator->getPlayer("Player1")->incrementKC();
+                simulator->overlay->updateScore();
+            }
             simulator->removeObject(this);
             this->~GameObject();
             return;

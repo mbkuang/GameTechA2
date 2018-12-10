@@ -22,6 +22,8 @@ public:
 	int getNumShots();
 	int getLevel();
 	void setLevel(int);
+	int getKC();
+	void incrementKC();
 
 protected:
 	Ogre::String playerName;
@@ -31,6 +33,7 @@ protected:
 	bool fired;
 	int numShots;
 	int level;
+	int killCount;
 };
 
 #endif

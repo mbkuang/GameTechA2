@@ -37,7 +37,6 @@ GameObject::~GameObject() {
     body = NULL;
     context = NULL;
     cCallBack = NULL;
-    //simulator->printList();
 }
 
 btRigidBody* GameObject::getBody() {

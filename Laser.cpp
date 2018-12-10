@@ -67,6 +67,8 @@ void Laser::update(float elapsedTime) {
                     rem->~GameObject();
                     simulator->removeObject(rem);
                 }
+                simulator->getPlayer("Player1")->incrementKC();
+                simulator->overlay->updateScore();
             }
         }
 
@@ -80,19 +82,6 @@ void Laser::update(float elapsedTime) {
                 simulator->overlay->updateScore();
             }
         }
-
-        // if(contactName.substr(0, 4).compare("Bird") == 0) {
-        //     printf("Yo you hit a bird nice one m8\n");
-        //     Bird *bird = (Bird*) simulator->getObject(contactName);
-        //     printf("Yo we grabbed a bird from the list \n");
-        //     if(bird != NULL) {
-        //         printf("That bird isn't null\n");
-        //         simulator->removeObject(bird);
-        //         bird->~Bird();
-        //         printf("The bird has been successfully destroyed\n");
-        //         printf("Removed bird from object list and map\n");
-        //     }
-        // }
 
         this->inertia = btVector3(0.0f, 0.0f, 0.0f);
         availability = true;

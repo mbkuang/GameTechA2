@@ -135,10 +135,7 @@ void Overlay::createMainMenu() {
     backMusic->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::settings, this));
 
     /* Game Over Stuff */
-    CEGUI::Window *p1wins = gameOverMenu->getChildRecursive("p1wins");
-    CEGUI::Window *p2wins = gameOverMenu->getChildRecursive("p2wins");
-    p1wins->hide();
-    p2wins->hide();
+    gameOverMenu->getChildRecursive("continue")->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::toMainMenu, this));
 
     /* New Level Stuff */
     CEGUI::Window *message = newLevelMenu->getChildRecursive("message");
@@ -158,7 +155,7 @@ void Overlay::createMainMenu() {
 void Overlay::createScoreboard() {
 	CEGUI::WindowManager &wmgr = CEGUI::WindowManager::getSingleton();
 	playerScore = wmgr.createWindow("TaharezLook/StaticText", "CEGUIDemo/StaticText");
-    playerScore->setSize(CEGUI::USize(CEGUI::UDim(0.1, 0), CEGUI::UDim(0.1, 0)));
+    playerScore->setSize(CEGUI::USize(CEGUI::UDim(0.1, 0), CEGUI::UDim(0.12, 0)));
 
     updateScore();
     CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(sheet);
@@ -166,15 +163,15 @@ void Overlay::createScoreboard() {
 
 /* Update the scoreboard when one of the players scores, and checks for wins */
 void Overlay::updateScore() {
-    Ogre::stringstream ss1;
-    Ogre::stringstream ss2;
-
     Player* p1 = simulator->getPlayer("Player1");
 
     int p1score = p1->getScore();
     int p1hp = p1->getHP();
 
-    if(p1hp == 0) {
+    if(p1score <= 0) {
+        playerLoses();
+    }
+    else if(p1hp <= 0) {
         Ogre::stringstream numLives;
         numLives << "Lives Remaining: " << p1score-1;
         deathMenu->getChildRecursive("lives")->setText(numLives.str());
@@ -184,26 +181,38 @@ void Overlay::updateScore() {
             CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().show();
             deathMenu->show();
             simulator->pause();
+        } 
+        else {
+            playerLoses();
         }
-    } else if(p1score == 0) {
-        deathMenu->getChildRecursive("lives")->setText("Game Over... You are out of lives");
-        deathMenu->getChildRecursive("continue")->setText("Back to Main Menu");
-        deathMenu->getChildRecursive("continue")->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::toMainMenu, this));
-        p1->setHP(5);
-        p1->setScore(5);
-        simulator->pause();
-        simulator->destroyWorld();
-        p1->setLevel(0);
-        deathMenu->show();
-        CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().show();
-        restarting = true;
     }
+    changeScoreboard();
+    simulator->soundSystem->playSound("deathSound");  
+}
 
-    ss1 << "Player 1\nLives: "<<p1score<<"\nHP: "<<p1hp;
+void Overlay::changeScoreboard() {
+    Player* p1 = simulator->getPlayer("Player1");
+
+    int p1score = p1->getScore();
+    int p1hp = p1->getHP();
+
+    Ogre::stringstream ss1;
+    ss1 << "Player 1\nLives: "<<p1score<<"\nHP: "<<p1hp<<"\nKC: "<<p1->getKC();
 
     playerScore->setText("[colour='FFFF0000']"+ ss1.str());
     sheet->addChild(playerScore);
-    simulator->soundSystem->playSound("scoreSound");
+}
+
+void Overlay::playerLoses() {
+    Player* p1 = simulator->getPlayer("Player1");
+    p1->setHP(5);
+    p1->setScore(5);
+    simulator->pause();
+    simulator->destroyWorld();
+    p1->setLevel(0);
+    gameOverMenu->show();
+    CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().show();
+    restarting = true;
 }
 
 /* Display the win/lose message for a certain amout of time  */
@@ -222,6 +231,7 @@ bool Overlay::countdown() {
 
 /* Start Single player mode */
 bool Overlay::singlePlayer() {
+    // changeScoreboard();
     mainMenu->hide();
     pauseMenu->hide();
     simulator->pause();
@@ -268,12 +278,9 @@ bool Overlay::back() {
 
 /* Return to main menu */
 bool Overlay::toMainMenu() {
-    if(restarting) {
-        simulator->pause();
-        restarting = false;
-    }
     settingsMenu->hide();
     pauseMenu->hide();
+    gameOverMenu->hide();
     // multiMenu->hide();
     mainMenu->show();
     CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().show();
