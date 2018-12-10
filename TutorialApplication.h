@@ -64,6 +64,8 @@ protected:
     void createLevel4();
     void createLevel5();
 
+    Laser* shoot(Ogre::Vector3 location, Ogre::Vector3 direction);
+
     void restart();
 
     struct Positions {
@@ -88,11 +90,12 @@ private:
     void newGame();
 
     float old_x;
-    bool firstPerson;
+    bool firstPerson = true;
+
     float time_passed;
     AIManager* aiMgr;
-    Frog* frog1;
-    Frog* frog2;
+
+    int numAttack = 0;
 };
 
 //---------------------------------------------------------------------------

@@ -27,7 +27,8 @@ class Frog : public GameObject {
 
     public:
         Frog(Ogre::String name, Ogre::SceneManager* sceneMgr, Simulator* simulator,
-    	Ogre::Vector3 position, float radius, Ogre::String material, AIManager* aiMgr);
+    	Ogre::Vector3 position, float radius, Ogre::String material, AIManager* aiMgr,
+        int* numAttackers);
 
         ~Frog();
 
@@ -36,6 +37,8 @@ class Frog : public GameObject {
         void update(float elapsedTime);
 
         Ogre::Vector3 lerp(const Ogre::Vector3 A, const Ogre::Vector3 B, float t);
+
+        int* numAttack;
 };
 
 #endif

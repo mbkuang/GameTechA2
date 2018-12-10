@@ -99,6 +99,7 @@ void TutorialApplication::nextLevel() {
         aiMgr->destroyNodes();
     }
     level ++;
+    numAttack = 0;
     simulator->getPlayer("Player1")->setLevel(level);
     simulator->pause();
     switch(level) {
@@ -198,13 +199,15 @@ void TutorialApplication::createLevel2() {
     Ogre::ParticleEmitter* emitter1 = particleSystem->addEmitter("Point");
     Bird* bird1 = new Bird("Bird1", mSceneMgr, simulator,
         Ogre::Vector3(70, 10.0f, -500.0f), 2.0f,
-        "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic, emitter1);
+        "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic, emitter1,
+        &numAttack);
     bird1->setTarget((Shooter*) simulator->getObject("PlayerShooter"));
 
     Ogre::ParticleEmitter* emitter2 = particleSystem->addEmitter("Point");
     Bird* bird2 = new Bird("Bird2", mSceneMgr, simulator,
         Ogre::Vector3(50, 10.0f, -500.0f), 2.0f,
-        "greenball", ballMass, ballRestitution, ballFriction, ballKinematic, emitter2);
+        "greenball", ballMass, ballRestitution, ballFriction, ballKinematic, emitter2,
+        &numAttack);
     bird2->setTarget((Shooter*) simulator->getObject("PlayerShooter"));
     bird2->setLeader(bird1->getName());
     bird2->setFormation(btVector3(-75.0f,0.0f,0.0f));
@@ -212,7 +215,8 @@ void TutorialApplication::createLevel2() {
     Ogre::ParticleEmitter* emitter3 = particleSystem->addEmitter("Point");
     Bird* bird3 = new Bird("Bird3", mSceneMgr, simulator,
         Ogre::Vector3(70.0f, 40.0f, -500.0f), 2.0f,
-        "greenball", ballMass, ballRestitution, ballFriction, ballKinematic, emitter3);
+        "greenball", ballMass, ballRestitution, ballFriction, ballKinematic, emitter3,
+        &numAttack);
     bird3->setTarget((Shooter*) simulator->getObject("PlayerShooter"));
     bird3->setLeader(bird1->getName());
     bird3->setFormation(btVector3(0.0f,75.0f,0.0f));
@@ -220,39 +224,33 @@ void TutorialApplication::createLevel2() {
     Ogre::ParticleEmitter* emitter4 = particleSystem->addEmitter("Point");
     Bird* bird4 = new Bird("Bird4", mSceneMgr, simulator,
         Ogre::Vector3(-100, 10.0f, -1000.0f), 2.0f,
-        "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic, emitter4);
+        "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic, emitter4,
+        &numAttack);
     bird4->setTarget((Shooter*) simulator->getObject("PlayerShooter"));
 
     Ogre::ParticleEmitter* emitter5 = particleSystem->addEmitter("Point");
     Bird* bird5 = new Bird("Bird5", mSceneMgr, simulator,
         Ogre::Vector3(-100, 30.0f, -1000.0f), 2.0f,
-        "greenball", ballMass, ballRestitution, ballFriction, ballKinematic, emitter5);
+        "greenball", ballMass, ballRestitution, ballFriction, ballKinematic, emitter5,
+        &numAttack);
     bird5->setTarget((Shooter*) simulator->getObject("PlayerShooter"));
     bird5->setLeader(bird4->getName());
     bird5->setFormation(btVector3(50.0f,50.0f,0.0f));
 
-    Ogre::ParticleEmitter* emitter6 = particleSystem->addEmitter("Point");
-    Bird* bird6 = new Bird("Bird6", mSceneMgr, simulator,
-        Ogre::Vector3(-130.0f, 40.0f, -1000.0f), 2.0f,
-        "greenball", ballMass, ballRestitution, ballFriction, ballKinematic, emitter6);
-    bird6->setTarget((Shooter*) simulator->getObject("PlayerShooter"));
-    bird6->setLeader(bird4->getName());
-    bird6->setFormation(btVector3(-50.0f,-50.0f,0.0f));
-
     Spawner* spawn1 = new Spawner("Spawner1", mSceneMgr, simulator,
         Ogre::Vector3(30.0f, 10.0f, -300.0f), Ogre::Vector3(5.0f, 5.0f, 5.0f),
         "ShooterTexture", wallMass, 0.98f, wallFriction, ballKinematic, 0,
-        5.0f, particleSystem, aiMgr);
+        5.0f, particleSystem, aiMgr, &numAttack);
 
     Spawner* spawn2 = new Spawner("Spawner2", mSceneMgr, simulator,
-        Ogre::Vector3(-30.0f, 10.0f, -600.0f), Ogre::Vector3(5.0f, 5.0f, 5.0f),
-        "ShooterTexture", wallMass, 0.98f, wallFriction, ballKinematic, 0,
-        5.0f, particleSystem, aiMgr);
+        Ogre::Vector3(-70.0f, 10.0f, -800.0f), Ogre::Vector3(5.0f, 5.0f, 5.0f),
+        "ShooterTexture", wallMass, 0.98f, wallFriction, ballKinematic, 3,
+        1.0f, particleSystem, aiMgr, &numAttack);
 
     Spawner* spawn3 = new Spawner("Spawner3", mSceneMgr, simulator,
-        Ogre::Vector3(-20.0f, 10.0f, -100.0f), Ogre::Vector3(5.0f, 5.0f, 5.0f),
+        Ogre::Vector3(-40.0f, 10.0f, -800.0f), Ogre::Vector3(5.0f, 5.0f, 5.0f),
         "ShooterTexture", wallMass, 0.98f, wallFriction, ballKinematic, 3,
-        1.0f, particleSystem, aiMgr);
+        1.0f, particleSystem, aiMgr, &numAttack);
 
     Door* door = new Door("Door", mSceneMgr, simulator,
         Ogre::Vector3(-50.0f, 10.0f, -970.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
@@ -316,13 +314,13 @@ void TutorialApplication::createLevel3() {
     aiMgr->addNode(Ogre::Vector3(-25.0f,0.0f,-25.0f));
     aiMgr->connectAllNodes();
 
-    frog1 = new Frog("Frog1", mSceneMgr, simulator,
+    Frog* frog1 = new Frog("Frog1", mSceneMgr, simulator,
         Ogre::Vector3(25.0f,0.0f,0.0f), 4.0f,
-        "BallTexture", aiMgr);
+        "BallTexture", aiMgr, &numAttack);
 
-    frog2 = new Frog("Frog2", mSceneMgr, simulator,
+    Frog* frog2 = new Frog("Frog2", mSceneMgr, simulator,
         Ogre::Vector3(-25.0f,0.0f,-25.0f), 4.0f,
-        "BallTexture", aiMgr);
+        "BallTexture", aiMgr, &numAttack);
 
     Door* door = new Door("Door", mSceneMgr, simulator,
         Ogre::Vector3(100.0f, 10.0f, 100.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
@@ -346,13 +344,15 @@ void TutorialApplication::createLevel4() {
     Ogre::ParticleEmitter* emitter1 = particleSystem->addEmitter("Point");
     Bird* bird1 = new Bird("Bird1", mSceneMgr, simulator,
         Ogre::Vector3(0.0f, 10.0f, -300.0f), 2.0f,
-        "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic, emitter1);
+        "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic, emitter1,
+        &numAttack);
     bird1->setTarget((Shooter*) simulator->getObject("PlayerShooter"));
 
     Ogre::ParticleEmitter* emitter2 = particleSystem->addEmitter("Point");
     Bird* bird2 = new Bird("Bird2", mSceneMgr, simulator,
         Ogre::Vector3(20.0f, 10.0f, -300.0f), 2.0f,
-        "WallTexture", ballMass, ballRestitution, ballFriction, ballKinematic, emitter2);
+        "WallTexture", ballMass, ballRestitution, ballFriction, ballKinematic, emitter2,
+        &numAttack);
     bird2->setTarget((Shooter*) simulator->getObject("PlayerShooter"));
 
     Door* door = new Door("Door", mSceneMgr, simulator,
@@ -362,7 +362,7 @@ void TutorialApplication::createLevel4() {
     Spawner* spawn = new Spawner("Spawner", mSceneMgr, simulator,
         Ogre::Vector3(30.0f, 10.0f, -300.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
         "ShooterTexture", wallMass, 0.98f, wallFriction, ballKinematic, 0,
-        10.0f, particleSystem, aiMgr);
+        10.0f, particleSystem, aiMgr, &numAttack);
 }
 //---------------------------------------------------------------------------
 bool TutorialApplication::quit() {
@@ -579,28 +579,52 @@ bool TutorialApplication::mouseMoved(const OIS::MouseEvent& arg) {
     return true;
 }
 //---------------------------------------------------------------------------
+Laser* TutorialApplication::shoot(Ogre::Vector3 location, Ogre::Vector3 direction) {
+    Shooter* player = (Shooter*) simulator->getObject("PlayerShooter");
+    float avgVel = laserSpeed * 2;
+    Ogre::stringstream ss;
+    ss << "PlayerLaser" << player->getNumShots();
+
+    Laser* laser = new Laser(ss.str(), mSceneMgr, simulator,
+        Ogre::Vector3(location.x+direction.x*6, location.y+direction.y*6 + 2.5, location.z+direction.z*6), 2.0f,
+        "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic);
+    laser->setVelocity(btVector3(direction.x, direction.y, direction.z)*avgVel);
+    int i;
+    ss.str("");
+    player->shot();
+    return laser;
+}
+//---------------------------------------------------------------------------
 bool TutorialApplication::mousePressed(const OIS::MouseEvent& arg, OIS::MouseButtonID id) {
     CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonDown(convertButton(id));
     if (!simulator->paused()) {
         if (id == OIS::MB_Left) {
             Shooter* player = (Shooter*) simulator->getObject("PlayerShooter");
-            Ogre::Vector3 location = player->getGunPosition();
-            float avgVel = laserSpeed;
+            Ogre::Vector3 location = player->getOgrePosition();//player->getGunPosition();
             Ogre::Vector3 cDir = mCamera->getDirection();
 
-            Ogre::stringstream ss;
-            ss << "PlayerLaser" << player->getNumShots();
+            Ogre::Vector3 dLocation = location + Ogre::Vector3(cDir.x*3, cDir.y*4 + 2.5, cDir.z*3);
+            shoot(dLocation, cDir);
 
-            Laser* laser = new Laser(ss.str(), mSceneMgr, simulator,
-            Ogre::Vector3(location.x+cDir.x*1.5, location.y+cDir.y, location.z+cDir.z*1.5), 2.0f,
-            "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic);
-            laser->setVelocity(btVector3(avgVel*cDir.x, avgVel*cDir.y, avgVel*cDir.z));
-
-            player->shot();
-
-            positions.xPBPos = location.x+cDir.x;
-            positions.yPBPos = location.y+cDir.y;
-            positions.zPBPos = location.z+cDir.z;
+            int weapon = player->getWeaponType();
+            int i = 0, j = 0;
+            Ogre::Vector3 direction = cDir; //Ogre::Vector3(cDir.x + i/24 - .125, cDir.y + i/24 - .125, cDir.z + i/24 - .125)
+            Ogre::Vector3 dDir;
+            Ogre::Vector3 cDirPerp = Ogre::Quaternion(Ogre::Degree(-90), Ogre::Vector3::UNIT_Y) * cDir;
+            switch (weapon) {
+                case 1:
+                    for (i = 0; i < 3; i ++) {
+                        for (j = 0; j < 3; j ++) {
+                            dLocation = location + Ogre::Vector3(cDir.x*6+cDirPerp.x*(i-1)*6, cDir.y*6 + cDirPerp.y+ (j-1)*6 + 2.5, cDir.z*6+cDirPerp.z*(i-1)*6);
+                            // dDir = Ogre::Vector3(i/24-.125 + j/24-.125, i/24-.125 + j/24-.125, i/24-.125 + j/24-.125);
+                            shoot(dLocation, (direction).normalisedCopy());
+                        }
+                    }
+                    break;
+                case 0:
+                default:
+                    break;
+            }
         }
         else if (id == OIS::MB_Right) {
             firstPerson = !firstPerson;

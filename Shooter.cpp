@@ -106,6 +106,10 @@ int Shooter::getNumShots() {
     return numShots;
 }
 
+int Shooter::getWeaponType() {
+    return weapon;
+}
+
 bool Shooter::canJump() {
     return jump;
 }

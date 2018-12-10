@@ -17,6 +17,15 @@ private:
     bool fired;
     int numShots;
     Gun* gun;
+
+    int weapon = 1;
+
+    enum WEAPONTYPE {
+        STANDARD = 0,
+        SHOTGUN = 1,
+        BIG = 2
+    };
+
     bool jump;
     Ogre::Vector3 startPosition;
     bool fallenOff;
@@ -35,6 +44,8 @@ public:
     bool hasFired();
     void shot();
     int getNumShots();
+    int getWeaponType();
+
     bool canJump();
     void setJump(bool);
     void setStartPos(Ogre::Vector3);
