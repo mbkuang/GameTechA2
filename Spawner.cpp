@@ -82,7 +82,7 @@ void Spawner::update(float elapsedTime) {
                     count ++;
                     emitted = new Bird(ss.str(), sceneMgr, simulator,
                         position, 2.0f,
-                        "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic, emitter, numAttack);
+                        "BirdTexture", ballMass, ballRestitution, ballFriction, ballKinematic, emitter, numAttack);
                     ((Bird*) emitted)->setTarget(pShooter);
                 }
                 break;
@@ -95,7 +95,7 @@ void Spawner::update(float elapsedTime) {
                     count ++;
                     emitted = new Frog(ss.str(), sceneMgr, simulator,
                         position, 4.0f,
-                        "BallTexture", aiMgr, numAttack);
+                        "BirdTexture", aiMgr, numAttack);
                 }
                 break;
             case SHOOTER:

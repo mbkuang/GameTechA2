@@ -136,12 +136,12 @@ void TutorialApplication::createLevel1() {
 
     Shooter* player = (Shooter*) simulator->getObject("PlayerShooter");
     player->setPosition(0.0f, 10.0f, -5.0f);
-    player->setStartPos(Ogre::Vector3(0.0f, 10.0f, -5.0f));
+    player->setStartPos(player->getOgrePosition());
     player->setWeaponType(0);
 
     Door* door = new Door("Door", mSceneMgr, simulator,
         Ogre::Vector3(0.0f, 0.0f, -95.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
-        "DoorTexture", 10000, 0.98f, wallFriction, doorKinematic);
+        "DoorTexture", 0, 0.98f, wallFriction, doorKinematic);
 
     simulator->getPlayer("Player1")->setScore(5);
     simulator->getPlayer("Player1")->setHP(5);
@@ -164,14 +164,14 @@ void TutorialApplication::createLevel1() {
         "ShotgunTexture", 0, 0.98f, wallFriction, wallKinematic, 3);
 
     Powerup* power4 = new Powerup("Powerup4", mSceneMgr, simulator,
-        Ogre::Vector3(-30.0f, 5.0f, -30.0f), Ogre::Vector3(3.0f, 3.0f, 3.0f),
-        "SuperJumpTexture", 0, 0.98f, wallFriction, wallKinematic, 2);
+        Ogre::Vector3(-30.0f, 20.0f, -30.0f), Ogre::Vector3(3.0f, 3.0f, 3.0f),
+        "CheckpointTexture", 0, 0.98f, wallFriction, wallKinematic, 4);
 }
 //---------------------------------------------------------------------------
 void TutorialApplication::createLevel2() {
 
     Wall* wall1 = new Wall("Wall1", mSceneMgr, simulator,
-        Ogre::Vector3(40.0f, -10.0f, -50.0f), Ogre::Vector3(100, wallThickness, 100),
+        Ogre::Vector3(40.0f, -10.0f, -40.0f), Ogre::Vector3(100, wallThickness, 100),
         "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
     Wall* wall2 = new Wall("Wall2", mSceneMgr, simulator,
         Ogre::Vector3(-45.0f, -10.0f, -105.0f), Ogre::Vector3(100, wallThickness, 10),
@@ -217,22 +217,35 @@ void TutorialApplication::createLevel2() {
         Ogre::Vector3(-20.0f, 0.0f, -190.0f), Ogre::Vector3(30, 10, 10),
         "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
 
+    Wall* wall16 = new Wall("Wall16", mSceneMgr, simulator,
+        Ogre::Vector3(100.0f, 5.0f, -50.0f), Ogre::Vector3(10, wallThickness, 10),
+        "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
+
+    Wall* wall17 = new Wall("Wall17", mSceneMgr, simulator,
+        Ogre::Vector3(115.0f, 10.0f, -50.0f), Ogre::Vector3(10, wallThickness, 10),
+        "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
+
+    Powerup* power3 = new Powerup("Powerup3", mSceneMgr, simulator,
+        Ogre::Vector3(115.0f, 25.0f, -50.0f), Ogre::Vector3(3.0f, 3.0f, 3.0f),
+        "ShotgunTexture", 0, 0.98f, wallFriction, wallKinematic, 3);
+
     Shooter* player = (Shooter*) simulator->getObject("PlayerShooter");
     player->setPosition(0.0f, 20.0f, 0.0f);
+    player->setStartPos(player->getOgrePosition());
 
     Ogre::ParticleSystem* particleSystem = mSceneMgr->getParticleSystem("Trails");
 
     Ogre::ParticleEmitter* emitter1 = particleSystem->addEmitter("Point");
     Bird* bird1 = new Bird("Bird1", mSceneMgr, simulator,
         Ogre::Vector3(70, 10.0f, -500.0f), 2.0f,
-        "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic, emitter1,
+        "BirdTexture", ballMass, ballRestitution, ballFriction, ballKinematic, emitter1,
         &numAttack);
     bird1->setTarget((Shooter*) simulator->getObject("PlayerShooter"));
 
     Ogre::ParticleEmitter* emitter2 = particleSystem->addEmitter("Point");
     Bird* bird2 = new Bird("Bird2", mSceneMgr, simulator,
         Ogre::Vector3(50, 10.0f, -500.0f), 2.0f,
-        "greenball", ballMass, ballRestitution, ballFriction, ballKinematic, emitter2,
+        "BirdTexture", ballMass, ballRestitution, ballFriction, ballKinematic, emitter2,
         &numAttack);
     bird2->setTarget((Shooter*) simulator->getObject("PlayerShooter"));
     bird2->setLeader(bird1->getName());
@@ -241,7 +254,7 @@ void TutorialApplication::createLevel2() {
     Ogre::ParticleEmitter* emitter3 = particleSystem->addEmitter("Point");
     Bird* bird3 = new Bird("Bird3", mSceneMgr, simulator,
         Ogre::Vector3(70.0f, 40.0f, -500.0f), 2.0f,
-        "greenball", ballMass, ballRestitution, ballFriction, ballKinematic, emitter3,
+        "BirdTexture", ballMass, ballRestitution, ballFriction, ballKinematic, emitter3,
         &numAttack);
     bird3->setTarget((Shooter*) simulator->getObject("PlayerShooter"));
     bird3->setLeader(bird1->getName());
@@ -250,14 +263,14 @@ void TutorialApplication::createLevel2() {
     Ogre::ParticleEmitter* emitter4 = particleSystem->addEmitter("Point");
     Bird* bird4 = new Bird("Bird4", mSceneMgr, simulator,
         Ogre::Vector3(-100, 10.0f, -1000.0f), 2.0f,
-        "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic, emitter4,
+        "BirdTexture", ballMass, ballRestitution, ballFriction, ballKinematic, emitter4,
         &numAttack);
     bird4->setTarget((Shooter*) simulator->getObject("PlayerShooter"));
 
     Ogre::ParticleEmitter* emitter5 = particleSystem->addEmitter("Point");
     Bird* bird5 = new Bird("Bird5", mSceneMgr, simulator,
         Ogre::Vector3(-100, 30.0f, -1000.0f), 2.0f,
-        "greenball", ballMass, ballRestitution, ballFriction, ballKinematic, emitter5,
+        "BirdTexture", ballMass, ballRestitution, ballFriction, ballKinematic, emitter5,
         &numAttack);
     bird5->setTarget((Shooter*) simulator->getObject("PlayerShooter"));
     bird5->setLeader(bird4->getName());
@@ -282,6 +295,10 @@ void TutorialApplication::createLevel2() {
         Ogre::Vector3(-50.0f, 10.0f, -970.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
         "WallTexture", 10000, 0.98f, wallFriction, ballKinematic);
 
+
+    Powerup* power4 = new Powerup("Powerup4", mSceneMgr, simulator,
+        Ogre::Vector3(-20.0f, 15.0f, -190.0f), Ogre::Vector3(3.0f, 3.0f, 3.0f),
+        "CheckpointTexture", 0, 0.98f, wallFriction, wallKinematic, 4);
 }
 //---------------------------------------------------------------------------
 void TutorialApplication::createLevel3() {
@@ -342,18 +359,20 @@ void TutorialApplication::createLevel3() {
 
     Frog* frog1 = new Frog("Frog1", mSceneMgr, simulator,
         Ogre::Vector3(25.0f,0.0f,0.0f), 4.0f,
-        "BallTexture", aiMgr, &numAttack);
+        "BirdTexture", aiMgr, &numAttack);
 
     Frog* frog2 = new Frog("Frog2", mSceneMgr, simulator,
         Ogre::Vector3(-25.0f,0.0f,-25.0f), 4.0f,
-        "BallTexture", aiMgr, &numAttack);
+        "BirdTexture", aiMgr, &numAttack);
 
     Door* door = new Door("Door", mSceneMgr, simulator,
         Ogre::Vector3(100.0f, 10.0f, 100.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
         "WallTexture", 10000, 0.98f, wallFriction, ballKinematic);
 
+
     Shooter* player = (Shooter*) simulator->getObject("PlayerShooter");
     player->setPosition(0.0f, 20.0f, 0.0f);
+    player->setStartPos(player->getOgrePosition());
 }
 //---------------------------------------------------------------------------
 void TutorialApplication::createLevel4() {
@@ -367,26 +386,28 @@ void TutorialApplication::createLevel4() {
 
     Shooter* player = (Shooter*) simulator->getObject("PlayerShooter");
     player->setPosition(0.0f, 10.0f, -50.0f);
+    player->setStartPos(player->getOgrePosition());
 
     Ogre::ParticleSystem* particleSystem = mSceneMgr->getParticleSystem("Trails");
 
     Ogre::ParticleEmitter* emitter1 = particleSystem->addEmitter("Point");
     Bird* bird1 = new Bird("Bird1", mSceneMgr, simulator,
         Ogre::Vector3(0.0f, 10.0f, -300.0f), 2.0f,
-        "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic, emitter1,
+        "BirdTexture", ballMass, ballRestitution, ballFriction, ballKinematic, emitter1,
         &numAttack);
     bird1->setTarget((Shooter*) simulator->getObject("PlayerShooter"));
 
     Ogre::ParticleEmitter* emitter2 = particleSystem->addEmitter("Point");
     Bird* bird2 = new Bird("Bird2", mSceneMgr, simulator,
         Ogre::Vector3(20.0f, 10.0f, -300.0f), 2.0f,
-        "WallTexture", ballMass, ballRestitution, ballFriction, ballKinematic, emitter2,
+        "BirdTexture", ballMass, ballRestitution, ballFriction, ballKinematic, emitter2,
         &numAttack);
     bird2->setTarget((Shooter*) simulator->getObject("PlayerShooter"));
 
     Door* door = new Door("Door", mSceneMgr, simulator,
         Ogre::Vector3(45.0f, 10.0f, 105.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
         "WallTexture", 10000, 0.98f, wallFriction, ballKinematic);
+
 
     Spawner* spawn = new Spawner("Spawner", mSceneMgr, simulator,
         Ogre::Vector3(30.0f, 10.0f, -300.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
@@ -601,11 +622,11 @@ bool TutorialApplication::mouseMoved(const OIS::MouseEvent& arg) {
     mCamera->pitch(Ogre::Degree(-arg.state.Y.rel * cRotSpd));
 
     Ogre::Vector3 cDir = mCamera->getDirection();
-    if (cDir.y >= .95) {
-        cDir.y = .95;
+    if (cDir.y >= .9) {
+        cDir.y = .9;
     }
-    if (cDir.y <= -.95) {
-        cDir.y = -.95;
+    if (cDir.y <= -.9) {
+        cDir.y = -.9;
     }
     mCamera->setDirection(cDir);
 
@@ -640,7 +661,7 @@ bool TutorialApplication::mousePressed(const OIS::MouseEvent& arg, OIS::MouseBut
             Ogre::Vector3 location = player->getOgrePosition();//player->getGunPosition();
             Ogre::Vector3 cDir = mCamera->getDirection();
 
-            Ogre::Vector3 dLocation = location + Ogre::Vector3(cDir.x*3, cDir.y*4 + 2.5, cDir.z*3);
+            Ogre::Vector3 dLocation = location + Ogre::Vector3(cDir.x*3, cDir.y*3, cDir.z*3);
             shoot(dLocation, cDir);
 
             int weapon = player->getWeaponType();
@@ -652,7 +673,7 @@ bool TutorialApplication::mousePressed(const OIS::MouseEvent& arg, OIS::MouseBut
                 case 1:
                     for (i = 0; i < 3; i ++) {
                         for (j = 0; j < 3; j ++) {
-                            dLocation = location + Ogre::Vector3(cDir.x*5+cDirPerp.x*(i-1)*5, cDir.y*5 + cDirPerp.y+ (j-1)*5 + 2.5, cDir.z*6+cDirPerp.z*(i-1)*5);
+                            dLocation = location + Ogre::Vector3(cDir.x*5+cDirPerp.x*(i-1)*5, cDir.y*5 + cDirPerp.y+ (j-1)*5, cDir.z*6+cDirPerp.z*(i-1)*5);
                             // dDir = Ogre::Vector3(i/24-.125 + j/24-.125, i/24-.125 + j/24-.125, i/24-.125 + j/24-.125);
                             shoot(dLocation, (direction).normalisedCopy());
                         }

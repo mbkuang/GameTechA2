@@ -15,8 +15,8 @@ private:
         HEALTH = 0,
         LIFE = 1,
         JUMP = 2,
-        SHOTGUN = 3
-
+        SHOTGUN = 3,
+        CHECKPOINT = 4
     };
 
 public:

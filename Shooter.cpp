@@ -44,7 +44,7 @@ Shooter::Shooter(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* si
     fired = false;
     numShots = 0;
 
-    jump = true;
+    jump = false;
     startPosition = position;
     fallenOff = false;
     door = false;
@@ -114,6 +114,10 @@ void Shooter::update(float elapsedTime) {
                     case 3:
                         //Shotgun
                         weapon = SHOTGUN;
+                        break;
+                    case 4:
+                        //Checkpoint
+                        setStartPos(this->getOgrePosition());
                         break;
                     default:
                         break;
