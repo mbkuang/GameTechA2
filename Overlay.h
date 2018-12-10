@@ -13,12 +13,13 @@ public:
 	Overlay(Simulator* simulator);
 	~Overlay();
 	void initCEGUI();
-	void updateScore();
+	bool updateScore();
 	void createScoreboard();
     bool countdown();
     void createMainMenu();
     void pauseGame();
     void showWinMessage(int);
+    void changeScoreboard();
 
     CEGUI::Window *sheet;
 	CEGUI::Window *mainMenu;
@@ -54,7 +55,6 @@ protected:
 	void nextLevel();
 	void leaveWinScreen();
 	void playerLoses();
-	void changeScoreboard();
 
 	bool lastMenu;	//Keep track of what the last menu was before settings
 	bool restarting;

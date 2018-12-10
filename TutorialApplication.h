@@ -91,6 +91,8 @@ private:
     bool firstPerson;
     float time_passed;
     AIManager* aiMgr;
+    bool restarting;
+
     Frog* frog1;
     Frog* frog2;
 };

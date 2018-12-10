@@ -79,7 +79,8 @@ void Laser::update(float elapsedTime) {
             if(contactName.compare("PlayerShooter") == 0) {
                 // Player loses life
                 p->setHP(p->getHP()-1);
-                simulator->overlay->updateScore();
+                if(simulator->overlay->updateScore())
+                    return;
             }
         }
 
@@ -90,7 +91,9 @@ void Laser::update(float elapsedTime) {
 
         lastTime = 0.0f;
 
-        this->~GameObject();
-        simulator->removeObject(this);
+        if(this != NULL) {
+            this->~GameObject();
+            simulator->removeObject(this);
+        }
     }
 }

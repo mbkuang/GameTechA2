@@ -162,7 +162,7 @@ void Overlay::createScoreboard() {
 }
 
 /* Update the scoreboard when one of the players scores, and checks for wins */
-void Overlay::updateScore() {
+bool Overlay::updateScore() {
     Player* p1 = simulator->getPlayer("Player1");
 
     int p1score = p1->getScore();
@@ -170,6 +170,8 @@ void Overlay::updateScore() {
 
     if(p1score <= 0) {
         playerLoses();
+        changeScoreboard();
+        return true;
     }
     else if(p1hp <= 0) {
         Ogre::stringstream numLives;
@@ -184,10 +186,12 @@ void Overlay::updateScore() {
         } 
         else {
             playerLoses();
+            return true;
         }
     }
     changeScoreboard();
-    simulator->soundSystem->playSound("deathSound");  
+    simulator->soundSystem->playSound("deathSound"); 
+    return false; 
 }
 
 void Overlay::changeScoreboard() {
@@ -231,7 +235,6 @@ bool Overlay::countdown() {
 
 /* Start Single player mode */
 bool Overlay::singlePlayer() {
-    // changeScoreboard();
     mainMenu->hide();
     pauseMenu->hide();
     simulator->pause();

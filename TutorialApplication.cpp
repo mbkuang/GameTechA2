@@ -26,6 +26,7 @@ TutorialApplication::TutorialApplication(void)
     simulator = new Simulator();
     time_passed = 0;
     firstPerson = true;
+    restarting = true;
 }
 //---------------------------------------------------------------------------
 TutorialApplication::~TutorialApplication(void)
@@ -86,6 +87,7 @@ void TutorialApplication::createScene(void)
 void TutorialApplication::restart() {
     simulator->getPlayer("Player1")->setLevel(0);
     level = 0;
+    restarting = true;
     nextLevel();
 }
 //---------------------------------------------------------------------------
@@ -138,6 +140,10 @@ void TutorialApplication::createLevel1() {
     Door* door = new Door("Door", mSceneMgr, simulator,
         Ogre::Vector3(0.0f, 0.0f, -95.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
         "DoorTexture", 10000, 0.98f, wallFriction, doorKinematic);
+
+    simulator->getPlayer("Player1")->setScore(5);
+    simulator->getPlayer("Player1")->setHP(5);
+    simulator->overlay->changeScoreboard();
 }
 //---------------------------------------------------------------------------
 void TutorialApplication::createLevel2() {
@@ -457,13 +463,15 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
     Shooter* pShooter = (Shooter*) simulator->getObject("PlayerShooter");
     Ogre::Vector3 startPosition = pShooter->getStartPos();
     Ogre::Vector3 currentPos = (Ogre::Vector3) pShooter->getPosition();
-    if(currentPos.y - startPosition.y < -200) {
+    if((currentPos.y - startPosition.y < -100 && !restarting) || currentPos.y - startPosition.y < -300) {
+        restarting = false;
         if (!pShooter->hasFallenOff()) {
             pShooter->setPosition(startPosition.x, startPosition.y, startPosition.z);
             player->incrementScore();
             player->setHP(5);
-            simulator->overlay->updateScore();
             pShooter->setFallenOff(true);
+            simulator->overlay->updateScore();
+            return true;
         }
     } else {
         pShooter->setFallenOff(false);
@@ -513,6 +521,7 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
 }
 //---------------------------------------------------------------------------
 bool TutorialApplication::keyPressed(const OIS::KeyEvent& arg) {
+    restarting = false; //Fix the starting new game with 4 lives problem
     CEGUI::GUIContext& context = CEGUI::System::getSingleton().getDefaultGUIContext();
     context.injectKeyDown((CEGUI::Key::Scan)arg.key);
     context.injectChar((CEGUI::Key::Scan)arg.text);
