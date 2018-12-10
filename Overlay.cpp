@@ -157,6 +157,10 @@ void Overlay::createScoreboard() {
 	playerScore = wmgr.createWindow("TaharezLook/StaticText", "CEGUIDemo/StaticText");
     playerScore->setSize(CEGUI::USize(CEGUI::UDim(0.1, 0), CEGUI::UDim(0.12, 0)));
 
+    levelInfo = wmgr.createWindow("TaharezLook/StaticText", "CEGUIDemo/StaticText");
+    levelInfo->setSize(CEGUI::USize(CEGUI::UDim(0.19, 0), CEGUI::UDim(0.12, 0)));
+    levelInfo->setPosition(CEGUI::UVector2(CEGUI::UDim(0.81, 0), CEGUI::UDim(0, 0)));
+
     updateScore();
     CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(sheet);
 }
@@ -205,6 +209,19 @@ void Overlay::changeScoreboard() {
 
     playerScore->setText("[colour='FFFF0000']"+ ss1.str());
     sheet->addChild(playerScore);
+
+    Ogre::stringstream ss2;
+    Ogre::String status;
+    bool b = simulator->hasKC();
+    int level = p1->getLevel();
+    if(b)
+        status = "Unlocked";
+    else
+        status = "Locked";
+    ss2<< "Level: "<<level<<"\nDoor Status: "<<status.c_str()<<"\nKC Needed: "<<simulator->getRequiredKC(level);
+
+    levelInfo->setText("[colour='FFFF0000']"+ ss2.str());
+    sheet->addChild(levelInfo);
 }
 
 void Overlay::playerLoses() {

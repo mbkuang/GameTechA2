@@ -17,6 +17,11 @@ Simulator::Simulator() {
 
 	overlay = new Overlay(this);
 	isPaused = true;
+
+	levelKcMap[1] = 0;
+	levelKcMap[2] = 1;
+	levelKcMap[3] = 2;
+	levelKcMap[4] = 3;
 }
 
 void Simulator::addObject (GameObject* o) {
@@ -132,16 +137,10 @@ bool Simulator::hasKC() {
 	Player* p1 = getPlayer("Player1");
 	int level = p1->getLevel();
 	int kc = p1->getKC();
-	switch(level) {
-		case 1:
-			return true;
-		case 2:
-			return kc >= 0;
-		case 3:
-			return kc >= 2;
-		case 4:
-			return true;
-		default:
-			return true;
-	}
+
+	return kc >= levelKcMap[level];
+}
+
+int Simulator::getRequiredKC(int level) {
+	return levelKcMap[level];
 }

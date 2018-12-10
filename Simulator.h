@@ -27,6 +27,7 @@ protected:
 	std::deque<GameObject*> objList;
 	std::map<Ogre::String, Player*> players;
 	bool isPaused;
+	std::map<int, int> levelKcMap;
 
 public:
 	Simulator();
@@ -55,6 +56,8 @@ public:
 
 	void bulletTimer();
 	bool hasKC();
+
+	int getRequiredKC(int);
 };
 
 #endif

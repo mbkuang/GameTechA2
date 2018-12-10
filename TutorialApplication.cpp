@@ -280,7 +280,7 @@ void TutorialApplication::createLevel2() {
 
     Door* door = new Door("Door", mSceneMgr, simulator,
         Ogre::Vector3(-50.0f, 10.0f, -970.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
-        "DoorTexture", 10000, 0.98f, wallFriction, ballKinematic);
+        "WallTexture", 10000, 0.98f, wallFriction, ballKinematic);
 
 }
 //---------------------------------------------------------------------------
@@ -350,7 +350,7 @@ void TutorialApplication::createLevel3() {
 
     Door* door = new Door("Door", mSceneMgr, simulator,
         Ogre::Vector3(100.0f, 10.0f, 100.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
-        "DoorTexture", 10000, 0.98f, wallFriction, ballKinematic);
+        "WallTexture", 10000, 0.98f, wallFriction, ballKinematic);
 
     Shooter* player = (Shooter*) simulator->getObject("PlayerShooter");
     player->setPosition(0.0f, 20.0f, 0.0f);
@@ -386,7 +386,7 @@ void TutorialApplication::createLevel4() {
 
     Door* door = new Door("Door", mSceneMgr, simulator,
         Ogre::Vector3(45.0f, 10.0f, 105.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
-        "DoorTexture", 10000, 0.98f, wallFriction, ballKinematic);
+        "WallTexture", 10000, 0.98f, wallFriction, ballKinematic);
 
     Spawner* spawn = new Spawner("Spawner", mSceneMgr, simulator,
         Ogre::Vector3(30.0f, 10.0f, -300.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),

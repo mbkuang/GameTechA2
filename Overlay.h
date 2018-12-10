@@ -33,6 +33,7 @@ public:
 	CEGUI::Window *winMenu;
 	CEGUI::Window *playerScore;
 	CEGUI::Window *cpuScore;
+	CEGUI::Window *levelInfo;
 	bool done;
 
 protected:

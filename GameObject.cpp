@@ -197,3 +197,7 @@ bool GameObject::increaseTimer() {
         return true;
     return false;
 }
+
+void GameObject::unlockDoor() {
+    geom->setMaterialName("DoorTexture");
+}

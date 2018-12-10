@@ -68,7 +68,10 @@ void Laser::update(float elapsedTime) {
                 if(rem != NULL) {
                     rem->~GameObject();
                     simulator->removeObject(rem);
-                    simulator->getPlayer("Player1")->incrementKC();
+                    Player* p1 = simulator->getPlayer("Player1");
+                    p1->incrementKC();
+                    if(simulator->hasKC())
+                        simulator->getObject("Door")->unlockDoor();
                     simulator->overlay->updateScore();
                 }
             }
@@ -77,7 +80,10 @@ void Laser::update(float elapsedTime) {
                 if(bird != NULL) {
                     simulator->removeObject(bird);
                     bird->~Bird();
-                    simulator->getPlayer("Player1")->incrementKC();
+                    Player* p1 = simulator->getPlayer("Player1");
+                    p1->incrementKC();
+                    if(simulator->hasKC())
+                        simulator->getObject("Door")->unlockDoor();
                     simulator->overlay->updateScore();
                 }
             }

@@ -61,6 +61,7 @@ public:
     void addToSimulator();
 
     bool increaseTimer();
+    void unlockDoor();
 
     virtual void update(float elapsedTime) {}
 };
