@@ -31,6 +31,7 @@ public:
 	CEGUI::Window *gameOverMenu;
 	CEGUI::Window *deathMenu;
 	CEGUI::Window *winMenu;
+	CEGUI::Window *controlsMenu;
 	CEGUI::Window *playerScore;
 	CEGUI::Window *cpuScore;
 	CEGUI::Window *levelInfo;
@@ -52,10 +53,10 @@ protected:
 	void volumeDown();
 	void volumeUp();
 	void mute();
-	void showControls();
 	void nextLevel();
 	void leaveWinScreen();
 	void playerLoses();
+	void showControls();
 
 	bool lastMenu;	//Keep track of what the last menu was before settings
 	bool restarting;

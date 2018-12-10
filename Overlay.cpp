@@ -63,6 +63,10 @@ void Overlay::createMainMenu() {
     winMenu->hide();
     sheet->addChild(winMenu);
 
+    controlsMenu = wmgr.loadLayoutFromFile("controlsMenu.layout");
+    controlsMenu->hide();
+    sheet->addChild(controlsMenu);
+
     /* Main Menu Buttons */
     CEGUI::Window *singlePlayerButton = mainMenu->getChildRecursive("singlePlayerButton");
     singlePlayerButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::singlePlayer, this));
@@ -95,7 +99,7 @@ void Overlay::createMainMenu() {
     musicSettings->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::showMusicMenu, this));
 
     CEGUI::Window *ms2 = settingsMenu->getChildRecursive("Setting2");
-    ms2->setDisabled(true);
+    ms2->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::showControls, this));
 
     CEGUI::Window *ms3 = settingsMenu->getChildRecursive("Setting3");
     ms3->setDisabled(true);
@@ -149,6 +153,10 @@ void Overlay::createMainMenu() {
     /* Win Stuff */
     CEGUI::Window *winButton = winMenu->getChildRecursive("continue");
     winButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::leaveWinScreen, this));
+
+    /* Controls Stuff */
+    CEGUI::Window *leaveControlsButton = controlsMenu->getChildRecursive("back");
+    leaveControlsButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&Overlay::toMainMenu, this));
 }
 
 /* Display the scoreboard */
@@ -302,6 +310,7 @@ bool Overlay::toMainMenu() {
     pauseMenu->hide();
     gameOverMenu->hide();
     // multiMenu->hide();
+    controlsMenu->hide();
     mainMenu->show();
     CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().show();
     return true;
@@ -369,4 +378,9 @@ void Overlay::leaveWinScreen() {
     winMenu->hide();
     mainMenu->show();
     CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().show();
+}
+
+void Overlay::showControls() {
+    settingsMenu->hide();
+    controlsMenu->show();
 }
