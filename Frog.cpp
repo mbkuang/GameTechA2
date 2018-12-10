@@ -1,7 +1,8 @@
 #include "Frog.h"
 
 Frog::Frog(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
-    Ogre::Vector3 position, float radius, Ogre::String material, AIManager* aiMgr)
+    Ogre::Vector3 position, float radius, Ogre::String material, AIManager* aiMgr,
+    int* numAttackers)
     : GameObject(newName, scnMgr, sim) {
     // Set variables.
     this->position = position;
@@ -46,6 +47,8 @@ Frog::Frog(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
 
     startPosition = position;
     goalPosition = position;
+
+    numAttack = numAttackers;
 }
 
 Frog::~Frog() {

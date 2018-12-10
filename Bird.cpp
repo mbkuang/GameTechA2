@@ -2,7 +2,8 @@
 
 Bird::Bird(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
     Ogre::Vector3 position, float radius, Ogre::String material,
-    float mass, float restitution, float friction, bool kinematic, Ogre::ParticleEmitter* particleEmit)
+    float mass, float restitution, float friction, bool kinematic, Ogre::ParticleEmitter* particleEmit,
+    int* numAttackers)
     : GameObject(newName, scnMgr, sim) {
     // Set variables.
     this->position = position;
@@ -31,10 +32,10 @@ Bird::Bird(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
 
     // Set the rigid body.
     transform.setOrigin(btVector3(position.x, position.y, position.z));
-    shape = new btSphereShape(btScalar(radius * 0.5f));
+    shape = new btSphereShape(btScalar(radius * 0.65f));
     motionState = new OgreMotionState(transform, rootNode);
 
-    state = CHASE;
+    state = FLY;
     timer = SECOND*2;
     flyVector = btVector3(0,0,0);
 
@@ -43,11 +44,17 @@ Bird::Bird(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
     this->getBody()->setGravity(btVector3(0,0,0));
 
     emitter = particleEmit;
+
+    numAttack = numAttackers;
 }
 
 Bird::~Bird() {
-    if (emitter != NULL) {
-        emitter->~ParticleEmitter();
+    // if (emitter != NULL) {
+    //     emitter->~ParticleEmitter();
+    // }
+    if (attacking) {
+        (*numAttack) --;
+        attacking = false;
     }
 }
 
@@ -85,8 +92,7 @@ void Bird::update(float elapsedTime) {
         emitter->setDirection(this->getOgreVelocity());
     }
 
-    if (context->hit && (context->velNorm > 2.0 || context->velNorm < -2.0)
-        && (lastTime > 0.5 || (context->lastBody != context->body && lastTime > 0.1)) && state == CHASE) {
+    if (context->hit) {
         //Handle the hit
         GameObject* contact = context->theObject;
         Ogre::String contactName = contact->getName();
@@ -95,32 +101,30 @@ void Bird::update(float elapsedTime) {
         Player* cpu = simulator->getPlayer("CPU");
         Shooter* ps = (Shooter*) simulator->getObject("PlayerShooter");
 
-        simulator->soundSystem->playSound("deathSound");
-        if (contactName.compare("PlayerShooter") == 0) {
-            p->setHP(p->getHP()-1);
-            simulator->overlay->updateScore();
-            state = FLY;//SCATTER;
-            timer = FLYTIME;//SCATTERTIME;
-            return;
-        } else if (contactName.compare("EnemyShooter") == 0) {
-            cpu->setHP(cpu->getHP()-1);
-            simulator->overlay->updateScore();
-            state = FLY;
-            timer = FLYTIME;
-            return;
+        if (state == CHASE) {
+            simulator->soundSystem->playSound("deathSound");
+            if (contactName.compare("PlayerShooter") == 0) {
+                p->setHP(p->getHP()-1);
+                simulator->overlay->updateScore();
+                state = FLY;//SCATTER;
+                timer = FLYTIME;//SCATTERTIME;
+                if (attacking) {(*numAttack) --; attacking = false;}
+                return;
+            } else if (contactName.compare("EnemyShooter") == 0) {
+                cpu->setHP(cpu->getHP()-1);
+                simulator->overlay->updateScore();
+                state = FLY;
+                timer = FLYTIME;
+                return;
+            }
         }
 
-        bool isPlayerLaser = contactName.substr(0,11).compare("PlayerLaser") == 0;
-        if( isPlayerLaser ||
-            contactName.substr(0,10).compare("EnemyLaser") == 0) {
-            if(isPlayerLaser) {
-                simulator->getPlayer("Player1")->incrementKC();
-                simulator->overlay->updateScore();
-            }
-            simulator->removeObject(this);
-            this->~GameObject();
-            return;
-        }
+        // if(contactName.substr(0,11).compare("PlayerLaser") == 0 ||
+        //     contactName.substr(0,10).compare("EnemyLaser") == 0) {
+        //     simulator->removeObject(this);
+        //     this->~GameObject();
+        //     return;
+        // }
 
         lastTime = 0.0f;
     }
@@ -170,9 +174,23 @@ int Bird::getState() {
 void Bird::chaseState() {
     if (target == NULL) return;
 
+    // Get bird's velocity, what it wants its velocity to be, and where the player is looking
     btVector3 vel = this->getVelocity();
     flyVector = target->getPosition() - this->getPosition();
+    btVector3 pLookDir = target->getLookDir().normalized() * -1;
+    float vLength = flyVector.length();
+    flyVector = flyVector.normalized();
+
+    // If the player isn't looking at us, we can charge him, otherwise evade
+    float angle = pLookDir.angle(flyVector);
+    if (fabs(angle) < .1) {
+        flyVector.setX(flyVector.getX() + sqrt(vLength)/50 - angle);
+        flyVector.setY(flyVector.getY() + sqrt(vLength)/50 - angle);
+        flyVector.setZ(flyVector.getZ() + sqrt(vLength)/50 - angle);
+    }
+
     flyVector = flyVector.normalized() * speed;
+
     if (fabs(vel.angle(flyVector)) > .26) {
         if (speed > minSpd) {speed --;}
         else {speed = minSpd;}
@@ -180,10 +198,13 @@ void Bird::chaseState() {
         if (timer < 0) {
             timer = CHASEFLYTIME;
             state = FLY;
+            attacking = false;
+            (*numAttack) --;
         }
     }
     else if (speed < maxSpd) {speed ++;}
     else {speed = maxSpd;}
+
     this->setVelocity(this->getVelocity().lerp(flyVector, .001).normalized()*speed);
 }
 
@@ -228,16 +249,30 @@ void Bird::flyState() {
 }
 
 void Bird::scatterState() {
+    // btVector3 vel = this->getVelocity();
+    // // if (leader != NULL) {
+    // //     flyVector = (leader->getPosition() + formation) - this->getPosition();
+    // //     flyVector = flyVector.normalized() * speed;
+    // // }
+    // this->setVelocity(vel.lerp(flyVector, .005).normalized() * flySpd);
+
+    btVector3 tDir = target->getPosition() - this->getPosition();
+    Ogre::Vector3 otDir = Ogre::Vector3(tDir.getX(), tDir.getY(), tDir.getZ());
+    Ogre::Vector3 tDirPerp = Ogre::Quaternion(Ogre::Degree(-90), Ogre::Vector3::UNIT_Y) * otDir;
+    flyVector = btVector3(tDirPerp.x, tDirPerp.y, tDirPerp.z);
+
     btVector3 vel = this->getVelocity();
-    // if (leader != NULL) {
-    //     flyVector = (leader->getPosition() + formation) - this->getPosition();
-    //     flyVector = flyVector.normalized() * speed;
-    // }
     this->setVelocity(vel.lerp(flyVector, .005).normalized() * flySpd);
 
     timer --;
     if (timer < 0) {
-        timer = CHASETIME;
-        state = CHASE;
+        if (*numAttack < 5 && !attacking) {
+            timer = CHASETIME;
+            state = CHASE;
+            (*numAttack) ++;
+            attacking = true;
+        } else {
+            timer = rand() % CHASEFLYTIME;
+        }
     }
 }

@@ -2,7 +2,7 @@
 
 Spawner::Spawner(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
     Ogre::Vector3 position, Ogre::Vector3 scale, Ogre::String material,
-    float mass, float restitution, float friction, bool kinematic, int newType, float newRate, Ogre::ParticleSystem* particleSys, AIManager* aiManager) :
+    float mass, float restitution, float friction, bool kinematic, int newType, float newRate, Ogre::ParticleSystem* particleSys, AIManager* aiManager, int* numAttackers) :
     GameObject(newName, scnMgr, sim) {
     // Set variables.
     this->position = position;
@@ -42,6 +42,8 @@ Spawner::Spawner(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* si
     motionState = new OgreMotionState(transform, rootNode);
 
     addToSimulator();
+
+    numAttack = numAttackers;
 }
 
 Spawner::~Spawner() {
@@ -80,7 +82,7 @@ void Spawner::update(float elapsedTime) {
                     count ++;
                     emitted = new Bird(ss.str(), sceneMgr, simulator,
                         position, 2.0f,
-                        "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic, emitter);
+                        "BallTexture", ballMass, ballRestitution, ballFriction, ballKinematic, emitter, numAttack);
                     ((Bird*) emitted)->setTarget(pShooter);
                 }
                 break;
@@ -93,7 +95,7 @@ void Spawner::update(float elapsedTime) {
                     count ++;
                     emitted = new Frog(ss.str(), sceneMgr, simulator,
                         position, 4.0f,
-                        "BallTexture", aiMgr);
+                        "BallTexture", aiMgr, numAttack);
                 }
                 break;
             case SHOOTER:

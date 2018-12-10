@@ -34,9 +34,11 @@ public:
     Spawner(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
         Ogre::Vector3 position, Ogre::Vector3 scale, Ogre::String material,
         float mass, float restitution, float friction, bool kinematic, int newType,
-        float newRate, Ogre::ParticleSystem* particleSys, AIManager* aiManager);
+        float newRate, Ogre::ParticleSystem* particleSys, AIManager* aiManager, int* numAttackers);
     ~Spawner();
     void update(float elapsedTime);
+
+    int* numAttack;
 };
 
 

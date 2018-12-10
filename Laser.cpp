@@ -26,7 +26,7 @@ Laser::Laser(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
     rootNode = sceneMgr->getRootSceneNode()
         ->createChildSceneNode(name, Ogre::Vector3(position.x, position.y, position.z));
     rootNode->attachObject(geom);
-    rootNode->scale(radius * 0.01f, radius * 0.01f, radius * 0.01f);
+    rootNode->scale(radius * 0.0075f, radius * 0.0075f, radius * 0.0075f);
     rootNode->setPosition(position.x, position.y, position.z);
 
     // Set the rigid body.
@@ -75,21 +75,31 @@ void Laser::update(float elapsedTime) {
         Player* p = simulator->getPlayer("Player1");
         Shooter* ps = (Shooter*) simulator->getObject("PlayerShooter");
 
-        if(objName.substr(0,10).compare("EnemyLaser") == 0) {
-            if(contactName.compare("PlayerShooter") == 0) {
+        if(contactName.compare("PlayerShooter") == 0) {
+            if(objName.substr(0,5).compare("Enemy") == 0) {
                 // Player loses life
                 p->setHP(p->getHP()-1);
                 if(simulator->overlay->updateScore())
                     return;
+            } else {
+                lastTime = 0.0f;
+                return;
             }
         }
+
+        if(contactName.substr(0, 4).compare("Bird") == 0) {
+            Bird *bird = (Bird*) simulator->getObject(contactName);
+            if(bird != NULL) {
+                simulator->removeObject(bird);
+                bird->~Bird();
+            }
+        }
+        lastTime = 0.0f;
 
         this->inertia = btVector3(0.0f, 0.0f, 0.0f);
         availability = true;
         simulator->soundSystem->playSound("deathSound");
         this->context->reset(); //Reset the callback
-
-        lastTime = 0.0f;
 
         if(this != NULL) {
             this->~GameObject();

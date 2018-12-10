@@ -27,6 +27,7 @@ http://www.ogre3d.org/wiki/
 #include "Bird.h"
 #include "Door.h"
 #include "Spawner.h"
+#include "Powerup.h"
 #include "GameSettings.h"
 #include "Overlay.h"
 #include "Shooter.h"
@@ -64,6 +65,8 @@ protected:
     void createLevel4();
     void createLevel5();
 
+    Laser* shoot(Ogre::Vector3 location, Ogre::Vector3 direction);
+
     void restart();
 
     struct Positions {
@@ -88,13 +91,13 @@ private:
     void newGame();
 
     float old_x;
-    bool firstPerson;
+    bool firstPerson = true;
+
     float time_passed;
     AIManager* aiMgr;
     bool restarting;
 
-    Frog* frog1;
-    Frog* frog2;
+    int numAttack = 0;
 };
 
 //---------------------------------------------------------------------------

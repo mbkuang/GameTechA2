@@ -26,9 +26,9 @@ protected:
         SCATTER = 2
     };
     btVector3 flyVector;
-    int maxSpd = 150;
-    int flySpd = 110;
-    int minSpd = 80;
+    int maxSpd = 125;
+    int flySpd = 90;
+    int minSpd = 70;
     int speed = 80;
 
     Ogre::ParticleEmitter* emitter = NULL;
@@ -45,7 +45,8 @@ protected:
 public:
     Bird(Ogre::String name, Ogre::SceneManager* sceneMgr, Simulator* simulator,
     	Ogre::Vector3 position, float radius, Ogre::String material,
-    	float mass, float restitution, float friction, bool kinematic, Ogre::ParticleEmitter* particleEmit);
+    	float mass, float restitution, float friction, bool kinematic, Ogre::ParticleEmitter* particleEmit,
+        int* numAttackers);
     ~Bird();
     void setTarget(Shooter* targe);
     void setLeader(Ogre::String lName);
@@ -58,6 +59,9 @@ public:
     void scatterState();
 
     void setVelocity(btVector3 vel);
+
+    int* numAttack = NULL;
+    bool attacking = false;
 };
 
 #endif
