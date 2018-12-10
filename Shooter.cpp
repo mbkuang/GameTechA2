@@ -82,7 +82,7 @@ void Shooter::update(float elapsedTime) {
         GameObject* contact = context->theObject;
         Ogre::String contactName = contact->getName();
 
-        if(contactName.compare("Door") == 0) {
+        if(contactName.compare("Door") == 0 && simulator->hasKC()) {
             door = true;
         }
     }

@@ -127,3 +127,21 @@ void Simulator::bulletTimer() {
 		}
 	}
 }
+
+bool Simulator::hasKC() {
+	Player* p1 = getPlayer("Player1");
+	int level = p1->getLevel();
+	int kc = p1->getKC();
+	switch(level) {
+		case 1:
+			return true;
+		case 2:
+			return kc >= 1;
+		case 3:
+			return kc >= 2;
+		case 4:
+			return true;
+		default:
+			return true;
+	}
+}

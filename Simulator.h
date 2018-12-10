@@ -54,6 +54,7 @@ public:
 	void printMap();
 
 	void bulletTimer();
+	bool hasKC();
 };
 
 #endif
