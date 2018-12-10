@@ -60,21 +60,33 @@ void Laser::update(float elapsedTime) {
         //Handle the hit
         GameObject* contact = context->theObject;
         Ogre::String contactName = contact->getName();
+
+        /* Player's bullets hit enemy */
         if(!objName.substr(0,5).compare("Enemy") == 0) {
             if (contactName.substr(0,4).compare("Frog") == 0) {
                 GameObject* rem = simulator->getObject(contactName);
                 if(rem != NULL) {
                     rem->~GameObject();
                     simulator->removeObject(rem);
+                    simulator->getPlayer("Player1")->incrementKC();
+                    simulator->overlay->updateScore();
                 }
-                simulator->getPlayer("Player1")->incrementKC();
-                simulator->overlay->updateScore();
+            }
+            else if(contactName.substr(0, 4).compare("Bird") == 0) {
+                Bird *bird = (Bird*) simulator->getObject(contactName);
+                if(bird != NULL) {
+                    simulator->removeObject(bird);
+                    bird->~Bird();
+                    simulator->getPlayer("Player1")->incrementKC();
+                    simulator->overlay->updateScore();
+                }
             }
         }
 
         Player* p = simulator->getPlayer("Player1");
         Shooter* ps = (Shooter*) simulator->getObject("PlayerShooter");
 
+        /* Enemy hit player */
         if(contactName.compare("PlayerShooter") == 0) {
             if(objName.substr(0,5).compare("Enemy") == 0) {
                 // Player loses life
@@ -87,13 +99,6 @@ void Laser::update(float elapsedTime) {
             }
         }
 
-        if(contactName.substr(0, 4).compare("Bird") == 0) {
-            Bird *bird = (Bird*) simulator->getObject(contactName);
-            if(bird != NULL) {
-                simulator->removeObject(bird);
-                bird->~Bird();
-            }
-        }
         lastTime = 0.0f;
 
         this->inertia = btVector3(0.0f, 0.0f, 0.0f);

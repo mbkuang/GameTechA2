@@ -136,7 +136,7 @@ bool Simulator::hasKC() {
 		case 1:
 			return true;
 		case 2:
-			return kc >= 1;
+			return kc >= 0;
 		case 3:
 			return kc >= 2;
 		case 4:
