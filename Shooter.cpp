@@ -115,6 +115,10 @@ void Shooter::update(float elapsedTime) {
                         //Shotgun
                         weapon = SHOTGUN;
                         break;
+                    case 4:
+                        //Checkpoint
+                        setStartPos(this->getOgrePosition());
+                        break;
                     default:
                         break;
                 }

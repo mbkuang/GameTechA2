@@ -164,8 +164,8 @@ void TutorialApplication::createLevel1() {
         "ShotgunTexture", 0, 0.98f, wallFriction, wallKinematic, 3);
 
     Powerup* power4 = new Powerup("Powerup4", mSceneMgr, simulator,
-        Ogre::Vector3(-30.0f, 5.0f, -30.0f), Ogre::Vector3(3.0f, 3.0f, 3.0f),
-        "SuperJumpTexture", 0, 0.98f, wallFriction, wallKinematic, 2);
+        Ogre::Vector3(-30.0f, 20.0f, -30.0f), Ogre::Vector3(3.0f, 3.0f, 3.0f),
+        "CheckpointTexture", 0, 0.98f, wallFriction, wallKinematic, 4);
 }
 //---------------------------------------------------------------------------
 void TutorialApplication::createLevel2() {
