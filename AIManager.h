@@ -13,8 +13,15 @@
 #include <sstream>
 #include <iostream>
 #include <algorithm>    // std::reverse
+#include <unordered_set>
 
 class AIManager {
+    struct Point 
+    { 
+        float x; 
+        float y; 
+    }; 
+
     protected:
         std::vector<Node*> _nodes;
         Ogre::SceneManager* scnMgr;
@@ -23,6 +30,8 @@ class AIManager {
         int numNodes;
         Ogre::Vector3 player_position;
         float connectionDistance;
+        double limit;
+        std::vector<std::pair<Point, Point>> _walls;
 
     public:
         AIManager(Ogre::SceneManager* sceneMgr, Simulator* simulator, Ogre::String material);
@@ -42,7 +51,10 @@ class AIManager {
         void printAllNodeConnections();
 
         Node* findNodeClosest(Ogre::Vector3 position);
+
         Node* findNodeClosestPlayer(Ogre::Vector3 position, Node* nodeAt);
+
+        Node* findNodeClosestList(Ogre::Vector3 position, std::vector<Node*> nodes);
 
         float distance(Ogre::Vector3 a, Ogre::Vector3 b);
 
@@ -55,6 +67,22 @@ class AIManager {
         void setPlayerPosition(Ogre::Vector3 pos);
 
         Ogre::Vector3 getPlayerPosition();
+
+        void addNodesGridXZ(Ogre::Vector3 position, int x, int z);
+
+        void addNodesGridXY(Ogre::Vector3 position, int x, int y);
+
+        void addNodesGridYZ(Ogre::Vector3 position, int y, int z);
+
+        void addWall(float a, float b, float c, float d);
+
+        bool collideWithWall(Ogre::Vector3 pos1, Ogre::Vector3 pos2);
+
+        bool onSegment(Point p, Point q, Point r);
+
+        float orientation(Point p, Point q, Point r);
+
+        bool doIntersect(Point p1, Point q1, Point p2, Point q2);
 
 
 };

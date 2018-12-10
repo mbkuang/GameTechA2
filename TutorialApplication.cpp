@@ -103,7 +103,7 @@ void TutorialApplication::nextLevel() {
     simulator->pause();
     switch(level) {
         case 1:
-            createLevel1();
+            createLevel3();
             break;
         case 2:
             createLevel2();
@@ -275,58 +275,88 @@ void TutorialApplication::createLevel3() {
     Wall* wall4 = new Wall("Wall4", mSceneMgr, simulator,
         Ogre::Vector3(250.0f, 40.0f, 0.0f), Ogre::Vector3(wallThickness, 100, 100),
         "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
-    Wall* wall5 = new Wall("Wall5", mSceneMgr, simulator,
-        Ogre::Vector3(-250.0f, 40.0f, 0.0f), Ogre::Vector3(100, wallThickness, 500),
-        "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
-    // Wall* wall6 = new Wall("Wall6", mSceneMgr, simulator,
-    //     Ogre::Vector3(0.0f, 100.0f, 0.0f), Ogre::Vector3(500, 100, 500),
+    // Wall* wall5 = new Wall("Wall5", mSceneMgr, simulator,
+    //     Ogre::Vector3(-250.0f, 40.0f, 0.0f), Ogre::Vector3(100, wallThickness, 500),
     //     "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
 
-    Wall* wall7 = new Wall("Wall7", mSceneMgr, simulator,
-        Ogre::Vector3(0.0f, 40.0f, 60.0f), Ogre::Vector3(100, 100, wallThickness),
-        "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
-    Wall* wall8 = new Wall("Wall8", mSceneMgr, simulator,
-        Ogre::Vector3(60.0f, 40.0f, 0.0f), Ogre::Vector3(wallThickness, 100, 50),
-        "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
-    Wall* wall9 = new Wall("Wall9", mSceneMgr, simulator,
-        Ogre::Vector3(50.0f, 40.0f, 100.0f), Ogre::Vector3(150, 100, wallThickness),
-        "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
-    Wall* wall10 = new Wall("Wall10", mSceneMgr, simulator,
-        Ogre::Vector3(-50.0f, 40.0f, -50.0f), Ogre::Vector3(wallThickness, 100, 50),
-        "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
+    // Wall* wall7 = new Wall("Wall7", mSceneMgr, simulator,
+    //     Ogre::Vector3(0.0f, 40.0f, 60.0f), Ogre::Vector3(100, 100, wallThickness),
+    //     "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
+    // Wall* wall8 = new Wall("Wall8", mSceneMgr, simulator,
+    //     Ogre::Vector3(60.0f, 40.0f, 0.0f), Ogre::Vector3(wallThickness, 100, 50),
+    //     "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
+    // Wall* wall9 = new Wall("Wall9", mSceneMgr, simulator,
+    //     Ogre::Vector3(50.0f, 40.0f, 100.0f), Ogre::Vector3(150, 100, wallThickness),
+    //     "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
+    // Wall* wall10 = new Wall("Wall10", mSceneMgr, simulator,
+    //     Ogre::Vector3(-50.0f, 40.0f, -50.0f), Ogre::Vector3(wallThickness, 100, 50),
+    //     "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
 
     /* Adding nodes to map */
 
-    /* If nodes are too far away bad things happen */
-    aiMgr->addNode(Ogre::Vector3(50.0f,50.0f,0.0f));
-    aiMgr->addNode(Ogre::Vector3(0.0f,50.0f,50.0f));
-    aiMgr->addNode(Ogre::Vector3(-50.0f,50.0f,0.0f));
-    aiMgr->addNode(Ogre::Vector3(0.0f,50.0f,-50.0f));
-    aiMgr->addNode(Ogre::Vector3(50.0f,50.0f,50.0f));
-    aiMgr->addNode(Ogre::Vector3(-50.0f,50.0f,50.0f));
-    aiMgr->addNode(Ogre::Vector3(-50.0f,50.0f,-50.0f));
-    aiMgr->addNode(Ogre::Vector3(50.0f,50.0f,-50.0f));
-    aiMgr->addNode(Ogre::Vector3(25.0f,0.0f,0.0f));
-    aiMgr->addNode(Ogre::Vector3(25.0f,0.0f,25.0f));
-    aiMgr->addNode(Ogre::Vector3(0.0f,0.0f,25.0f));
-    aiMgr->addNode(Ogre::Vector3(-25.0f, 0.0f,0.0f));
-    aiMgr->addNode(Ogre::Vector3(0.0f,0.0f,-25.0f));
-    aiMgr->addNode(Ogre::Vector3(25.0f,0.0f,-25.0f));
-    aiMgr->addNode(Ogre::Vector3(-25.0f,0.0f,25.0f));
-    aiMgr->addNode(Ogre::Vector3(-25.0f,0.0f,-25.0f));
+    /* Floor nodes */
+    aiMgr->addNodesGridXZ(Ogre::Vector3(-240.0f, 0.0f, -230.0f), 480, 150);
+    aiMgr->addNodesGridXZ(Ogre::Vector3(-30.0f, 0.0f, -70.0f), 270, 40);
+    aiMgr->addNodesGridXZ(Ogre::Vector3(-240.0f, 0.0f, -80.0f), 180, 320);
+    aiMgr->addNodesGridXZ(Ogre::Vector3(-40.0f, 0.0f, -20.0f), 80, 60);
+    aiMgr->addNodesGridXZ(Ogre::Vector3(-40.0f, 0.0f, 120.0f), 280, 100);
+    aiMgr->addNodesGridXZ(Ogre::Vector3(90.0f, 0.0f, -20.0f), 140, 100);
+    aiMgr->addNodesGridXZ(Ogre::Vector3(-40.0f, 0.0f, 80.0f), 120, 20);
+    aiMgr->addNodesGridXZ(Ogre::Vector3(60.0f, 0.0f, 30.0f), 40, 40);
+    aiMgr->addNodesGridXZ(Ogre::Vector3(130.0f, 0.0f, 100.0f), 110, 20);
+    aiMgr->addNodesGridXZ(Ogre::Vector3(-290.0f, 53.0f, -220.0f), 60, 470);
+    aiMgr->addNodesGridXZ(Ogre::Vector3(-198.0f, 46.0f, -240.0f), 20, 480);
+
+    /* Wall nodes */
+    aiMgr->addNodesGridXY(Ogre::Vector3(-30.0f, 10.0f, 50.0f), 60, 60);
+    aiMgr->addNodesGridXY(Ogre::Vector3(-30.0f, 10.0f, 70.0f), 60, 60);
+    aiMgr->addNodesGridXY(Ogre::Vector3(-10.0f, 10.0f, 90.0f), 120, 60);
+    aiMgr->addNodesGridXY(Ogre::Vector3(-10.0f, 10.0f, 110.0f), 120, 60);
+    aiMgr->addNodesGridXY(Ogre::Vector3(60.0f, 10.0f, -25.0f), 1, 60);
+    aiMgr->addNodesGridXY(Ogre::Vector3(60.0f, 10.0f, 25.0f), 1, 60);
+    aiMgr->addNodesGridXY(Ogre::Vector3(250.0f, 10.0f, -50.0f), 1, 60);
+    aiMgr->addNodesGridXY(Ogre::Vector3(250.0f, 10.0f, 50.0f), 1, 60);
+    aiMgr->addNodesGridXY(Ogre::Vector3(-50.0f, 10.0f, -75.0f), 1, 60);
+
+    aiMgr->addNodesGridXY(Ogre::Vector3(-50.0f, 10.0f, -25.0f), 1, 60);
+
+    aiMgr->addNodesGridXY(Ogre::Vector3(-180.0f, 10.0f, 240.0f), 470, 60);
+    aiMgr->addNodesGridXY(Ogre::Vector3(-180.0f, 10.0f, -240.0f), 470, 60);
+
+    aiMgr->addNodesGridYZ(Ogre::Vector3(240.0f, 10.0f, -30.0f), 60, 60);
+    aiMgr->addNodesGridYZ(Ogre::Vector3(70.0f, 10.0f, 0.0f), 60, 1);
+    aiMgr->addNodesGridYZ(Ogre::Vector3(50.0f, 10.0f, 0.0f), 60, 1);
+    aiMgr->addNodesGridYZ(Ogre::Vector3(-40.0f, 10.0f, -50.0f), 60, 1);
+    aiMgr->addNodesGridYZ(Ogre::Vector3(-60.0f, 10.0f, -50.0f), 60, 1);
+
+    /* Add walls */
+    /* TODO */
+    aiMgr->addWall(-1000.0f, 0.0f, 1000.0f, 0.0f);
+
     aiMgr->connectAllNodes();
 
-    frog1 = new Frog("Frog1", mSceneMgr, simulator,
-        Ogre::Vector3(25.0f,0.0f,0.0f), 4.0f,
+    Frog* frog1 = new Frog("Frog1", mSceneMgr, simulator,
+        Ogre::Vector3(240.0f, 0.0f, -110.0f), 4.0f,
         "BallTexture", aiMgr);
 
-    frog2 = new Frog("Frog2", mSceneMgr, simulator,
-        Ogre::Vector3(-25.0f,0.0f,-25.0f), 4.0f,
+    Frog* frog2 = new Frog("Frog2", mSceneMgr, simulator,
+        Ogre::Vector3(-60.0f, 0.0f, -110.0f), 4.0f,
+        "BallTexture", aiMgr);
+
+    Frog* frog3 = new Frog("Frog3", mSceneMgr, simulator,
+        Ogre::Vector3(-60.0f, 0.0f, 160.0f), 4.0f,
+        "BallTexture", aiMgr);
+
+    Frog* frog4 = new Frog("Frog4", mSceneMgr, simulator,
+        Ogre::Vector3(200.0f, 0.0f, 180.0f), 4.0f,
         "BallTexture", aiMgr);
 
     Door* door = new Door("Door", mSceneMgr, simulator,
         Ogre::Vector3(100.0f, 10.0f, 100.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
         "DoorTexture", 10000, 0.98f, wallFriction, ballKinematic);
+
+    Shooter* player = (Shooter*) simulator->getObject("PlayerShooter");
+    player->setPosition(0.0f, 20.0f, 0.0f);
 }
 //---------------------------------------------------------------------------
 void TutorialApplication::createLevel4() {
@@ -501,15 +531,7 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
 
     /* Find player position */
     aiMgr->setPlayerPosition(position);
-
-    // Door* door = (Door*) simulator->getObject("Door");
-    // if (door != NULL) {
-    //     if (door->tripped) {
-    //         door->tripped = false;
-    //         simulator->overlay->showWinMessage(level);
-    //         nextLevel();
-    //     }
-    // }
+    // printf("Player's position: %f, %f, %f\n", position.x, position.y, position.z);
 
     if(pShooter->reachedDoor()) {
         pShooter->setDoor(false);
@@ -642,15 +664,11 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& fe)
     }
 
     moveDir.x = ((cDir.x * walk) + (cDirPerp.x * strafe)) * movementSpeed;
-    // if (moveDir.x == 0) {moveDir.x = 0;}
     moveDir.z = ((cDir.z * walk) + (cDirPerp.z * strafe)) * movementSpeed;
 
     float yVelocity = player->getVelocity().getY();
 
     player->setVelocity(moveDir.x, yVelocity/*0.0*/, moveDir.z);
-
-    // btVector3 pVel = player->getVelocity();
-    // if (pVel.length() > movementSpeed) {player->setVelocity(pVel.normalized()*movementSpeed);}
 
     return true;
 }

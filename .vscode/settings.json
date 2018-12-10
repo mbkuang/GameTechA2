@@ -51,6 +51,8 @@
         "numeric": "cpp",
         "sstream": "cpp",
         "streambuf": "cpp",
-        "string": "cpp"
+        "string": "cpp",
+        "unordered_set": "cpp",
+        "*.ipp": "cpp"
     }
 }
