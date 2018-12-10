@@ -27,6 +27,7 @@ http://www.ogre3d.org/wiki/
 #include "Bird.h"
 #include "Door.h"
 #include "Spawner.h"
+#include "Powerup.h"
 #include "GameSettings.h"
 #include "Overlay.h"
 #include "Shooter.h"

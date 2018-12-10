@@ -48,6 +48,8 @@ Shooter::Shooter(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* si
     startPosition = position;
     fallenOff = false;
     door = false;
+
+    weapon = STANDARD;
 }
 
 Shooter::~Shooter() {
@@ -75,6 +77,10 @@ void Shooter::update(float elapsedTime) {
     Ogre::Vector3 dir = this->getOgreDirection() * Ogre::Vector3(0.0f, 0.0f, -1.0f);
     gun->setPosition(pos + btVector3(dir.x * 1.5f, 2.5f, dir.z * 1.5f));
 
+    if (superJumpTimer > 0) {
+        superJumpTimer -= elapsedTime;
+    }
+
     if (context->hit) {
         jump = true;
         lastTime = 0.0f;
@@ -84,6 +90,37 @@ void Shooter::update(float elapsedTime) {
 
         if(contactName.compare("Door") == 0) {
             door = true;
+        }
+
+        Player* p = simulator->getPlayer("Player1");
+        if (p != NULL) {
+            if (contactName.substr(0,7).compare("Powerup") == 0) {
+                int power = ((Powerup*) contact)->getType();
+                switch (power) {
+                    case 0:
+                        //Health
+                        p->setHP(p->getHP()+2);
+                        simulator->overlay->updateScore();
+                        break;
+                    case 1:
+                        //Life
+                        p->setScore(p->getScore()+1);
+                        simulator->overlay->updateScore();
+                        break;
+                    case 2:
+                        //Superjump
+                        superJumpTimer = 20.0f;
+                        break;
+                    case 3:
+                        //Shotgun
+                        weapon = SHOTGUN;
+                        break;
+                    default:
+                        break;
+                }
+                contact->~GameObject();
+                simulator->removeObject(contact);
+            }
         }
     }
     context->hit = false;
@@ -116,6 +153,10 @@ bool Shooter::canJump() {
 
 void Shooter::setJump(bool j) {
     jump = j;
+}
+
+float Shooter::getJumpTimer() {
+    return superJumpTimer;
 }
 
 void Shooter::setStartPos(Ogre::Vector3 pos) {

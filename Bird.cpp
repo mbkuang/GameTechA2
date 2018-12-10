@@ -49,9 +49,9 @@ Bird::Bird(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
 }
 
 Bird::~Bird() {
-    if (emitter != NULL) {
-        emitter->~ParticleEmitter();
-    }
+    // if (emitter != NULL) {
+    //     emitter->~ParticleEmitter();
+    // }
     if (attacking) {
         (*numAttack) --;
         attacking = false;
@@ -119,12 +119,12 @@ void Bird::update(float elapsedTime) {
             }
         }
 
-        if(contactName.substr(0,11).compare("PlayerLaser") == 0 ||
-            contactName.substr(0,10).compare("EnemyLaser") == 0) {
-            simulator->removeObject(this);
-            this->~GameObject();
-            return;
-        }
+        // if(contactName.substr(0,11).compare("PlayerLaser") == 0 ||
+        //     contactName.substr(0,10).compare("EnemyLaser") == 0) {
+        //     simulator->removeObject(this);
+        //     this->~GameObject();
+        //     return;
+        // }
 
         lastTime = 0.0f;
     }

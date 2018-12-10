@@ -6,6 +6,7 @@
 #include "GameSettings.h"
 #include "Gun.h"
 #include "Player.h"
+#include "Powerup.h"
 
 class Shooter : public GameObject {
 private:
@@ -16,7 +17,8 @@ private:
     float lastTime;
     bool fired;
     int numShots;
-    Gun* gun;
+    Gun* gun = NULL;
+    Player* player = NULL;
 
     int weapon = 1;
 
@@ -25,6 +27,8 @@ private:
         SHOTGUN = 1,
         BIG = 2
     };
+
+    float superJumpTimer = 0.0;
 
     bool jump;
     Ogre::Vector3 startPosition;
@@ -48,6 +52,8 @@ public:
 
     bool canJump();
     void setJump(bool);
+    float getJumpTimer();
+
     void setStartPos(Ogre::Vector3);
     Ogre::Vector3 getStartPos();
     void setLookDir(Ogre::Vector3 newDir);

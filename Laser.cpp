@@ -26,7 +26,7 @@ Laser::Laser(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
     rootNode = sceneMgr->getRootSceneNode()
         ->createChildSceneNode(name, Ogre::Vector3(position.x, position.y, position.z));
     rootNode->attachObject(geom);
-    rootNode->scale(radius * 0.005f, radius * 0.005f, radius * 0.005f);
+    rootNode->scale(radius * 0.0075f, radius * 0.0075f, radius * 0.0075f);
     rootNode->setPosition(position.x, position.y, position.z);
 
     // Set the rigid body.
@@ -84,18 +84,13 @@ void Laser::update(float elapsedTime) {
             }
         }
 
-        // if(contactName.substr(0, 4).compare("Bird") == 0) {
-        //     printf("Yo you hit a bird nice one m8\n");
-        //     Bird *bird = (Bird*) simulator->getObject(contactName);
-        //     printf("Yo we grabbed a bird from the list \n");
-        //     if(bird != NULL) {
-        //         printf("That bird isn't null\n");
-        //         simulator->removeObject(bird);
-        //         bird->~Bird();
-        //         printf("The bird has been successfully destroyed\n");
-        //         printf("Removed bird from object list and map\n");
-        //     }
-        // }
+        if(contactName.substr(0, 4).compare("Bird") == 0) {
+            Bird *bird = (Bird*) simulator->getObject(contactName);
+            if(bird != NULL) {
+                simulator->removeObject(bird);
+                bird->~Bird();
+            }
+        }
         lastTime = 0.0f;
 
         this->inertia = btVector3(0.0f, 0.0f, 0.0f);

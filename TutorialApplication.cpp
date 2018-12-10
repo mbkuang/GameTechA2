@@ -140,6 +140,26 @@ void TutorialApplication::createLevel1() {
     Door* door = new Door("Door", mSceneMgr, simulator,
         Ogre::Vector3(0.0f, 0.0f, -95.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
         "DoorTexture", 10000, 0.98f, wallFriction, doorKinematic);
+
+    Powerup* power0 = new Powerup("Powerup0", mSceneMgr, simulator,
+        Ogre::Vector3(0.0f, 5.0f, -30.0f), Ogre::Vector3(3.0f, 3.0f, 3.0f),
+        "MedpackTexture", 0, 0.98f, wallFriction, wallKinematic, 0);
+
+    Powerup* power1 = new Powerup("Powerup1", mSceneMgr, simulator,
+        Ogre::Vector3(30.0f, 5.0f, -30.0f), Ogre::Vector3(3.0f, 3.0f, 3.0f),
+        "ExtraLifeTexture", 0, 0.98f, wallFriction, wallKinematic, 1);
+
+    Powerup* power2 = new Powerup("Powerup2", mSceneMgr, simulator,
+        Ogre::Vector3(30.0f, 5.0f, -60.0f), Ogre::Vector3(3.0f, 3.0f, 3.0f),
+        "SuperJumpTexture", 0, 0.98f, wallFriction, wallKinematic, 2);
+
+    Powerup* power3 = new Powerup("Powerup3", mSceneMgr, simulator,
+        Ogre::Vector3(-30.0f, 5.0f, -60.0f), Ogre::Vector3(3.0f, 3.0f, 3.0f),
+        "ShotgunTexture", 0, 0.98f, wallFriction, wallKinematic, 3);
+
+    Powerup* power4 = new Powerup("Powerup4", mSceneMgr, simulator,
+        Ogre::Vector3(-30.0f, 5.0f, -30.0f), Ogre::Vector3(3.0f, 3.0f, 3.0f),
+        "SuperJumpTexture", 0, 0.98f, wallFriction, wallKinematic, 2);
 }
 //---------------------------------------------------------------------------
 void TutorialApplication::createLevel2() {
@@ -325,6 +345,9 @@ void TutorialApplication::createLevel3() {
     Door* door = new Door("Door", mSceneMgr, simulator,
         Ogre::Vector3(100.0f, 10.0f, 100.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
         "DoorTexture", 10000, 0.98f, wallFriction, ballKinematic);
+
+    Shooter* player = (Shooter*) simulator->getObject("PlayerShooter");
+    player->setPosition(0.0f, 20.0f, 0.0f);
 }
 //---------------------------------------------------------------------------
 void TutorialApplication::createLevel4() {
@@ -333,7 +356,7 @@ void TutorialApplication::createLevel4() {
         Ogre::Vector3(0.0f, 0.0f, -50.0f), Ogre::Vector3(10.0f, wallThickness, 100.0f),
         "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
     Wall* flooring2 = new Wall("Flooring2", mSceneMgr, simulator,
-        Ogre::Vector3(45.0f, 0.0f, 105.0f), Ogre::Vector3(100.0f, wallThickness, 10.0f),
+        Ogre::Vector3(45.0f, 0.0f, 105.0f), Ogre::Vector3(100.0f, wallThickness, 100.0f),
         "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
 
     Shooter* player = (Shooter*) simulator->getObject("PlayerShooter");
@@ -530,7 +553,9 @@ bool TutorialApplication::keyPressed(const OIS::KeyEvent& arg) {
     } else if (arg.key == OIS::KC_SPACE) {
         Shooter* player = (Shooter*) simulator->getObject("PlayerShooter");
         if(player->canJump()) {
-            player->setVelocity(0,50,0);
+            float jumpSpeed = 50.0f;
+            if (player->getJumpTimer() > 0) {jumpSpeed = 75.0f;}
+            player->setVelocity(0,jumpSpeed,0);
             player->setJump(false);
         }
 
@@ -573,6 +598,15 @@ bool TutorialApplication::mouseMoved(const OIS::MouseEvent& arg) {
     mCamera->yaw(Ogre::Degree(-arg.state.X.rel * cRotSpd));
     mCamera->pitch(Ogre::Degree(-arg.state.Y.rel * cRotSpd));
 
+    Ogre::Vector3 cDir = mCamera->getDirection();
+    if (cDir.y >= .95) {
+        cDir.y = .95;
+    }
+    if (cDir.y <= -.95) {
+        cDir.y = -.95;
+    }
+    mCamera->setDirection(cDir);
+
     Shooter* pShooter = (Shooter*) simulator->getObject("PlayerShooter");
     if (pShooter != NULL) {pShooter->setLookDir(mCamera->getDirection());}
 
@@ -581,7 +615,7 @@ bool TutorialApplication::mouseMoved(const OIS::MouseEvent& arg) {
 //---------------------------------------------------------------------------
 Laser* TutorialApplication::shoot(Ogre::Vector3 location, Ogre::Vector3 direction) {
     Shooter* player = (Shooter*) simulator->getObject("PlayerShooter");
-    float avgVel = laserSpeed * 2;
+    float avgVel = laserSpeed * 1.5;
     Ogre::stringstream ss;
     ss << "PlayerLaser" << player->getNumShots();
 
@@ -615,7 +649,7 @@ bool TutorialApplication::mousePressed(const OIS::MouseEvent& arg, OIS::MouseBut
                 case 1:
                     for (i = 0; i < 3; i ++) {
                         for (j = 0; j < 3; j ++) {
-                            dLocation = location + Ogre::Vector3(cDir.x*6+cDirPerp.x*(i-1)*6, cDir.y*6 + cDirPerp.y+ (j-1)*6 + 2.5, cDir.z*6+cDirPerp.z*(i-1)*6);
+                            dLocation = location + Ogre::Vector3(cDir.x*5+cDirPerp.x*(i-1)*5, cDir.y*5 + cDirPerp.y+ (j-1)*5 + 2.5, cDir.z*6+cDirPerp.z*(i-1)*5);
                             // dDir = Ogre::Vector3(i/24-.125 + j/24-.125, i/24-.125 + j/24-.125, i/24-.125 + j/24-.125);
                             shoot(dLocation, (direction).normalisedCopy());
                         }
@@ -650,13 +684,6 @@ bool TutorialApplication::processUnbufferedInput(const Ogre::FrameEvent& fe)
     }
 
     Ogre::Vector3 cDir = mCamera->getDirection();
-    if (cDir.y >= .95) {
-        cDir.y = .95;
-    }
-    if (cDir.y <= -.95) {
-        cDir.y = -.95;
-    }
-    mCamera->setDirection(cDir);
 
     Ogre::Vector3 moveDir = Ogre::Vector3(0.0f, 0.0f, 0.0f);
     Ogre::Vector3 cDirPerp = Ogre::Quaternion(Ogre::Degree(-90), Ogre::Vector3::UNIT_Y) * cDir;
