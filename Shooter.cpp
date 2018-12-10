@@ -44,7 +44,7 @@ Shooter::Shooter(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* si
     fired = false;
     numShots = 0;
 
-    jump = true;
+    jump = false;
     startPosition = position;
     fallenOff = false;
     door = false;
