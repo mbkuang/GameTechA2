@@ -100,6 +100,7 @@ void TutorialApplication::nextLevel() {
         aiMgr->destroyNodes();
     }
     level ++;
+
     numAttack = 0;
     simulator->getPlayer("Player1")->setLevel(level);
     simulator->pause();
