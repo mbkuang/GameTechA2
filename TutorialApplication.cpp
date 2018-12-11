@@ -38,7 +38,7 @@ void TutorialApplication::createScene(void)
 {
     // Create your scene here :)
     mSceneMgr->setSkyBox(true, "Examples/StormySkyBox");
-    aiMgr = new AIManager(mSceneMgr, simulator, "greenball");
+    aiMgr = new AIManager(mSceneMgr, simulator, "");
 
     simulator->overlay->initCEGUI();
 
@@ -140,7 +140,7 @@ void TutorialApplication::createLevel1() {
     player->setWeaponType(0);
 
     Door* door = new Door("Door", mSceneMgr, simulator,
-        Ogre::Vector3(0.0f, 0.0f, -95.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
+        Ogre::Vector3(0.0f, 15.0f, -95.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
         "DoorTexture", 0, 0.98f, wallFriction, doorKinematic);
 
     simulator->getPlayer("Player1")->setScore(5);
@@ -148,23 +148,23 @@ void TutorialApplication::createLevel1() {
     simulator->overlay->changeScoreboard();
 
     Powerup* power0 = new Powerup("Powerup0", mSceneMgr, simulator,
-        Ogre::Vector3(0.0f, 5.0f, -30.0f), Ogre::Vector3(3.0f, 3.0f, 3.0f),
+        Ogre::Vector3(0.0f, 10.0f, -30.0f), Ogre::Vector3(3.0f, 3.0f, 3.0f),
         "MedpackTexture", 0, 0.98f, wallFriction, wallKinematic, 0);
 
     Powerup* power1 = new Powerup("Powerup1", mSceneMgr, simulator,
-        Ogre::Vector3(30.0f, 5.0f, -30.0f), Ogre::Vector3(3.0f, 3.0f, 3.0f),
+        Ogre::Vector3(30.0f, 10.0f, -30.0f), Ogre::Vector3(3.0f, 3.0f, 3.0f),
         "ExtraLifeTexture", 0, 0.98f, wallFriction, wallKinematic, 1);
 
     Powerup* power2 = new Powerup("Powerup2", mSceneMgr, simulator,
-        Ogre::Vector3(30.0f, 5.0f, -60.0f), Ogre::Vector3(3.0f, 3.0f, 3.0f),
+        Ogre::Vector3(30.0f, 10.0f, -60.0f), Ogre::Vector3(3.0f, 3.0f, 3.0f),
         "SuperJumpTexture", 0, 0.98f, wallFriction, wallKinematic, 2);
 
     Powerup* power3 = new Powerup("Powerup3", mSceneMgr, simulator,
-        Ogre::Vector3(-30.0f, 5.0f, -60.0f), Ogre::Vector3(3.0f, 3.0f, 3.0f),
+        Ogre::Vector3(-30.0f, 10.0f, -60.0f), Ogre::Vector3(3.0f, 3.0f, 3.0f),
         "ShotgunTexture", 0, 0.98f, wallFriction, wallKinematic, 3);
 
     Powerup* power4 = new Powerup("Powerup4", mSceneMgr, simulator,
-        Ogre::Vector3(-30.0f, 20.0f, -30.0f), Ogre::Vector3(3.0f, 3.0f, 3.0f),
+        Ogre::Vector3(-35.0f, 25.0f, -50.0f), Ogre::Vector3(3.0f, 3.0f, 3.0f),
         "CheckpointTexture", 0, 0.98f, wallFriction, wallKinematic, 4);
 }
 //---------------------------------------------------------------------------
@@ -292,20 +292,32 @@ void TutorialApplication::createLevel2() {
         1.0f, particleSystem, aiMgr, &numAttack);
 
     Door* door = new Door("Door", mSceneMgr, simulator,
-        Ogre::Vector3(-50.0f, 10.0f, -970.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
-        "WallTexture", 10000, 0.98f, wallFriction, ballKinematic);
-
+        Ogre::Vector3(-50.0f, 15.0f, -970.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
+        "WallTexture", 0, 0.98f, wallFriction, ballKinematic);
 
     Powerup* power4 = new Powerup("Powerup4", mSceneMgr, simulator,
         Ogre::Vector3(-20.0f, 15.0f, -190.0f), Ogre::Vector3(3.0f, 3.0f, 3.0f),
         "CheckpointTexture", 0, 0.98f, wallFriction, wallKinematic, 4);
 }
 //---------------------------------------------------------------------------
+void TutorialApplication::addNodesInCube(float x1, float x2, float y1, float y2,
+    float z1, float z2, float interval) {
+
+    float i, j, k;
+    for (i = x1; i <= x2; i += interval) {
+        for (j = y1; j <= y2; j += interval) {
+            for (k = z1; k <= z2; k += interval) {
+                aiMgr->addNode(Ogre::Vector3(i,j,k));
+            }
+        }
+    }
+}
+//---------------------------------------------------------------------------
 void TutorialApplication::createLevel3() {
     /* AI Stuff */
 
     Wall* wall1 = new Wall("Wall1", mSceneMgr, simulator,
-        Ogre::Vector3(0.0f, -12.5f, 0.0f), Ogre::Vector3(500, wallThickness, 500),
+        Ogre::Vector3(0.0f, -12.0f, 0.0f), Ogre::Vector3(500, wallThickness, 500),
         "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
     Wall* wall2 = new Wall("Wall2", mSceneMgr, simulator,
         Ogre::Vector3(0.0f, 40.0f, -250.0f), Ogre::Vector3(500, 100, wallThickness),
@@ -339,23 +351,27 @@ void TutorialApplication::createLevel3() {
     /* Adding nodes to map */
 
     /* If nodes are too far away bad things happen */
-    aiMgr->addNode(Ogre::Vector3(50.0f,50.0f,0.0f));
-    aiMgr->addNode(Ogre::Vector3(0.0f,50.0f,50.0f));
-    aiMgr->addNode(Ogre::Vector3(-50.0f,50.0f,0.0f));
-    aiMgr->addNode(Ogre::Vector3(0.0f,50.0f,-50.0f));
-    aiMgr->addNode(Ogre::Vector3(50.0f,50.0f,50.0f));
-    aiMgr->addNode(Ogre::Vector3(-50.0f,50.0f,50.0f));
-    aiMgr->addNode(Ogre::Vector3(-50.0f,50.0f,-50.0f));
-    aiMgr->addNode(Ogre::Vector3(50.0f,50.0f,-50.0f));
-    aiMgr->addNode(Ogre::Vector3(25.0f,0.0f,0.0f));
-    aiMgr->addNode(Ogre::Vector3(25.0f,0.0f,25.0f));
-    aiMgr->addNode(Ogre::Vector3(0.0f,0.0f,25.0f));
-    aiMgr->addNode(Ogre::Vector3(-25.0f, 0.0f,0.0f));
-    aiMgr->addNode(Ogre::Vector3(0.0f,0.0f,-25.0f));
-    aiMgr->addNode(Ogre::Vector3(25.0f,0.0f,-25.0f));
-    aiMgr->addNode(Ogre::Vector3(-25.0f,0.0f,25.0f));
-    aiMgr->addNode(Ogre::Vector3(-25.0f,0.0f,-25.0f));
+    // aiMgr->addNode(Ogre::Vector3(50.0f,50.0f,0.0f));
+    // aiMgr->addNode(Ogre::Vector3(0.0f,50.0f,50.0f));
+    // aiMgr->addNode(Ogre::Vector3(-50.0f,50.0f,0.0f));
+    // aiMgr->addNode(Ogre::Vector3(0.0f,50.0f,-50.0f));
+    // aiMgr->addNode(Ogre::Vector3(50.0f,50.0f,50.0f));
+    // aiMgr->addNode(Ogre::Vector3(-50.0f,50.0f,50.0f));
+    // aiMgr->addNode(Ogre::Vector3(-50.0f,50.0f,-50.0f));
+    // aiMgr->addNode(Ogre::Vector3(50.0f,50.0f,-50.0f));
+    // aiMgr->addNode(Ogre::Vector3(25.0f,0.0f,0.0f));
+    // aiMgr->addNode(Ogre::Vector3(25.0f,0.0f,25.0f));
+    // aiMgr->addNode(Ogre::Vector3(0.0f,0.0f,25.0f));
+    // aiMgr->addNode(Ogre::Vector3(-25.0f, 0.0f,0.0f));
+    // aiMgr->addNode(Ogre::Vector3(0.0f,0.0f,-25.0f));
+    // aiMgr->addNode(Ogre::Vector3(25.0f,0.0f,-25.0f));
+    // aiMgr->addNode(Ogre::Vector3(-25.0f,0.0f,25.0f));
+    // aiMgr->addNode(Ogre::Vector3(-25.0f,0.0f,-25.0f));
+
+    addNodesInCube(-250.0f, 250.0f, 50.0f, 50.0f, -250.0f, 250.0f, 100.0f);
+    addNodesInCube(-240.0f, 240.0f, 0.0f, 0.0f, -240.0f, 240.0f, 40.0f);
     aiMgr->connectAllNodes();
+    aiMgr->printAllNodeConnections();
 
     Frog* frog1 = new Frog("Frog1", mSceneMgr, simulator,
         Ogre::Vector3(25.0f,0.0f,0.0f), 4.0f,
@@ -366,9 +382,8 @@ void TutorialApplication::createLevel3() {
         "BirdTexture", aiMgr, &numAttack);
 
     Door* door = new Door("Door", mSceneMgr, simulator,
-        Ogre::Vector3(100.0f, 10.0f, 100.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
-        "WallTexture", 10000, 0.98f, wallFriction, ballKinematic);
-
+        Ogre::Vector3(100.0f, 15.0f, 130.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
+        "WallTexture", 0, 0.98f, wallFriction, ballKinematic);
 
     Shooter* player = (Shooter*) simulator->getObject("PlayerShooter");
     player->setPosition(0.0f, 20.0f, 0.0f);
@@ -395,19 +410,18 @@ void TutorialApplication::createLevel4() {
         Ogre::Vector3(0.0f, 10.0f, -300.0f), 2.0f,
         "BirdTexture", ballMass, ballRestitution, ballFriction, ballKinematic, emitter1,
         &numAttack);
-    bird1->setTarget((Shooter*) simulator->getObject("PlayerShooter"));
+    bird1->setTarget(player);
 
     Ogre::ParticleEmitter* emitter2 = particleSystem->addEmitter("Point");
     Bird* bird2 = new Bird("Bird2", mSceneMgr, simulator,
         Ogre::Vector3(20.0f, 10.0f, -300.0f), 2.0f,
         "BirdTexture", ballMass, ballRestitution, ballFriction, ballKinematic, emitter2,
         &numAttack);
-    bird2->setTarget((Shooter*) simulator->getObject("PlayerShooter"));
+    bird2->setTarget(player);
 
     Door* door = new Door("Door", mSceneMgr, simulator,
-        Ogre::Vector3(45.0f, 10.0f, 105.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
-        "WallTexture", 10000, 0.98f, wallFriction, ballKinematic);
-
+        Ogre::Vector3(45.0f, 20.0f, 105.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
+        "WallTexture", 0, 0.98f, wallFriction, ballKinematic);
 
     Spawner* spawn = new Spawner("Spawner", mSceneMgr, simulator,
         Ogre::Vector3(30.0f, 10.0f, -300.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
