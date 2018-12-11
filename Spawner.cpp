@@ -89,8 +89,7 @@ void Spawner::update(float elapsedTime) {
             case FROG:
                 // Spawn a FROG
                 numEmitted = simulator->getObjectNumber("FrogEnemy");
-                printf("%d\n", numEmitted);
-                if (numEmitted < 10) {
+                if (numEmitted < 5) {
                     ss << "FrogEnemy" << name << count;
                     count ++;
                     emitted = new Frog(ss.str(), sceneMgr, simulator,

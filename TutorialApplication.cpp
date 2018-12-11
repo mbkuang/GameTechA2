@@ -447,7 +447,7 @@ void TutorialApplication::createLevel4() {
         Ogre::Vector3(45.0f, 120.0f, 105.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
         "WallTexture", 0, 0.98f, wallFriction, ballKinematic);
 
-    Spawner* spawn = new Spawner("Spawner", mSceneMgr, simulator,
+    Spawner* spawn = new Spawner("Spawner0", mSceneMgr, simulator,
         Ogre::Vector3(30.0f, 10.0f, -300.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
         "ShooterTexture", wallMass, 0.98f, wallFriction, ballKinematic, 0,
         10.0f, particleSystem, aiMgr, &numAttack);
@@ -465,17 +465,17 @@ void TutorialApplication::createLevel4() {
     aiMgr->printAllNodeConnections();
 
     Frog* frog1 = new Frog("Frog1", mSceneMgr, simulator,
-        Ogre::Vector3(-40.0f,102.0f,155.0f), 4.0f,
+        Ogre::Vector3(45.0f,102.0f,125.0f), 4.0f,
         "BirdTexture", aiMgr, &numAttack);
 
     Frog* frog2 = new Frog("Frog2", mSceneMgr, simulator,
-        Ogre::Vector3(-10.0f,102.0f,-25.0f), 4.0f,
+        Ogre::Vector3(45.0f,102.0f,90.0f), 4.0f,
         "BirdTexture", aiMgr, &numAttack);
 
-    Spawner* frogSpawner = new Spawner("FrogSpawner", mSceneMgr, simulator,
+    Spawner* frogSpawner = new Spawner("Spawner1", mSceneMgr, simulator,
     Ogre::Vector3(45.0f, 140.0f, 105.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
     "ShooterTexture", wallMass, 0.98f, wallFriction, ballKinematic, 1,
-    10.0f, particleSystem, aiMgr, &numAttack); 
+    5.0f, particleSystem, aiMgr, &numAttack); 
 }
 //---------------------------------------------------------------------------
 bool TutorialApplication::quit() {

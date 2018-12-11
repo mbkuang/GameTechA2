@@ -3,6 +3,7 @@
 
 #include "GameObject.h"
 #include "Bird.h"
+#include "Frog.h"
 #include "Shooter.h"
 #include <string>
 #include <sstream>

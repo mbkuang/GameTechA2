@@ -53,6 +53,9 @@ Frog::Frog(Ogre::String newName, Ogre::SceneManager* scnMgr, Simulator* sim,
 
 Frog::~Frog() {
     /* May not be neccesary? */
+    Node* closest = aiMgr->findNodeClosest(position);
+    if (closest != NULL)
+        closest->occupy(false);
 }
 
 void Frog::jump() {

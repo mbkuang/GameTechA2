@@ -64,9 +64,9 @@ void Laser::update(float elapsedTime) {
         /* Player's bullets hit enemy */
         if(!objName.substr(0,5).compare("Enemy") == 0) {
             if (contactName.substr(0,4).compare("Frog") == 0) {
-                GameObject* rem = simulator->getObject(contactName);
+                Frog* rem = (Frog*) simulator->getObject(contactName);
                 if(rem != NULL) {
-                    rem->~GameObject();
+                    rem->~Frog();
                     simulator->removeObject(rem);
                     Player* p1 = simulator->getPlayer("Player1");
                     p1->incrementKC();
