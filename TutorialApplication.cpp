@@ -378,11 +378,20 @@ void TutorialApplication::createLevel3() {
 //---------------------------------------------------------------------------
 void TutorialApplication::createLevel4() {
 
-    Wall* flooring1 = new Wall("Flooring1", mSceneMgr, simulator,
+    Wall* flooring1 = new Wall("StartPlatform", mSceneMgr, simulator,
         Ogre::Vector3(0.0f, 0.0f, -50.0f), Ogre::Vector3(10.0f, wallThickness, 100.0f),
         "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
-    Wall* flooring2 = new Wall("Flooring2", mSceneMgr, simulator,
-        Ogre::Vector3(45.0f, 0.0f, 105.0f), Ogre::Vector3(100.0f, wallThickness, 100.0f),
+    Wall* flooring2 = new Wall("EndPlatform", mSceneMgr, simulator,
+        Ogre::Vector3(45.0f, 100.0f, 105.0f), Ogre::Vector3(100.0f, wallThickness, 100.0f),
+        "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
+    Wall* flooring3 = new Wall("Platform3", mSceneMgr, simulator,
+        Ogre::Vector3(-30.0f, 10.0f, 0.0f), Ogre::Vector3(10.0f, 10.0f, 20.0f),
+        "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
+    Wall* flooring4 = new Wall("Platform4", mSceneMgr, simulator,
+        Ogre::Vector3(-60.0f, 20.0f, 0.0f), Ogre::Vector3(20.0f, 10.0f, 10.0f),
+        "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
+    Wall* flooring5 = new Wall("Platform5", mSceneMgr, simulator,
+        Ogre::Vector3(-50.0f, 30.0f, 40.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
         "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
 
     Shooter* player = (Shooter*) simulator->getObject("PlayerShooter");
@@ -406,7 +415,7 @@ void TutorialApplication::createLevel4() {
     bird2->setTarget((Shooter*) simulator->getObject("PlayerShooter"));
 
     Door* door = new Door("Door", mSceneMgr, simulator,
-        Ogre::Vector3(45.0f, 10.0f, 105.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
+        Ogre::Vector3(45.0f, 110.0f, 105.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
         "WallTexture", 10000, 0.98f, wallFriction, ballKinematic);
 
 
@@ -584,7 +593,7 @@ bool TutorialApplication::keyPressed(const OIS::KeyEvent& arg) {
         }
 
     } else if (arg.key == OIS::KC_LSHIFT) {
-        simulator->destroyWorld();
+        ((Shooter*)simulator->getObject("PlayerShooter"))->setJump(true);
     } else if(arg.key == OIS::KC_UP) {
         simulator->soundSystem->volumeUp();
     } else if(arg.key == OIS::KC_DOWN) {
@@ -596,6 +605,8 @@ bool TutorialApplication::keyPressed(const OIS::KeyEvent& arg) {
     } else if(arg.key == OIS::KC_L) {
         simulator->printMap();
         simulator->printList();
+    } else if(arg.key == OIS::KC_F1) {
+        nextLevel();
     }
     return true;
 }
