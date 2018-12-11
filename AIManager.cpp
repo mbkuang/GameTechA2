@@ -92,7 +92,8 @@ void AIManager::a_star_search(std::unordered_map<Node*, Node*>& came_from, Node*
         Node* current = frontier.top().second;
         frontier.pop();
 
-        if (current == goal || count == 100) {
+        if (current == goal || count == 5000) {
+            printf("Failed in a star search, count = %d\n", count);
             break;
         }
 
@@ -119,7 +120,7 @@ std::vector<Node*> AIManager::reconstruct_path(std::unordered_map<Node*, Node*> 
 
     int count = 0;
 
-    while(current != start && count != 100) {
+    while(current != start && count != 5000) {
         path.push_back(current);
         current = came_from[current];
         count++;

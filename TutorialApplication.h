@@ -67,6 +67,9 @@ protected:
 
     Laser* shoot(Ogre::Vector3 location, Ogre::Vector3 direction);
 
+    void addNodesInCube(float x1, float x2, float y1, float y2,
+        float z1, float z2, float interval);
+
     void restart();
 
     struct Positions {

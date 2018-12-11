@@ -19,9 +19,9 @@ Simulator::Simulator() {
 	isPaused = true;
 
 	levelKcMap[1] = 0;
-	levelKcMap[2] = 1;
+	levelKcMap[2] = 2;
 	levelKcMap[3] = 2;
-	levelKcMap[4] = 3;
+	levelKcMap[4] = 5;
 }
 
 void Simulator::addObject (GameObject* o) {
