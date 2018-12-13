@@ -452,7 +452,7 @@ void TutorialApplication::createLevel4() {
         "ShooterTexture", wallMass, 0.98f, wallFriction, ballKinematic, 0,
         10.0f, particleSystem, aiMgr, &numAttack);
 
-    addNodesInCube(0.0f, 90.0f, 115.0f, 115.0f, 60.0f, 150.0f, 30.0f);
+    addNodesInCube(0.0f, 90.0f, 112.0f, 112.0f, 60.0f, 150.0f, 30.0f);
 
     aiMgr->addNode(Ogre::Vector3(-30.0f,17.0f,0.0f));
     aiMgr->addNode(Ogre::Vector3(-60.0f,27.0f,0.0f));
