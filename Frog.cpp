@@ -116,15 +116,15 @@ void Frog::update(float elapsedTime) {
     /* Make froggo jump */
     timeSinceLastJump += elapsedTime;
     timeSinceLastShot += elapsedTime;
-    if(timeSinceLastJump > jumpPeriod / 2) { // should probably adjust this value to make frogs faster/ slower
+    if(timeSinceLastJump > jumpPeriod / 1) { // should probably adjust this value to make frogs faster/ slower
         position = goalPosition;
         rootNode->setPosition(goalPosition);
         updateTransform();
         jump();
         timeSinceLastJump = 0;
-    } else if (timeSinceLastJump > (jumpPeriod / 4) && startPosition != goalPosition) { // adjust value to adjust wait period
+    } else if (timeSinceLastJump > (jumpPeriod / 2) && startPosition != goalPosition) { // adjust value to adjust wait period
         /* Make frog travel to its next destination */
-        float t = (timeSinceLastJump - (jumpPeriod / 4)) / (jumpPeriod / 4);
+        float t = (timeSinceLastJump - (jumpPeriod / 2)) / (jumpPeriod / 2);
 
         /* Position between start and goal used to create jump arc */
         Ogre::Vector3 intermediatePosition(

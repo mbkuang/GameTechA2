@@ -93,7 +93,6 @@ void AIManager::a_star_search(std::unordered_map<Node*, Node*>& came_from, Node*
         frontier.pop();
 
         if (current == goal || count == 5000) {
-            printf("Failed in a star search, count = %d\n", count);
             break;
         }
 

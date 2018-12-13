@@ -26,9 +26,9 @@ protected:
         SCATTER = 2
     };
     btVector3 flyVector;
-    int maxSpd = 125;
-    int flySpd = 90;
-    int minSpd = 70;
+    int maxSpd = 150;
+    int flySpd = 100;
+    int minSpd = 80;
     int speed = 80;
 
     Ogre::ParticleEmitter* emitter = NULL;

@@ -191,7 +191,7 @@ void Bird::chaseState() {
 
     flyVector = flyVector.normalized() * speed;
 
-    if (fabs(vel.angle(flyVector)) > .26) {
+    if (fabs(vel.angle(flyVector)) > .2) {
         if (speed > minSpd) {speed --;}
         else {speed = minSpd;}
         timer --;
@@ -205,7 +205,7 @@ void Bird::chaseState() {
     else if (speed < maxSpd) {speed ++;}
     else {speed = maxSpd;}
 
-    this->setVelocity(this->getVelocity().lerp(flyVector, .001).normalized()*speed);
+    this->setVelocity(this->getVelocity().lerp(flyVector, .005).normalized()*speed);
 }
 
 void Bird::flyState() {

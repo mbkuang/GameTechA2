@@ -136,7 +136,7 @@ void TutorialApplication::createLevel1() {
         "Examples/Rockwall", wallMass, wallRestitution, wallFriction, wallKinematic);
 
     Shooter* player = (Shooter*) simulator->getObject("PlayerShooter");
-    player->setPosition(0.0f, 10.0f, -5.0f);
+    player->setPosition(0.0f, 10.0f, -10.0f);
     player->setStartPos(player->getOgrePosition());
     player->setWeaponType(0);
 
@@ -153,20 +153,20 @@ void TutorialApplication::createLevel1() {
         "MedpackTexture", 0, 0.98f, wallFriction, wallKinematic, 0);
 
     Powerup* power1 = new Powerup("Powerup1", mSceneMgr, simulator,
-        Ogre::Vector3(30.0f, 10.0f, -30.0f), Ogre::Vector3(3.0f, 3.0f, 3.0f),
+        Ogre::Vector3(-30.0f, 10.0f, -60.0f), Ogre::Vector3(3.0f, 3.0f, 3.0f),
         "ExtraLifeTexture", 0, 0.98f, wallFriction, wallKinematic, 1);
 
     Powerup* power2 = new Powerup("Powerup2", mSceneMgr, simulator,
         Ogre::Vector3(30.0f, 10.0f, -60.0f), Ogre::Vector3(3.0f, 3.0f, 3.0f),
         "SuperJumpTexture", 0, 0.98f, wallFriction, wallKinematic, 2);
 
-    Powerup* power3 = new Powerup("Powerup3", mSceneMgr, simulator,
-        Ogre::Vector3(-30.0f, 10.0f, -60.0f), Ogre::Vector3(3.0f, 3.0f, 3.0f),
-        "ShotgunTexture", 0, 0.98f, wallFriction, wallKinematic, 3);
-
-    Powerup* power4 = new Powerup("Powerup4", mSceneMgr, simulator,
-        Ogre::Vector3(-35.0f, 25.0f, -50.0f), Ogre::Vector3(3.0f, 3.0f, 3.0f),
-        "CheckpointTexture", 0, 0.98f, wallFriction, wallKinematic, 4);
+    // Powerup* power3 = new Powerup("Powerup3", mSceneMgr, simulator,
+    //     Ogre::Vector3(-30.0f, 10.0f, -60.0f), Ogre::Vector3(3.0f, 3.0f, 3.0f),
+    //     "ShotgunTexture", 0, 0.98f, wallFriction, wallKinematic, 3);
+    //
+    // Powerup* power4 = new Powerup("Powerup4", mSceneMgr, simulator,
+    //     Ogre::Vector3(-35.0f, 25.0f, -50.0f), Ogre::Vector3(3.0f, 3.0f, 3.0f),
+    //     "CheckpointTexture", 0, 0.98f, wallFriction, wallKinematic, 4);
 }
 //---------------------------------------------------------------------------
 void TutorialApplication::createLevel2() {
@@ -227,7 +227,6 @@ void TutorialApplication::createLevel2() {
     addNodesInCube(-250.0f, 250.0f, 50.0f, 50.0f, -250.0f, 250.0f, 100.0f);
     addNodesInCube(-240.0f, 240.0f, 0.0f, 0.0f, -240.0f, 240.0f, 40.0f);
     aiMgr->connectAllNodes();
-    aiMgr->printAllNodeConnections();
 
     Frog* frog1 = new Frog("Frog1", mSceneMgr, simulator,
         Ogre::Vector3(25.0f,0.0f,0.0f), 4.0f,
@@ -241,9 +240,33 @@ void TutorialApplication::createLevel2() {
         Ogre::Vector3(100.0f, 15.0f, 130.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
         "WallTexture", 0, 0.98f, wallFriction, ballKinematic);
 
+    Ogre::ParticleSystem* particleSystem = mSceneMgr->getParticleSystem("Trails");
+
+    Spawner* spawn1 = new Spawner("Spawner1", mSceneMgr, simulator,
+        Ogre::Vector3(0.0f, 10.0f, 0.0f), Ogre::Vector3(5.0f, 5.0f, 5.0f),
+        "ShooterTexture", wallMass, 0.98f, wallFriction, ballKinematic, 1,
+        5.0f, particleSystem, aiMgr, &numAttack);
+
+    Spawner* spawn3 = new Spawner("Spawner3", mSceneMgr, simulator,
+        Ogre::Vector3(20.0f, 10.0f, -230.0f), Ogre::Vector3(5.0f, 5.0f, 5.0f),
+        "ShooterTexture", wallMass, 0.98f, wallFriction, ballKinematic, 1,
+        5.0f, particleSystem, aiMgr, &numAttack);
+
     Shooter* player = (Shooter*) simulator->getObject("PlayerShooter");
-    player->setPosition(0.0f, 20.0f, 0.0f);
+    player->setPosition(-100.0f, 20.0f, -130.0f);
     player->setStartPos(player->getOgrePosition());
+
+    Powerup* power0 = new Powerup("Powerup0", mSceneMgr, simulator,
+        Ogre::Vector3(115.0f, 10.0f, -10.0f), Ogre::Vector3(3.0f, 3.0f, 3.0f),
+        "MedpackTexture", 0, 0.98f, wallFriction, wallKinematic, 0);
+
+    Powerup* power1 = new Powerup("Powerup1", mSceneMgr, simulator,
+        Ogre::Vector3(-50.0f, 100.0f, -50.0f), Ogre::Vector3(3.0f, 3.0f, 3.0f),
+        "ExtraLifeTexture", 0, 0.98f, wallFriction, wallKinematic, 1);
+
+    Powerup* power2 = new Powerup("Powerup2", mSceneMgr, simulator,
+        Ogre::Vector3(80.0f, 10.0f, -50.0f), Ogre::Vector3(3.0f, 3.0f, 3.0f),
+        "SuperJumpTexture", 0, 0.98f, wallFriction, wallKinematic, 2);
 }
 //---------------------------------------------------------------------------
 void TutorialApplication::createLevel3() {
@@ -308,7 +331,7 @@ void TutorialApplication::createLevel3() {
         "ShotgunTexture", 0, 0.98f, wallFriction, wallKinematic, 3);
 
     Shooter* player = (Shooter*) simulator->getObject("PlayerShooter");
-    player->setPosition(0.0f, 20.0f, 0.0f);
+    player->setPosition(20.0f, 20.0f, -20.0f);
     player->setStartPos(player->getOgrePosition());
 
     Ogre::ParticleSystem* particleSystem = mSceneMgr->getParticleSystem("Trails");
@@ -376,6 +399,10 @@ void TutorialApplication::createLevel3() {
     Powerup* power4 = new Powerup("Powerup4", mSceneMgr, simulator,
         Ogre::Vector3(-20.0f, 15.0f, -190.0f), Ogre::Vector3(3.0f, 3.0f, 3.0f),
         "CheckpointTexture", 0, 0.98f, wallFriction, wallKinematic, 4);
+
+    Powerup* power0 = new Powerup("Powerup0", mSceneMgr, simulator,
+        Ogre::Vector3(-15.0f, 15.0f, -190.0f), Ogre::Vector3(3.0f, 3.0f, 3.0f),
+        "MedpackTexture", 0, 0.98f, wallFriction, wallKinematic, 0);
 }
 //---------------------------------------------------------------------------
 void TutorialApplication::addNodesInCube(float x1, float x2, float y1, float y2,
@@ -413,7 +440,7 @@ void TutorialApplication::createLevel4() {
         "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
 
     Powerup* power2 = new Powerup("Powerup2", mSceneMgr, simulator,
-        Ogre::Vector3(-40.0f, 55.0f, 60.0f), Ogre::Vector3(3.0f, 3.0f, 3.0f),
+        Ogre::Vector3(0.0f, 20.0f, -40.0f), Ogre::Vector3(3.0f, 3.0f, 3.0f),
         "SuperJumpTexture", 0, 0.98f, wallFriction, wallKinematic, 2);
 
     Wall* flooring7 = new Wall("Platform7", mSceneMgr, simulator,
@@ -452,7 +479,7 @@ void TutorialApplication::createLevel4() {
         "ShooterTexture", wallMass, 0.98f, wallFriction, ballKinematic, 0,
         10.0f, particleSystem, aiMgr, &numAttack);
 
-    addNodesInCube(0.0f, 90.0f, 115.0f, 115.0f, 60.0f, 150.0f, 30.0f);
+    addNodesInCube(0.0f, 90.0f, 112.0f, 112.0f, 60.0f, 150.0f, 30.0f);
 
     aiMgr->addNode(Ogre::Vector3(-30.0f,17.0f,0.0f));
     aiMgr->addNode(Ogre::Vector3(-60.0f,27.0f,0.0f));
@@ -462,7 +489,6 @@ void TutorialApplication::createLevel4() {
     aiMgr->addNode(Ogre::Vector3(-20.0f, 87.0f, 60.0f));
 
     aiMgr->connectAllNodes();
-    aiMgr->printAllNodeConnections();
 
     Frog* frog1 = new Frog("Frog1", mSceneMgr, simulator,
         Ogre::Vector3(45.0f,102.0f,125.0f), 4.0f,
@@ -475,7 +501,7 @@ void TutorialApplication::createLevel4() {
     Spawner* frogSpawner = new Spawner("Spawner1", mSceneMgr, simulator,
     Ogre::Vector3(45.0f, 140.0f, 105.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
     "ShooterTexture", wallMass, 0.98f, wallFriction, ballKinematic, 1,
-    5.0f, particleSystem, aiMgr, &numAttack); 
+    5.0f, particleSystem, aiMgr, &numAttack);
 }
 //---------------------------------------------------------------------------
 bool TutorialApplication::quit() {
