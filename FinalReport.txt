@@ -1,38 +1,20 @@
-﻿Final Report
+﻿Assignment 4: Plan - Final Report
 
-Sons of Liberty reporting in! We extended our game engine to accommodate networking 
-and demo a third person shooter. Down below are our personal thoughts to what we 
-succeeded and failed in while developing this project. 
+Sons of Liberty 2
+Ethan Williams, esw597
+Matthew Kuang, mk35622
+Sergio Moreno, sm62588
 
-Overall, we’re satisfied with our project and teamwork. It’s rewarding to see our 
-game networked across two computers. Much of this success comes from grouping up 
-more often to discuss ideas and pair-program. Such teamwork, we we’re able to flesh 
-out a GUI system that is intuitive to networking. In addition, we are thankful for 
-the NetManager code given to us, despite the issues.
+Game
+Our game will be a first person shooter where the player will fight through levels with different AI enemies. If the player dies, they reset the level. If the player gets through every level, then they win. The controls will be WASD and aiming with the mouse. The player’s bullets will explode on contact, on clicking the fire button again, or after a certain amount of time.
 
-We discovered two issues with the NetManager. The first issue is that UDP doesn’t work. 
-We suspect there is either logic error or missing code. The second problem is that 
-NetManager relies on data being sent and received via cstr. This is quite cumbersome 
-given the fact we already know the data types within a struct. 
+The new features will be the AI enemies which will attempt to kill the player in different ways. The first will be the birds, which will fly around and either attempt to avoid getting shot or divebomb the player. The second will be frogs which jump from surface to surface and try to snipe the player. The third will be a spawner that can either create one of the two other enemies or shoot bullets at the player.
 
-Working with Ogre and Bullet Physic is another cumbersome thing. We learned that dynamic 
-objects can only be updated by forces while kinematic objects must be updated by 
-transformations. Mixing the two types of objects can cause problems in the simulation. 
-For instance, we directly transform some of our dynamic objects to reset position. This 
-can sometimes cause the simulation to not register collisions on that object.
- 
-Given what we learned by integrating Ogre and Bullet Physics, we decided to control our 
-player dynamically since the trade off was minor and easier to implement. The trade off 
-is whether to implement force logic or collision logic. We felt that applying linear and 
-angular forces was much easier than determining the many different instance of collisions 
-that our player could make. Our dynamic character controller works well, but orientation 
-of player to camera updates slowly because catching “real-time” data in the render loop is 
-hard. In other words, we apply an angular force to the character, then stop the force when 
-the quaternion of the player and camera match up within error. 
+Architecture Changes
+We implemented destructors to clean up memory, and changed the way collisions are detected to make the game run more smoothly.
 
-Throughout the design of this project, our engine got messy since we we’re all learning 
-Ogre and Bullet Physics differently. We dislike that the GameObject now has many different 
-transformational getters and setters. There was no easy way to delete or combine them 
-since our code is spread out. 
+Extras
+We created ‘doors’ that served as goals for the player. These doors lead from one level to the next, and are unlocked by getting the kill count required for each level, displayed in a box in the top right corner of the screen. We also added power-ups throughout the game that could change the player’s weapon, enhance jumping abilities, and increase health/lives, as well as checkpoints throughout the levels.
 
-
+Division of Labor
+The three of us for the most part worked together on most of the components of this project. We met up in the lab often to ensure we could get the most out of pair programming. Sergio’s main focus was implementing the frogs and their A* heuristic, Matthew focused on cleaning up the engine/mechanics and GUI components, and Ethan focused on developing Birds, Spawners, and Power-ups. Matthew and Ethan each designed multiple levels. Overall, we all put in our share to make sure we were able to finish the project on time.

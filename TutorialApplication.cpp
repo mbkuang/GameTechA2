@@ -18,7 +18,7 @@ http://www.ogre3d.org/wiki/
 #include "TutorialApplication.h"
 #include <cmath>
 
-const int MAX_LEVEL = 4;
+const int MAX_LEVEL = 5;
 
 //---------------------------------------------------------------------------
 TutorialApplication::TutorialApplication(void)
@@ -37,7 +37,6 @@ TutorialApplication::~TutorialApplication(void)
 void TutorialApplication::createScene(void)
 {
     // Create your scene here :)
-    mSceneMgr->setSkyBox(true, "Examples/StormySkyBox");
     aiMgr = new AIManager(mSceneMgr, simulator, "");
 
     simulator->overlay->initCEGUI();
@@ -70,6 +69,12 @@ void TutorialApplication::createScene(void)
     light->setDiffuseColour(1.0,1.0,1.0);
     lightNode->attachObject(light);
 
+    Ogre::Light* newlight = mSceneMgr->createLight("NewLight");
+    Ogre::SceneNode* newlightNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
+    newlightNode->setPosition(-100, 25, 50);
+    newlight->setDiffuseColour(1.0,1.0,1.0);
+    newlightNode->attachObject(newlight);
+
     Player* player1 = new Player("Player1", simulator);
     Player* cpuPlayer = new Player("CPU", simulator);
 
@@ -92,6 +97,7 @@ void TutorialApplication::restart() {
 }
 //---------------------------------------------------------------------------
 void TutorialApplication::nextLevel() {
+    mSceneMgr->setSkyBox(true, "Examples/StormySkyBox");
     simulator->pause();
     simulator->destroyWorld();
     Ogre::ParticleSystem* particleSystem = mSceneMgr->getParticleSystem("Trails");
@@ -116,6 +122,9 @@ void TutorialApplication::nextLevel() {
             break;
         case 4:
             createLevel4();
+            break;
+        case 5:
+            createLevel5();
             break;
         default:
             simulator->pause();
@@ -170,7 +179,6 @@ void TutorialApplication::createLevel1() {
 }
 //---------------------------------------------------------------------------
 void TutorialApplication::createLevel2() {
-    /* AI Stuff */
 
     Wall* wall1 = new Wall("Wall1", mSceneMgr, simulator,
         Ogre::Vector3(0.0f, -12.0f, 0.0f), Ogre::Vector3(500, wallThickness, 500),
@@ -504,6 +512,131 @@ void TutorialApplication::createLevel4() {
     5.0f, particleSystem, aiMgr, &numAttack);
 }
 //---------------------------------------------------------------------------
+void TutorialApplication::createLevel5() {
+
+    mSceneMgr->setSkyBox(true, "Examples/EarlyMorningSkyBox");
+    Ogre::ParticleSystem* particleSystem = mSceneMgr->getParticleSystem("Trails");
+
+    Wall* startPlatform = new Wall("StartPlatform", mSceneMgr, simulator,
+        Ogre::Vector3(0.0f, -10.0f, -50.0f), Ogre::Vector3(100, wallThickness, 100),
+        "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
+
+    Shooter* player = (Shooter*) simulator->getObject("PlayerShooter");
+    player->setPosition(0.0f, 10.0f, -10.0f);
+    player->setStartPos(player->getOgrePosition());
+
+    Powerup* power0 = new Powerup("Powerup0", mSceneMgr, simulator,
+        Ogre::Vector3(33.0f, 10.0f, -60.0f), Ogre::Vector3(3.0f, 3.0f, 3.0f),
+        "MedpackTexture", 0, 0.98f, wallFriction, wallKinematic, 0);
+
+    Powerup* power1 = new Powerup("Powerup1", mSceneMgr, simulator,
+        Ogre::Vector3(-30.0f, 10.0f, -60.0f), Ogre::Vector3(3.0f, 3.0f, 3.0f),
+        "ExtraLifeTexture", 0, 0.98f, wallFriction, wallKinematic, 1);
+
+    Wall* w1 = new Wall("w1", mSceneMgr, simulator,
+        Ogre::Vector3(0.0f, -70.0f, -170.0f), Ogre::Vector3(10, 150, 10),
+        "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
+
+    Powerup* power2 = new Powerup("Powerup2", mSceneMgr, simulator,
+        Ogre::Vector3(0.0f, 15.0f, -170.0f), Ogre::Vector3(3.0f, 3.0f, 3.0f),
+        "SuperJumpTexture", 0, 0.98f, wallFriction, wallKinematic, 2);
+
+    Wall* w2 = new Wall("w2", mSceneMgr, simulator,
+        Ogre::Vector3(-40.0f, -50.0f, -200.0f), Ogre::Vector3(10, 150, 10),
+        "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
+
+    Wall* w3 = new Wall("w3", mSceneMgr, simulator,
+        Ogre::Vector3(40.0f, -50.0f, -200.0f), Ogre::Vector3(10, 150, 10),
+        "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
+
+    Wall* w4 = new Wall("w4", mSceneMgr, simulator,
+        Ogre::Vector3(-40.0f, -50.0f, -230.0f), Ogre::Vector3(10, 150, 10),
+        "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
+
+    Wall* w5 = new Wall("w5", mSceneMgr, simulator,
+        Ogre::Vector3(40.0f, -50.0f, -230.0f), Ogre::Vector3(10, 150, 10),
+        "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
+
+    Spawner* birdSpawner1 = new Spawner("Spawner1", mSceneMgr, simulator,
+        Ogre::Vector3(55.0f, 55.0f, -215.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
+        "ShooterTexture", wallMass, 0.98f, wallFriction, ballKinematic, 0,
+        5.0f, particleSystem, aiMgr, &numAttack);
+
+    Spawner* birdSpawner2 = new Spawner("Spawner2", mSceneMgr, simulator,
+        Ogre::Vector3(-55.0f, 55.0f, -215.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
+        "ShooterTexture", wallMass, 0.98f, wallFriction, ballKinematic, 0,
+        5.0f, particleSystem, aiMgr, &numAttack); 
+
+    Wall* w6 = new Wall("w6", mSceneMgr, simulator,
+        Ogre::Vector3(0.0f, 0.0f, -425.0f), Ogre::Vector3(2, 150, 300),
+        "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
+
+    Spawner* laserSpawner1 = new Spawner("Spawner3", mSceneMgr, simulator,
+        Ogre::Vector3(55.0f, 75.0f, -350.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
+        "ShooterTexture", wallMass, 0.98f, wallFriction, ballKinematic, 3,
+        1.1f, particleSystem, aiMgr, &numAttack);
+
+    Spawner* laserSpawner2 = new Spawner("Spawner4", mSceneMgr, simulator,
+        Ogre::Vector3(-55.0f, 75.0f, -350.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
+        "ShooterTexture", wallMass, 0.98f, wallFriction, ballKinematic, 3,
+        1.2f, particleSystem, aiMgr, &numAttack); 
+
+    Spawner* laserSpawner3 = new Spawner("Spawner5", mSceneMgr, simulator,
+        Ogre::Vector3(55.0f, 75.0f, -425.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
+        "ShooterTexture", wallMass, 0.98f, wallFriction, ballKinematic, 3,
+        1.0f, particleSystem, aiMgr, &numAttack);
+
+    Spawner* laserSpawner4 = new Spawner("Spawner6", mSceneMgr, simulator,
+        Ogre::Vector3(-55.0f, 75.0f, -425.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
+        "ShooterTexture", wallMass, 0.98f, wallFriction, ballKinematic, 3,
+        1.0f, particleSystem, aiMgr, &numAttack);
+
+    Spawner* laserSpawner5 = new Spawner("Spawner7", mSceneMgr, simulator,
+        Ogre::Vector3(55.0f, 75.0f, -500.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
+        "ShooterTexture", wallMass, 0.98f, wallFriction, ballKinematic, 3,
+        1.4f, particleSystem, aiMgr, &numAttack);
+
+    Spawner* laserSpawner6 = new Spawner("Spawner8", mSceneMgr, simulator,
+        Ogre::Vector3(-55.0f, 75.0f, -500.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
+        "ShooterTexture", wallMass, 0.98f, wallFriction, ballKinematic, 3,
+        1.3f, particleSystem, aiMgr, &numAttack);
+
+    Wall* w7 = new Wall("w7", mSceneMgr, simulator,
+        Ogre::Vector3(-45.0f, 0.0f, -650.0f), Ogre::Vector3(10, wallThickness, 100),
+        "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
+
+    Wall* w8 = new Wall("w8", mSceneMgr, simulator,
+        Ogre::Vector3(45.0f, 0.0f, -650.0f), Ogre::Vector3(10, wallThickness, 100),
+        "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
+
+    Powerup* power3 = new Powerup("Powerup3", mSceneMgr, simulator,
+        Ogre::Vector3(-45.0f, 20.0f, -650.0f), Ogre::Vector3(3.0f, 3.0f, 3.0f),
+        "MedpackTexture", 0, 0.98f, wallFriction, wallKinematic, 0);
+
+    Powerup* power4 = new Powerup("Powerup4", mSceneMgr, simulator,
+        Ogre::Vector3(45.0f, 20.0f, -650.0f), Ogre::Vector3(3.0f, 3.0f, 3.0f),
+        "ExtraLifeTexture", 0, 0.98f, wallFriction, wallKinematic, 1);
+
+    Wall* finalPlatform = new Wall("FinalPlatform", mSceneMgr, simulator,
+        Ogre::Vector3(0.0f, -10.0f, -800.0f), Ogre::Vector3(100, wallThickness, 100),
+        "WallTexture", wallMass, wallRestitution, wallFriction, wallKinematic);
+
+    Door* door = new Door("Door", mSceneMgr, simulator,
+        Ogre::Vector3(0.0f, 10.0f, -800.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
+        "WallTexture", 0, 0.98f, wallFriction, ballKinematic);
+
+    addNodesInCube(-45.0f, 45.0f, 2.0f, 2.0f, -845.0f, -755.0f, 30.0f);
+    aiMgr->connectAllNodes();
+
+    Spawner* frogSpawner = new Spawner("Spawner9", mSceneMgr, simulator,
+        Ogre::Vector3(0.0f, 30.0f, -800.0f), Ogre::Vector3(10.0f, 10.0f, 10.0f),
+        "ShooterTexture", wallMass, 0.98f, wallFriction, ballKinematic, 1,
+        7.5f, particleSystem, aiMgr, &numAttack);
+
+
+
+}
+//---------------------------------------------------------------------------
 bool TutorialApplication::quit() {
     mShutDown = true;
     return true;
@@ -597,7 +730,7 @@ bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
     Shooter* pShooter = (Shooter*) simulator->getObject("PlayerShooter");
     Ogre::Vector3 startPosition = pShooter->getStartPos();
     Ogre::Vector3 currentPos = (Ogre::Vector3) pShooter->getPosition();
-    if((currentPos.y - startPosition.y < -100 && !restarting) || currentPos.y - startPosition.y < -300) {
+    if((currentPos.y - startPosition.y < -100 && !restarting && level != 5) || currentPos.y - startPosition.y < -300) {
         restarting = false;
         if (!pShooter->hasFallenOff()) {
             pShooter->setPosition(startPosition.x, startPosition.y, startPosition.z);
@@ -684,8 +817,9 @@ bool TutorialApplication::keyPressed(const OIS::KeyEvent& arg) {
     } else if(arg.key == OIS::KC_L) {
         simulator->printMap();
         simulator->printList();
-    } else if(arg.key == OIS::KC_F1) {
+    } else if(arg.key == OIS::KC_F1) {   
         nextLevel();
+        simulator->overlay->changeScoreboard();
     }
     return true;
 }

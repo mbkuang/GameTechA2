@@ -1,10 +1,17 @@
 ﻿Shooter Demo Manual
 
-Objective: To win the game, you must kill your opponent.
+Objective: To win the game, you must reach the destination doors
+on all the levels.
 
-Health Points: Each time you get hit with a bullet, you lose 
-a health point. The same goes for your opponent. Health 
-points will be tracked under Player 1 and Player 2 panes.
+To unlock the doors, you must kill the number of enemies indicated
+in the top right of the screen.
+
+Health System: Each time you get hit by an enemy, you lose
+a health point. When you're health reaches 0, you lose a life.
+When you lose all your lives, the game is over.
+
+There are power-ups which can aid you on your quest to victory. The
+boxes with logos on them are the power-ups.
 
 Controls
 W – walk forward.
@@ -13,6 +20,7 @@ S – walk backward.
 D – strafe right.
 Mouse Track - aim or look around.
 Mouse Left - fire the gun.
+Mouse Right - Toggle 1st/3rd Person camera
 Spacebar – jump (jet up).
 Up Arrow – increase sound volume.
 Down Arrow – decrease sound volume.
@@ -20,10 +28,5 @@ P – turn on background sound.
 M - menu (pause).
 ESC - quit.
 
-To create a Multiplayer game, one player must host the game
-in the multiplayer lobby. The host's IP address will appear,
-and a player looking to join the game should enter that IP
-to join the server.
-
-If you're struggling to hit opponents in multiplayer, you
-might want to practice in the Training Mode. 
+Extra information is contained in the game manual in game in the 
+settings menu.

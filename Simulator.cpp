@@ -22,6 +22,7 @@ Simulator::Simulator() {
 	levelKcMap[2] = 2;
 	levelKcMap[3] = 2;
 	levelKcMap[4] = 5;
+	levelKcMap[5] = 10;
 }
 
 void Simulator::addObject (GameObject* o) {
